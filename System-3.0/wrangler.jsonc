@@ -1,0 +1,51 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "fine-form-3-0",
+  "account_id": "aec28ee9f801e3222a0f9e733d397596",
+  "main": "worker/index.mjs",
+  "compatibility_date": "2026-07-30",
+  "keep_vars": true,
+  "triggers": {
+    "crons": ["* * * * *"]
+  },
+  "assets": {
+    "directory": "dist",
+    "binding": "ASSETS",
+    "run_worker_first": [
+      "/api/*",
+      "/painel",
+      "/painel/*",
+      "/acompanhar",
+      "/acompanhar/*",
+      "/assinatura",
+      "/assinatura/*"
+    ]
+  },
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "fine-form-3-0",
+      "database_id": "e4a5ca12-b6f6-416f-b57e-f0c389161c23",
+      "migrations_dir": "migrations"
+    }
+  ],
+  "durable_objects": {
+    "bindings": [
+      {
+        "name": "LIVE",
+        "class_name": "LiveUpdates"
+      }
+    ]
+  },
+  "migrations": [
+    {
+      "tag": "v1",
+      "new_sqlite_classes": [
+        "LiveUpdates"
+      ]
+    }
+  ],
+  "observability": {
+    "enabled": false
+  }
+}

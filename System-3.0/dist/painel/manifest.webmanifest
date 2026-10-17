@@ -1,0 +1,11 @@
+{
+  "id": "/painel/",
+  "name": "Fine Form — Painel",
+  "short_name": "Fine Form",
+  "lang": "pt-BR",
+  "start_url": "/painel/",
+  "scope": "/painel/",
+  "display": "standalone",
+  "background_color": "#f7f8f4",
+  "theme_color": "#ff8800"
+}

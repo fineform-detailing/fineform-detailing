@@ -1,0 +1,2 @@
+# Apenas para desenvolvimento local. Copie para .dev.vars e escolha sua chave.
+ADMIN_KEY="defina_uma_chave_aleatoria_com_pelo_menos_32_caracteres"

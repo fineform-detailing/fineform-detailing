@@ -51,7 +51,7 @@ em{font-family:Georgia,'Times New Roman',serif;font-weight:400;letter-spacing:in
 .hero-note{position:absolute;z-index:3;padding:18px 20px;width:195px;text-align:left;border:1px solid #0b0d0c0d;border-radius:12px;background:#fffdf9;box-shadow:0 16px 37px #0b0d0c08;transform:translateY(var(--note-offset));transition:box-shadow .3s}
 .hero-note h2{font-family:FF Sans,Arial,sans-serif!important;font-size:13px!important;font-weight:600!important;letter-spacing:-.02em!important;line-height:1.3!important;margin:11px 0 7px}
 .hero-note p{font-size:10px;line-height:1.65;color:#747a70}
-.note-icon{font-size:20px;line-height:1;color:#c26000}
+.note-icon{font-size:20px;line-height:1;color:#329081}
 .note-attention{left:3%;top:37px;rotate:-6deg}
 .note-personal{right:3%;top:163px;rotate:5deg}
 .promise-strip{border-top:1px solid #0b0d0c15;border-bottom:1px solid #0b0d0c15;max-width:1100px;margin:0 auto;padding:25px 20px;display:flex;justify-content:space-between;align-items:center;gap:18px;color:#656e60;font-size:11px}
@@ -67,9 +67,9 @@ em{font-family:Georgia,'Times New Roman',serif;font-weight:400;letter-spacing:in
 .service-grid{gap:17px;align-items:stretch}
 .services-section .service-card{background:#faf9f5;border:1px solid #0b0d0c19;border-radius:15px;min-height:335px;padding:29px 25px;box-shadow:none;transition:border-color .3s,transform .3s}
 .services-section .service-card:hover{box-shadow:none;transform:translateY(-3px);border-color:#0b0d0c4d}
-.services-section .service-card.featured{color:var(--ink);background:#fff9f0;border-color:#df9e56}
+.services-section .service-card.featured{color:var(--ink);background:#fff9f0;border-color:#79bcb1}
 .services-section .service-card .class-tag{font-size:8px;letter-spacing:.08em;color:#656e60}
-.services-section .service-card .card-symbol{display:block;width:37px;height:37px;margin:25px 0 22px;color:#b95a00}
+.services-section .service-card .card-symbol{display:block;width:37px;height:37px;margin:25px 0 22px;color:#30897b}
 .services-section .card-symbol svg{width:37px;height:37px;fill:none;stroke:currentColor;stroke-width:1.2;stroke-linecap:round;stroke-linejoin:round}
 .services-section .service-card h3{font-size:28px;margin-bottom:14px;line-height:1.1}
 .services-section .service-card p{font-size:11px;line-height:1.8;color:#656e60}
@@ -102,7 +102,7 @@ em{font-family:Georgia,'Times New Roman',serif;font-weight:400;letter-spacing:in
 .guidance-links small{display:block;font-size:10px;color:#687363;line-height:1.75;margin-top:5px}
 .guidance-links b{font-size:21px;font-weight:400;color:#596a52;transition:transform .3s}
 .guidance-links a:hover b{transform:translate(3px,-3px)}
-.guidance-links a:hover strong{color:#a74b00}
+.guidance-links a:hover strong{color:#2b7c6f}
 
 .process-section{border-top:1px solid #0b0d0c16;padding-top:75px;padding-bottom:75px}
 .process-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:60px;text-align:center;margin-top:43px}
@@ -160,7 +160,7 @@ em{font-family:Georgia,'Times New Roman',serif;font-weight:400;letter-spacing:in
 .faq-list details[open] summary>span{rotate:45deg}
 .faq-list p{font-size:11px;line-height:1.85}
 .closing-section{padding-top:0;padding-bottom:60px}
-.closing-card{position:relative;background:#ff800012;border:1px solid #eab68155;border-radius:24px;padding:55px 30px;text-align:center;overflow:hidden}
+.closing-card{position:relative;background:#53c3b112;border:1px solid #9ccfc755;border-radius:24px;padding:55px 30px;text-align:center;overflow:hidden}
 .closing-card .eyebrow{font-size:9px;margin-bottom:21px}
 .closing-card h2{font-size:clamp(37px,4.1vw,57px)!important}
 .closing-card>p:not(.eyebrow){font-size:12px;line-height:1.8;margin-top:21px}
@@ -217,7 +217,7 @@ body[data-page=booking] .booking-aside h1{font-family:Georgia,serif;font-size:42
 body[data-page=booking] .booking-aside p{color:#a1aa9c}
 body[data-page=booking] .booking-panel{background:#faf9f5}
 body[data-page=booking] .wizard-title{font-family:Georgia,serif;letter-spacing:-.045em;font-size:35px;font-weight:400;line-height:1.15}
-body[data-page=booking] .choice-card.selected{background:#ff80000a;border-color:#e19342}
+body[data-page=booking] .choice-card.selected{background:#53c3b10a;border-color:#6bb8ac}
 
 @media(max-width:1050px){
   .guidance-section{gap:48px}.guidance-photo{min-height:480px}.service-grid{gap:13px}.services-section .service-card{padding:25px 21px}.services-section .service-card h3{font-size:25px}.services-section .card-bottom{gap:13px}.services-section .card-price{font-size:21px}.process-grid{gap:35px}.plan-card{padding:27px 20px}.plan-card h3{font-size:23px}.plan-price{font-size:32px}.personal-section{gap:55px}.hours-card{padding:28px}.faq-section{gap:55px}.footer-top{gap:40px}
@@ -265,7 +265,7 @@ body.motion-paused{scroll-behavior:auto}body.motion-paused *{animation-play-stat
 .treatment-heading p,.menu-footnote{font-size:11px;color:#687063;line-height:1.8}
 .treatment-grid{display:grid;grid-template-columns:1fr 1fr;gap:0 35px}
 .treatment-item{display:grid;grid-template-columns:22px minmax(0,1fr) auto;gap:12px;padding:24px 0;border-top:1px solid #0b0d0c18;align-items:start}
-.treatment-number{font-size:9px;padding-top:4px;color:#967b62}
+.treatment-number{font-size:9px;padding-top:4px;color:#6f8985}
 .treatment-item h4{font-size:14px;font-weight:600;line-height:1.5;letter-spacing:-.025em;margin:0 0 8px}
 .treatment-item p{font-size:12px;line-height:1.75;color:#687063}
 .treatment-item .text-link{font-size:10px;margin-top:13px;min-height:28px}
@@ -275,8 +275,8 @@ body.motion-paused{scroll-behavior:auto}body.motion-paused *{animation-play-stat
 .extra-title h4{margin-bottom:0}.extra-title>span{font-size:12px;white-space:nowrap;font-variant-numeric:tabular-nums}
 .services-section .complete-card{background:#111713;color:#f2f0ea;border-color:#111713}
 .services-section .complete-card .class-tag,.services-section .complete-card p,.services-section .complete-card .card-bottom button,.services-section .complete-card .card-price small{color:#d1d3c9!important}
-.services-section .complete-card .card-symbol{color:#ff8000}.services-section .complete-card h3,.services-section .complete-card .card-price{color:#f2f0ea}
-.option-price{display:block;font-size:12px;font-weight:600;margin-top:9px;color:#915019}
+.services-section .complete-card .card-symbol{color:#53c3b1}.services-section .complete-card h3,.services-section .complete-card .card-price{color:#f2f0ea}
+.option-price{display:block;font-size:12px;font-weight:600;margin-top:9px;color:#387269}
 .booking-treatments{margin-top:20px;border-top:1px solid #0b0d0c20;border-bottom:1px solid #0b0d0c20}
 .booking-treatments>summary{display:flex;justify-content:space-between;gap:20px;font-size:12px;cursor:pointer;list-style:none;padding:19px 0;line-height:1.7}
 .booking-treatments>summary::-webkit-details-marker{display:none}.booking-treatments[open]>summary span{rotate:45deg}.booking-treatments .choice-stack{padding-bottom:18px}
@@ -305,7 +305,7 @@ body.motion-paused{scroll-behavior:auto}body.motion-paused *{animation-play-stat
 .photo-explorer-controls{position:absolute;left:22px;right:22px;bottom:22px;display:flex;gap:6px;z-index:2}
 .photo-explorer-controls button{border:1px solid #f2f0ea50;background:#0b0d0c70;color:#f2f0ea;border-radius:30px;padding:10px 14px;min-height:40px;min-width:70px;font-size:10px;cursor:pointer;transition:color .2s,background .2s}
 .photo-explorer-controls button.active{background:#f2f0ea;color:#0b0d0c;border-color:#f2f0ea}
-.guidance-links a.is-selected strong{color:#a74b00}.guidance-links a.is-selected b{transform:translate(3px,-3px)}
+.guidance-links a.is-selected strong{color:#2b7c6f}.guidance-links a.is-selected b{transform:translate(3px,-3px)}
 .link-feature img{object-position:50% 80%}
 body.motion-paused .heading-line>*,body.motion-paused .hero-actions,body.motion-paused .hero-photo,body.motion-paused .hero-note,body.motion-paused .service-card{animation:none!important;opacity:1;clip-path:none;translate:none}
 body.motion-paused .hero-photo img{transform:none;will-change:auto}

@@ -43,7 +43,7 @@ function Explorer(){
 function ClosingSignature(){
  const enabled=useMotionPreference();
  return <div>
-  <BorderGlow className="closing-panel ff-glow" disabled={!enabled} animated={false} backgroundColor="#fffaf3" glowColor="30 100 64" colors={['#ff8000','#ffc88f','#c78538']} glowRadius={14} glowIntensity={0.55} fillOpacity={0.04} borderRadius={28}>
+  <BorderGlow className="closing-panel ff-glow" disabled={!enabled} animated={false} backgroundColor="#fffaf3" glowColor="170.36 48.28 64" colors={['#53c3b1','#ace2d9','#5da297']} glowRadius={14} glowIntensity={0.55} fillOpacity={0.04} borderRadius={28}>
    <div className="closing-copy"><p className="kicker"><span className="orange-dot"/>SEU PRÓXIMO CUIDADO</p><h2 id="closing-title">Tudo começa<br/>com uma boa conversa.</h2><p>Conte o que seu veículo precisa. Eu ajudo você a escolher.</p><a className="button orange" href="atendimento/">Preparar meu atendimento <span aria-hidden="true">↗</span></a></div>
   </BorderGlow>
  </div>;

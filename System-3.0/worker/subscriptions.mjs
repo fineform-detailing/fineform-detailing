@@ -4,6 +4,7 @@ import {stmt,first,all,now,uuid,getQuote,getSub,subView,customerFor,audit,checkV
 import {planVisitQuote} from '../dist/assets/catalog.mjs';
 import {requireRegisteredVehicle} from './plates.mjs';
 import {saveQuote} from './quotes.mjs';
+import {queueReviewPushStatement} from './reviews.mjs';
 export async function activateSubscription(env,body){
  if(body.paidConfirmed!==true)fail(400,'Confirme que o pagamento do ciclo foi recebido.');
  const origin=body.quoteId?await getQuote(env,body.quoteId):null;
@@ -96,11 +97,12 @@ export async function updateVisit(env,id,body){
  const reason=text(body.reason,300);if(status==='cancelled'&&reason.length<2)fail(400,'Informe o motivo para desfazer o registro.');
  const s=await getSub(env,v.subscription_id);
  if(status==='completed'){requireRegisteredVehicle(s);matchPlate(v.plate,s.plate);matchPlate(body.checkedPlate,v.plate);}
- const op=uuid(),stamp=now(),checkedAt=status==='completed'?stamp:v.plate_checked_at||null,checkedBy=status==='completed'?(env.ADMIN_SESSION?.id||'server'):v.plate_checked_by||null;const results=await env.DB.batch([
+ const op=uuid(),stamp=now(),checkedAt=status==='completed'?stamp:v.plate_checked_at||null,checkedBy=status==='completed'?(env.ADMIN_SESSION?.id||'server'):v.plate_checked_by||null;const batch=[
   stmt(env,'UPDATE visits SET status=?,completed_at=?,note=?,plate_checked_at=?,plate_checked_by=?,version=version+1,last_op=?,updated_at=? WHERE id=? AND version=?',status,status==='completed'?stamp:null,reason||v.note,checkedAt,checkedBy,op,stamp,id,v.version),
-  stmt(env,'UPDATE quotes SET status=?,plate_verified_at=COALESCE(plate_verified_at,?),plate_verified_by=COALESCE(plate_verified_by,?),plate_checked_at=?,plate_checked_by=?,version=version+1,updated_at=? WHERE id=? AND EXISTS(SELECT 1 FROM visits WHERE id=? AND last_op=?)',status,s.plate_verified_at||null,s.plate_verified_by||null,checkedAt,checkedBy,stamp,v.quote_id,id,op)
+  stmt(env,'UPDATE quotes SET status=?,plate_verified_at=COALESCE(plate_verified_at,?),plate_verified_by=COALESCE(plate_verified_by,?),plate_checked_at=?,plate_checked_by=?,version=version+1,last_op=?,updated_at=? WHERE id=? AND EXISTS(SELECT 1 FROM visits WHERE id=? AND last_op=?)',status,s.plate_verified_at||null,s.plate_verified_by||null,checkedAt,checkedBy,op,stamp,v.quote_id,id,op)
  ,stmt(env,'INSERT INTO quote_events(id,quote_id,status,message,created_at) SELECT ?,q.id,q.status,?,? FROM quotes q WHERE q.id=? AND EXISTS(SELECT 1 FROM visits WHERE id=? AND last_op=?)',uuid(),status==='completed'?'Lavagem concluída pela Fine Form.':'Registro de lavagem desfeito pela Fine Form. '+reason,stamp,v.quote_id,id,op)
- ]);if(results[0].meta.changes!==1)fail(409,'A visita mudou. Atualize e tente novamente.');
+ ];if(status==='completed'&&v.quote_id){const invitation=queueReviewPushStatement(env,v.quote_id,{op});if(invitation)batch.push(invitation);}
+ const results=await env.DB.batch(batch);if(results[0].meta.changes!==1)fail(409,'A visita mudou. Atualize e tente novamente.');
  await audit(env,'visit',id,status,reason);return {subscriptionId:v.subscription_id,quoteId:v.quote_id,subscription:await subView(env,await getSub(env,v.subscription_id),true)};
 }
 export async function requestVisit(req,env,s,body){

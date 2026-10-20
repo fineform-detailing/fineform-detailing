@@ -1,5 +1,5 @@
 export const escape=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-export const statusLabel={pending:'Recebido',accepted:'Aceito',declined:'Recusado',in_progress:'Em cuidado',ready:'Pronto para retirada',completed:'Concluído',cancelled:'Cancelado'};
+export const statusLabel={pending:'Recebido',accepted:'Aceito',declined:'Recusado',in_progress:'Em cuidado',ready:'Pronto para retirada',completed:'Retirado / entregue',cancelled:'Cancelado'};
 export const visitLabel={premium:'Premium',essential:'Essencial',moto:'Moto Premium'};
 export const dateLabel=s=>s?String(s).slice(0,10).split('-').reverse().join('/'):'A combinar';
 let adminCsrf='',lastActivity=Date.now(),reauthenticate=null,sessionExpired=null,authGeneration=0;

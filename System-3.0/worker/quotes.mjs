@@ -3,6 +3,7 @@ import {digest,randomToken,limit} from './security.mjs';
 import {now,uuid,stmt,first,all,getQuote,quoteView,checkVersion,customerFor} from './store.mjs';
 import {requireRegisteredVehicle} from './plates.mjs';
 import {queuePushStatement} from './push.mjs';
+import {queueReviewPushStatement} from './reviews.mjs';
 export async function saveQuote(env,{state,budget,token,subscription=null,cycle=null,creditKind=null}){
  if(!/^[A-Za-z0-9_-]{43}$/.test(token||''))fail(400,'Reabra o formulário para gerar seu link de acompanhamento.');
  const hash=await digest(token),payloadHash=await digest(JSON.stringify({state,subscription:subscription?.id||null,cycle:cycle?.id||null,creditKind}));
@@ -71,6 +72,7 @@ export async function updateQuote(env,id,body){
  batch.push(stmt(env,'INSERT INTO audit_events(id,entity,entity_id,action,detail,created_at,actor_id) SELECT ?,\'quote\',id,\'updated\',?,?,? FROM quotes WHERE id=? AND last_op=?',uuid(),JSON.stringify({status,confirmedTotalCents:confirmed}),stamp,env.ADMIN_SESSION?.id||'server',id,op));
  if(linked)batch.push(stmt(env,'UPDATE visits SET visit_date=?,visit_time=?,version=version+1,updated_at=? WHERE id=? AND EXISTS(SELECT 1 FROM quotes WHERE id=? AND last_op=?)',date,time,stamp,linked.id,id,op));
  if(q.kind==='subscription_visit'&&changing&&['in_progress','completed','cancelled'].includes(status))batch.push(stmt(env,`UPDATE visits SET status=?,completed_at=?,plate_checked_at=?,plate_checked_by=?,version=version+1,last_op=?,updated_at=? WHERE quote_id=? AND status!='cancelled' AND EXISTS(SELECT 1 FROM quotes WHERE id=? AND last_op=?)`,status,status==='completed'?stamp:null,checkedAt,checkedBy,op,stamp,id,id,op));
+ if(changing&&status==='completed'){const invitation=queueReviewPushStatement(env,id,{op});if(invitation)batch.push(invitation);}
  const results=await env.DB.batch(batch);const update=results[needsVisit?1:0];
  if(update.meta.changes!==1)fail(409,needsVisit?'O saldo ou ciclo da assinatura mudou. Atualize o pedido antes de aceitar.':'Este pedido mudou. Atualize e tente novamente.');
  return quoteView(await getQuote(env,id),true);

@@ -6,7 +6,9 @@
   "compatibility_date": "2026-07-30",
   "keep_vars": true,
   "triggers": {
-    "crons": ["* * * * *"]
+    "crons": [
+      "* * * * *"
+    ]
   },
   "assets": {
     "directory": "dist",
@@ -18,7 +20,9 @@
       "/acompanhar",
       "/acompanhar/*",
       "/assinatura",
-      "/assinatura/*"
+      "/assinatura/*",
+      "/avaliar",
+      "/avaliar/*"
     ]
   },
   "d1_databases": [

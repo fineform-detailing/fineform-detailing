@@ -1,6 +1,6 @@
-@font-face{font-family:FF Sans;src:url(fonts/body-400.ttf) format('truetype');font-weight:400;font-display:swap}
-@font-face{font-family:FF Sans;src:url(fonts/body-600.ttf) format('truetype');font-weight:600;font-display:swap}
-@font-face{font-family:FF Display;src:url(fonts/display-600.ttf) format('truetype');font-weight:600;font-display:swap}
+@font-face{font-family:FF Sans;src:url(fonts/body-400-latin-v1.woff2) format('woff2');font-weight:400;font-display:swap}
+@font-face{font-family:FF Sans;src:url(fonts/body-600-latin-v1.woff2) format('woff2');font-weight:600;font-display:swap}
+@font-face{font-family:FF Display;src:url(fonts/display-600-latin-v1.woff2) format('woff2');font-weight:600;font-display:swap}
 :root{--orange:#53c3b1;--paper:#f2f0ea;--ink:#0b0d0c;--muted:#9ea39e;--surface:#fafaf7;--line:#e5e7e1;--text-muted:#586250;--gutter:clamp(22px,5vw,60px);--ease:cubic-bezier(.22,1,.36,1);font-family:FF Sans,Arial,sans-serif;color-scheme:light;scroll-padding-top:112px;scrollbar-width:none}
 html::-webkit-scrollbar,body::-webkit-scrollbar{display:none;width:0;height:0}
 body[data-design=kinetic]{font-family:FF Sans,Arial,sans-serif;background:#fff;color:var(--ink);overflow-x:clip}
@@ -159,3 +159,5 @@ body[data-page=home] .closing-section{max-width:840px;width:100%;margin:0 auto;p
 .closing-copy{padding:36px 28px 42px}
 .closing-panel h2{font-size:clamp(30px,3vw,44px)}
 @media(max-width:700px){.closing-copy{padding:30px 22px 36px}body[data-page=home] .closing-section{padding-bottom:48px}}
+
+@media(hover:none),(pointer:coarse){.site-header{backdrop-filter:none;background:#fffffff7}.nav-links{backdrop-filter:none}}

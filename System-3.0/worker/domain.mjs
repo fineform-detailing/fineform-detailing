@@ -3,7 +3,7 @@ import {normalizePlate,isPlate} from '../dist/assets/plates.mjs';
 export function requirePlate(value){const plate=normalizePlate(value);if(!isPlate(plate))fail(400,'Informe uma placa válida: ABC-1234 ou ABC1D23.');return plate;}
 export function matchPlate(value,expected){if(!isPlate(expected))fail(409,'Cadastre a placa desta assinatura no Gerenciador de placas antes de utilizar o Care.');const plate=requirePlate(value);if(plate!==expected)fail(409,'A placa informada não pertence a esta assinatura. O Care é exclusivo do veículo cadastrado.');return plate;}
 export {services,extras,plans,todaySP,findPlan,quoteFor,validDate};
-export const statuses={pending:'Recebido',accepted:'Aceito',declined:'Recusado',in_progress:'Em cuidado',ready:'Pronto para retirada',completed:'Concluído',cancelled:'Cancelado'};
+export const statuses={pending:'Recebido',accepted:'Aceito',declined:'Recusado',in_progress:'Em cuidado',ready:'Pronto para retirada',completed:'Retirado / entregue',cancelled:'Cancelado'};
 export const transitions={pending:['accepted','declined','cancelled'],accepted:['in_progress','ready','completed','cancelled'],in_progress:['ready','completed','cancelled'],ready:['completed','cancelled'],declined:[],completed:[],cancelled:[]};
 export class AppError extends Error{constructor(status,message){super(message);this.status=status;}}
 export const fail=(status,message)=>{throw new AppError(status,message);};

@@ -80,7 +80,7 @@ export async function queuePushStatement(env,quoteId){
 export function pushMessage(quoteId){
  return quoteId?{type:'order.created',quoteId}:{type:'notification.test'};
 }
-async function sendPush(env,settings,subscription,message,{fetcher=fetch,ttl=JOB_TTL}={}){
+export async function sendPush(env,settings,subscription,message,{fetcher=fetch,ttl=JOB_TTL}={}){
  const endpoint=pushEndpoint(subscription.endpoint),payload=await buildPushPayload({data:message,options:{ttl,urgency:'high'}},{endpoint,expirationTime:null,keys:{p256dh:subscription.p256dh,auth:subscription.auth}},settings);
  const provider=new URL(endpoint).origin,keyId=await digest(settings.publicKey+'\u0000'+settings.subject),stamp=epoch();
  // Apple recommends retaining a VAPID JWT for at least one hour. D1 keeps

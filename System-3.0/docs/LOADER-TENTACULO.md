@@ -50,8 +50,8 @@ O estado de passagem guarda somente rota pública, parâmetros de navegação e 
 - Sem novas dependências de execução. SVG, CSS e Web Animations API nativos; sem vídeo, canvas, WebGL ou GIF.
 - A geometria é calculada uma única vez por abertura, com limite de 22 ventosas no trecho extensível. O movimento usa transformações e opacidade; não recalcula curvas em cada quadro.
 - A página real continua carregando por baixo. A espera considera apenas a primeira foto e a fonte principal, com limite de 800 ms. Conteúdo lazy, APIs e imagens abaixo da dobra não seguram o loader.
-- A apresentação da marca tem um mínimo curto de 240 ms; alcance, pegada e saída somam aproximadamente 1,35 segundo. Não há porcentagem fictícia nem cronômetro fingindo representar transferência de bytes.
-- Se algo trava, o controlador libera o conteúdo em até 3,6 segundos. Se o próprio módulo não carregar, o pequeno bootstrap libera a página em cinco segundos. Falhas de armazenamento também têm saída normal.
+- A apresentação da marca fica visível por pelo menos 2,65 segundos; alcance, pegada e saída somam aproximadamente 1,35 segundo. A primeira abertura e a repetição duram cerca de quatro segundos no total. As transições entre páginas continuam curtas. Não há porcentagem fictícia nem cronômetro fingindo representar transferência de bytes.
+- Se algo trava, o controlador libera o conteúdo em até cinco segundos. Se o próprio módulo não carregar, o pequeno bootstrap libera a página em cinco segundos. Falhas de armazenamento também têm saída normal.
 - A abertura inicial é omitida para movimento reduzido, animações pausadas, economia de dados, links profundos e restauração pelo histórico. Sem JavaScript, a marcação do loader fica oculta e a página mantém seu comportamento normal.
 - A abertura não muda a posição de rolagem do documento. Durante a animação, o conteúdo fica inerte e Tab permanece no botão de pular; ao terminar, o foco anterior retorna.
 - Os estilos da entrada principal ficam pausados enquanto a folha cobre o conteúdo e começam quando ela sai. A aba oculta cancela a abertura e evita efeitos que ninguém está vendo.

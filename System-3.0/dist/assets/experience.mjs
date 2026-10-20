@@ -29,7 +29,8 @@ const queue=()=>{if(!frame)frame=requestAnimationFrame(paint);};
 function sync(){
  const active=Boolean(hero)&&enabled()&&desktop.matches&&inView&&!document.hidden;
  if(active!==listening){listening=active;if(active)window.addEventListener('scroll',queue,{passive:true});else window.removeEventListener('scroll',queue);}
- if(!active)photo?.classList.remove('is-pointed');queue();
+ if(!active)photo?.classList.remove('is-pointed');
+ hero?.classList.toggle('is-in-view',inView);document.body.classList.toggle('is-page-hidden',document.hidden);queue();
 }
 window.addEventListener('resize',()=>{measure();sync();},{passive:true});
 window.addEventListener('ff:motion',sync);desktop.addEventListener('change',sync);
@@ -46,20 +47,23 @@ photo?.addEventListener('pointerleave',()=>{point=null;photo.classList.remove('i
 measure();sync();
 
 // Content is visible without JS; once-only reveals are enabled progressively.
-const revealSelector='.ff-section>.section-index,.menu-heading,.manifesto-copy,.service-row,.treatment-item,.extra-item,.explorer-heading,#react-gallery,.process-layout,.care-heading,.care-showcase,.personal-layout,.faq-list,.closing-panel,.reviews-heading,.reviews-list';
+const revealSelector='.ff-section>.section-index,.menu-heading,.manifesto-copy,.service-row,.treatment-item,.extra-item,.explorer-heading,#react-gallery,.process-intro,.process-steps article,.care-heading,.care-stage,.care-controls,.personal-layout>div,.hours-panel,.faq-list>details,.closing-panel,.reviews-heading,.reviews-empty,.review-card';
 const show=element=>{element.dataset.revealState='visible';observer?.unobserve(element);};
-const observer=typeof IntersectionObserver==='function'?new IntersectionObserver(entries=>{entries.forEach(entry=>{if(entry.isIntersecting)show(entry.target);});},{threshold:.08,rootMargin:'0px 0px -30px 0px'}):null;
+const observer=typeof IntersectionObserver==='function'?new IntersectionObserver(entries=>{entries.forEach(entry=>{if(entry.isIntersecting)show(entry.target);});},{threshold:.05,rootMargin:'0px 0px -20px 0px'}):null;
 function watchContent(){
  if(document.body.dataset.page!=='home')return;
  const candidates=$$(revealSelector).filter(element=>!element.dataset.revealState).map(element=>({element,rect:element.getBoundingClientRect()}));
  candidates.forEach(({element,rect})=>{
-  if(!enabled()||!observer||(rect.top>=0&&rect.top<innerHeight-30)){element.dataset.revealState='visible';return;}
+  if(!enabled()||!observer||rect.bottom<0){element.dataset.revealState='visible';return;}
+  if(element.matches('.service-row,.treatment-item,.extra-item,.process-steps article,.faq-list>details,.review-card'))element.dataset.revealKind='card';
+  else if(element.matches('#react-gallery,.care-stage'))element.dataset.revealKind='image';
   const siblings=[...element.parentElement.children],index=siblings.indexOf(element);
-  element.style.setProperty('--reveal-delay',Math.min(index,3)*65+'ms');
+  element.style.setProperty('--reveal-delay',Math.min(index,3)*40+'ms');
   element.dataset.revealState='pending';observer.observe(element);
  });
 }
 watchContent();
 window.addEventListener('ff:menu',watchContent);
+window.addEventListener('ff:content',watchContent);
 window.addEventListener('ff:motion',()=>{if(!enabled())$$('[data-reveal-state=pending]').forEach(show);else watchContent();});
 document.addEventListener('focusin',event=>{const pending=event.target.closest('[data-reveal-state=pending]');if(pending)show(pending);});

@@ -184,3 +184,24 @@ test('galeria nativa navega por botão, teclado e swipe, preserva foco e a pasta
   const folder=w.document.querySelector('.folder-float');folder.click();assert.equal(folder.getAttribute('aria-expanded'),'true');folder.dispatchEvent(new w.KeyboardEvent('keydown',{key:'Escape'}));assert.equal(folder.getAttribute('aria-expanded'),'false');
  }finally{w.close();}
 });
+test('arrastar acompanha o dedo, pausar cancela os efeitos e o gesto vertical mantém a foto atual',async()=>{
+ const out=await build({entryPoints:['src/studio-motion.mjs'],bundle:true,format:'iife',outfile:'/tmp/fineform-motion-test.js',write:false});
+ const dom=new JSDOM(await readFile('dist/index.html','utf8'),{url:origin,runScripts:'outside-only',pretendToBeVisual:true}),w=dom.window;
+ let enabled=true;const animations=[];w.ffMotion={enabled:()=>enabled};w.matchMedia=()=>({matches:false});
+ w.Element.prototype.animate=function(){
+  let reject;const animation={cancelled:false,finished:new Promise((_,r)=>reject=r),cancel(){this.cancelled=true;reject(Error('cancelled'));}};animations.push(animation);return animation;
+ };
+ const point=(target,name,x,y)=>{const event=new w.Event(name,{bubbles:true});Object.assign(event,{pointerId:1,clientX:x,clientY:y});target.dispatchEvent(event);};
+ try{
+  w.eval(out.outputFiles.find(f=>f.path.endsWith('.js')).text);
+  const gallery=w.document.getElementById('react-gallery'),first=gallery.querySelector('[data-card="0"]');
+  point(first,'pointerdown',200,100);point(first,'pointermove',140,104);await new Promise(r=>setTimeout(r,30));
+  assert.equal(first.classList.contains('is-dragging'),true);assert.equal(first.style.getPropertyValue('--drag-x'),'-60px');
+  point(first,'pointerup',120,105);assert.match(gallery.querySelector('.explorer-counter').textContent,/Interior/);assert.ok(animations.length>0);
+  enabled=false;w.dispatchEvent(new w.CustomEvent('ff:motion',{detail:{enabled:false}}));await Promise.resolve();
+  assert.ok(animations.every(a=>a.cancelled));assert.equal(gallery.querySelector('.is-dragging,.is-leaving'),null);
+  const count=animations.length;gallery.querySelector('[data-next]').click();assert.match(gallery.querySelector('.explorer-counter').textContent,/Moto/);assert.equal(animations.length,count);
+  enabled=true;const current=gallery.querySelector('[data-card="2"]');point(current,'pointerdown',100,100);point(current,'pointermove',103,170);await new Promise(r=>setTimeout(r,30));point(current,'pointercancel',103,170);
+  assert.match(gallery.querySelector('.explorer-counter').textContent,/Moto/);assert.equal(gallery.querySelector('.is-dragging'),null);assert.equal(current.style.getPropertyValue('--drag-x'),'');
+ }finally{w.dispatchEvent(new w.Event('pagehide'));await Promise.resolve();w.close();}
+});

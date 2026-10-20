@@ -17,9 +17,9 @@ Visitas do Care com pedido vinculado também geram o convite ao serem concluída
 ## Performance e movimento
 
 - `src/studio-motion.mjs` é a entrada atual do build dos efeitos. Galeria com swipe, setas e teclado, pasta interativa e faixa animada usam JavaScript nativo e CSS. Os antigos componentes React permanecem como referência; seus arquivos de execução não são carregados pela página inicial.
-- O pacote antigo dos efeitos tinha 358.011 bytes; a nova entrada fica em aproximadamente 6,4 KB, sem React/Motion na execução da página. Essa é uma redução de transferência e execução, não uma medição de FPS ou de tempo de carregamento em um aparelho real.
+- O pacote antigo dos efeitos tinha 358.011 bytes; a nova entrada fica em menos de 10 KB, sem React/Motion na execução da página. Essa é uma redução de transferência e execução, não uma medição de FPS ou de tempo de carregamento em um aparelho real.
 - A rolagem do celular é nativa e não executa o cálculo de parallax. No desktop, o listener passivo é ativado somente enquanto o topo está visível e há movimento permitido. As animações de entrada usam opacidade e transformações, com duração menor no celular.
-- A faixa para de animar fora da tela ou com a aba oculta. A preferência por movimento reduzido e o botão para pausar animações continuam respeitados. A galeria não avança automaticamente.
+- A abertura tem entradas coordenadas de texto e foto, sublinhado que se desenha e um acento ciano em movimento discreto. Os blocos entram em cascata no scroll; o swipe acompanha o dedo com inclinação e saída da foto, as legendas trocam em sequência e os botões respondem ao toque. A linha de progresso no cabeçalho usa animação de scroll nativa quando o navegador oferece suporte. A faixa e o acento decorativo param fora da tela ou com a aba oculta. A preferência por movimento reduzido e o botão para pausar animações continuam respeitados. A galeria não avança automaticamente.
 - As três fontes passam de 276.704 para 56.792 bytes em WOFF2, com caracteres latinos e acentos. Fotografias recebem versões menores para telas pequenas, dimensões e carregamento diferido abaixo da primeira dobra. A foto principal continua prioritária.
 - A lista de avaliações só consulta a API quando se aproxima da tela. Telas privadas e APIs continuam sem cache; somente fontes com nome versionado têm cache longo.
 

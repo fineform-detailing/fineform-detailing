@@ -13,6 +13,7 @@ async function load(append=false){
   if(!data.items.length&&!append)host.innerHTML='<div class="reviews-empty"><span aria-hidden="true">✳</span><h3>Um cuidado real. Uma opinião sua.</h3><p>Depois de receber seu veículo, avalie pelo acompanhamento do pedido. As experiências dos nossos clientes vão aparecer aqui.</p></div>';
   else host.insertAdjacentHTML('beforeend',data.items.map(r=>'<article class="review-card"><div class="review-card-top"><p class="review-stars" aria-label="'+r.rating+' de 5 estrelas">'+('★'.repeat(r.rating))+'<span aria-hidden="true">'+('☆'.repeat(5-r.rating))+'</span></p><span class="review-verified">✓ Atendimento verificado</span></div>'+(r.comment?'<blockquote>'+e(r.comment)+'</blockquote>':'<p class="review-no-comment">Avaliou o cuidado com '+r.rating+' de 5 estrelas.</p>')+'<footer><strong>'+e(r.firstName)+'</strong><span>'+(r.vehicle==='moto'?'Moto':'Carro')+' · '+e(date(r.createdAt))+'</span></footer></article>').join(''));
   more.hidden=!data.hasMore;more.textContent='Ver mais avaliações';
+  window.dispatchEvent(new CustomEvent('ff:content'));
  }catch{
   if(!loaded){summary.textContent='Experiências de quem já passou por aqui.';host.innerHTML='<p class="reviews-unavailable" role="status">Não foi possível carregar as avaliações agora.</p>';}
   more.hidden=false;more.textContent='Tentar novamente';

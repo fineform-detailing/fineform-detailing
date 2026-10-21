@@ -83,6 +83,27 @@ test('inscrição é consentida, privada, idempotente e limitada por pedido',asy
  const serialized=JSON.stringify(state.data);for(const v of [b.subscription.endpoint,b.subscription.keys.auth,b.subscription.keys.p256dh,f.vapid.privateKey])assert.ok(!serialized.includes(v));
  assert.equal((await f.db.prepare('SELECT COUNT(*) n FROM customer_push_jobs').first()).n,0);
 });
+
+test('titular retira publicação pelo mesmo link; revogação é privada, atômica e recalcula o resumo público',async t=>{
+ const f=await fixture(t),q=await f.quote(),other=await f.quote();await f.deliver(q);await f.deliver(other);
+ assert.equal((await f.review(q,{rating:5,comment:'Comentário a retirar.',consent:true})).status,201);
+ assert.equal((await f.review(other,{rating:1,comment:'Esta nota baixa permanece.',consent:true})).status,201);
+ const path='/api/quotes/'+q.id+'/review';
+ assert.equal((await f.call(path,{method:'DELETE'})).status,404);
+ assert.equal((await f.call(path,{method:'DELETE',token:other.token})).status,404);
+ await f.db.prepare("CREATE TRIGGER reject_withdraw_audit BEFORE INSERT ON audit_events WHEN NEW.action='consent_withdrawn' BEGIN SELECT RAISE(ABORT,'test atomic revocation'); END").run();
+ assert.equal((await f.call(path,{method:'DELETE',token:q.token})).status,500);
+ assert.equal((await f.db.prepare('SELECT published FROM reviews WHERE quote_id=?').bind(q.id).first()).published,1);
+ await f.db.prepare('DROP TRIGGER reject_withdraw_audit').run();
+ assert.equal((await f.call(path,{method:'DELETE',token:q.token})).status,200);
+ assert.equal((await f.call(path,{method:'DELETE',token:q.token})).status,200);
+ const privateReview=(await f.call(path,{token:q.token})).data.review;
+ assert.equal(privateReview.published,false);assert.equal(privateReview.firstName,'');assert.equal(privateReview.comment,'');
+ const publicState=(await f.call('/api/reviews')).data;
+ assert.equal(publicState.count,1);assert.equal(publicState.average,1);assert.equal(publicState.items[0].comment,'Esta nota baixa permanece.');
+ assert.equal((await f.db.prepare("SELECT COUNT(*) n FROM audit_events WHERE action='consent_withdrawn'").first()).n,1);
+ assert.equal((await f.call('/api/quotes/'+q.id,{token:q.token})).status,200);
+});
 test('só a entrega cria convite; processamento concorrente envia um push criptografado com acesso restrito à avaliação',async t=>{
  const f=await fixture(t),q=await f.quote(),b=await browser();await f.enroll(q,b);
  await f.update(q,'accepted');await f.update(q,'ready');assert.equal((await f.db.prepare('SELECT COUNT(*) n FROM customer_push_jobs').first()).n,0);

@@ -8,6 +8,7 @@ import {deleteQuote,customerDeletionPreview,deleteCustomer} from './deletions.mj
 import {notificationStatus,registerPush,removePush,testPush,wakePush,dispatchPush} from './push.mjs';
 import {changePlate,registerQuotePlate} from './plates.mjs';
 import {publicReviews,authorizeReview,reviewState,saveReview,customerNotificationState,registerCustomerPush,removeCustomerPush,wakeReviewPush,dispatchReviewPush} from './reviews.mjs';
+import {withdrawReview} from './privacy.mjs';
 export {LiveUpdates} from './live.mjs';
 const response=(data,status=200,headers={})=>new Response(JSON.stringify(data),{status,headers:{'Content-Type':'application/json; charset=utf-8','Cache-Control':'no-store','X-Content-Type-Options':'nosniff','Referrer-Policy':'no-referrer',...headers}});
 const idFrom=value=>{if(!idValid(value))fail(404,'Registro não encontrado.');return value;};
@@ -59,6 +60,7 @@ async function api(req,env,ctx){
   if(action==='review'){
    const q=await authorizeReview(req,env,id);
    if(method==='GET')return response(await reviewState(env,q));
+   if(method==='DELETE')return response(await withdrawReview(req,env,q));
    if(method==='POST'){const result=await saveReview(req,env,q,await jsonBody(req));emit(ctx,env,['quote:'+q.id]);return response(result,result.duplicate?200:201);}
   }else{
    const q=await authorizeQuote(req,env,id);

@@ -4,7 +4,7 @@ import {stmt,first,all,now,uuid,authorizeQuote} from './store.mjs';
 import {pushSettings,validatePushSubscription,sendPush} from './push.mjs';
 
 const epoch=()=>Math.floor(Date.now()/1000),TTL=7*86400,MAX_DEVICES=3;
-const reviewView=r=>r?{id:r.id,rating:r.rating,comment:r.comment,firstName:r.first_name,vehicle:r.vehicle,createdAt:r.created_at}:null;
+const reviewView=r=>r?{id:r.id,rating:r.rating,comment:r.comment,firstName:r.first_name,vehicle:r.vehicle,createdAt:r.created_at,published:Boolean(r.published)}:null;
 // A notification link can only read/write its review, never the private order.
 export async function authorizeReview(req,env,id){
  if(bearer(req))return authorizeQuote(req,env,id);

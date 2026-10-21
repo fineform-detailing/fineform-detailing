@@ -1,3 +1,4 @@
+import {rememberOrder} from './privacy-storage.mjs';
 export const escape=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 export const statusLabel={pending:'Recebido',accepted:'Aceito',declined:'Recusado',in_progress:'Em cuidado',ready:'Pronto para retirada',completed:'Retirado / entregue',cancelled:'Cancelado'};
 export const visitLabel={premium:'Premium',essential:'Essencial',moto:'Moto Premium'};
@@ -31,7 +32,7 @@ export function submissionToken(payload,key='ff-pending-submission'){
  const token=randomToken();try{sessionStorage.setItem(key,JSON.stringify({fingerprint,token}));}catch{}return token;
 }
 export function trackingUrl(id,token,path='acompanhar'){return new URL('/'+path+'/?id='+encodeURIComponent(id)+'#t='+encodeURIComponent(token),location.origin).href;}
-export function saveBookmark(id,token,reference){try{const list=JSON.parse(localStorage.getItem('ff-orders-v2')||'[]').filter(x=>x.id!==id);list.unshift({id,token,reference});localStorage.setItem('ff-orders-v2',JSON.stringify(list.slice(0,20)));}catch{}}
+export function saveBookmark(id,token,reference,options={}){try{return rememberOrder(localStorage,id,token,reference,options);}catch{return false;}}
 export async function copyText(value){if(navigator.clipboard?.writeText)return navigator.clipboard.writeText(value);const input=document.createElement('textarea');input.value=value;document.body.append(input);input.select();const ok=document.execCommand('copy');input.remove();if(!ok)throw Error('Copie o link exibido na tela.');}
 export function watchUpdates({scope,id,token,onChange,onState=()=>{}}){
  let stopped=false,socket=null,reconnect=null,poll=null,ping=null,delay=1000,refreshTimer=null,connecting=false,handshake=null;

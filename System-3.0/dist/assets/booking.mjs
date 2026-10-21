@@ -1,6 +1,7 @@
 import {mountCustomerNotice} from './customer-notifications.mjs';
 import {api,submissionToken,trackingUrl,saveBookmark,copyText} from './system.mjs';
 import {preferredContact} from './contacts.mjs';
+import {PRIVACY_VERSION,DRAFT_TTL,readDraft} from './privacy-storage.mjs';
 import {services,extras,plans,money,findService,findPlan,compatibleExtras,extraPrice,extraPriceFor,polishIds,availableTreatments,treatmentPrice,hasCoating,normalizeExtras,normalizeTreatments,includedFor,baseFor,todaySP,validDate,timesFor,validatePreference,createSummary,quoteFor} from './catalog.mjs';
 const $=s=>document.querySelector(s);
 const content=$('#wizard-content'),form=$('#care-form');
@@ -8,7 +9,7 @@ if(!form)throw new Error('Missing care form');
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const goals=['Manutenção','Interior','Pintura','Rodas','Acabamentos','Quero orientação'];
 const key='ff-care-draft-v1';
-const defaults=()=>({vehicle:'car',model:'',mode:'single',service:'essential',plan:'',goals:[],extras:[],treatments:[],date:'',time:'',flexibleDate:true,name:'',phone:'',notes:'',ack:false});
+const defaults=()=>({vehicle:'car',model:'',mode:'single',service:'essential',plan:'',goals:[],extras:[],treatments:[],date:'',time:'',flexibleDate:true,name:'',phone:'',notes:'',ack:false,rememberLink:false});
 let state=defaults(),step=0,remember=false,sending=false;
 function sanitize(raw){
  const next=defaults();
@@ -26,7 +27,7 @@ function sanitize(raw){
  next.treatments=normalizeTreatments(next);next.extras=normalizeExtras(next);
  return next;
 }
-try{const saved=localStorage.getItem(key);if(saved){state=sanitize(JSON.parse(saved));remember=true;}}catch{}
+try{const saved=readDraft(localStorage);if(saved){state=sanitize(saved);remember=true;}}catch{}
 const params=new URLSearchParams(location.search);
 if(params.get('vehicle')==='moto')state.vehicle='moto';
 if(params.get('vehicle')==='car')state.vehicle='car';
@@ -39,7 +40,7 @@ const areaGoal={pintura:'Pintura',interior:'Interior',rodas:'Rodas',exterior:'Ac
 if(areaGoal){state.goals=[areaGoal];state.mode='guidance';}
 state=sanitize(state);
 $('#remember-draft').checked=remember;
-function persist(){if(!remember)return;try{localStorage.setItem(key,JSON.stringify(state));}catch{remember=false;$('#remember-draft').checked=false;window.ff?.toast('Não foi possível guardar o rascunho. Você pode continuar normalmente.');}}
+function persist(){if(!remember)return;try{localStorage.setItem(key,JSON.stringify({...state,ack:false,rememberLink:false,expiresAt:Date.now()+DRAFT_TTL}));}catch{remember=false;$('#remember-draft').checked=false;window.ff?.toast('Não foi possível guardar o rascunho. Você pode continuar normalmente.');}}
 function tidy(){state.treatments=normalizeTreatments(state);state.extras=normalizeExtras(state);persist();}
 function icon(type){return type==='car'?'<svg viewBox="0 0 100 50" aria-hidden="true"><path d="M9 32 13 22 26 18 37 9 64 9 80 20 91 24 93 36H8Z M28 18H76 M39 10 34 18 M61 10 67 18 M12 25H23 M83 27H91"/><circle cx="27" cy="36" r="8"/><circle cx="76" cy="36" r="8"/><circle cx="27" cy="36" r="3"/><circle cx="76" cy="36" r="3"/></svg>':'<svg viewBox="0 0 100 50" aria-hidden="true"><circle cx="23" cy="35" r="11"/><circle cx="79" cy="35" r="11"/><path d="m23 35 16-22h13l13 8-20 14H23l26-1-10-18 M52 13 61 8 72 8 79 35 M70 8 69 3H60 M28 12h19 M36 18 49 22 64 20"/></svg>';}
 function heading(title,lead){return '<h2 class="wizard-title" tabindex="-1">'+title+'</h2><p class="wizard-lead">'+lead+'</p>';}
@@ -95,7 +96,8 @@ function interest(){return state.mode==='plan'?findPlan(state.plan)?.name||'Care
 function stepContact(){
  let html=heading('Agora, vamos<br>conversar.','Revise suas escolhas e envie seu pedido para a Fine Form. Você recebe um link para acompanhar as atualizações.');
  html+='<dl class="review-list"><div><dt>VEÍCULO</dt><dd>'+esc(state.model)+' · '+(state.vehicle==='car'?'Carro':'Moto')+'</dd></div><div><dt>INTERESSE</dt><dd>'+esc(interest())+'</dd></div><div><dt>PREFERÊNCIA</dt><dd>'+(state.date?esc(state.date.split('-').reverse().join('/')):'Data a combinar')+' · '+(state.time?esc(state.time):'Horário a combinar')+'</dd></div><div><dt>CUIDADOS ADICIONAIS</dt><dd>'+esc([...normalizeExtras(state).map(id=>extras.find(x=>x.id===id).label),...normalizeTreatments(state).map(id=>findService(id).label)].join(', ')||'Vamos definir pela conversa')+'</dd></div></dl>';
- html+='<label class="field"><span>Como podemos chamar você? *</span><input name="name" autocomplete="given-name" maxlength="80" value="'+esc(state.name)+'" placeholder="Seu nome" required></label><label class="field"><span>Seu WhatsApp com DDD *</span><input name="phone" type="tel" inputmode="tel" autocomplete="tel" maxlength="20" value="'+esc(state.phone)+'" placeholder="(11) 99999-9999" required><small>Usado por Mateus para combinar o atendimento.</small></label><label class="field"><span>Quer contar mais alguma coisa?</span><textarea name="notes" maxlength="600" placeholder="Ex.: manchas no banco, marcas na pintura, uma viagem chegando…">'+esc(state.notes)+'</textarea><small>Até 600 caracteres. Você poderá enviar fotos diretamente na conversa.</small></label><label class="check-line"><input type="checkbox" name="ack" '+(state.ack?'checked':'')+' required><span>Autorizo o envio dos dados deste pedido à Fine Form para atendimento. Entendo que data e horário dependem da confirmação de Mateus.</span></label>';
+ html+='<label class="field"><span>Como podemos chamar você? *</span><input name="name" autocomplete="given-name" maxlength="80" value="'+esc(state.name)+'" placeholder="Seu nome" required></label><label class="field"><span>Seu WhatsApp com DDD *</span><input name="phone" type="tel" inputmode="tel" autocomplete="tel" maxlength="20" value="'+esc(state.phone)+'" placeholder="(11) 99999-9999" required><small>Usado por Mateus para combinar o atendimento.</small></label><label class="field"><span>Quer contar mais alguma coisa?</span><textarea name="notes" maxlength="600" placeholder="Ex.: manchas no banco, marcas na pintura, uma viagem chegando…">'+esc(state.notes)+'</textarea><small>Até 600 caracteres. Não envie documentos, dados sensíveis ou dados de terceiros. Fotos podem ser combinadas diretamente na conversa.</small></label><label class="check-line"><input type="checkbox" name="ack" '+(state.ack?'checked':'')+' required><span>Solicito este atendimento e entendo que data e horário dependem da confirmação de Mateus. Li as informações de privacidade e atendimento abaixo.</span></label>';
+ html+='<p class="privacy-inline">Nome, telefone, veículo e escolhas serão usados pela Fine Form para responder ao pedido e organizar o atendimento. Isso não autoriza publicidade. <a href="../privacidade/">Privacidade</a> · <a href="../termos/">Termos</a> · <a href="../cancelamento-e-reembolso/">Cancelamento e reembolso</a>.</p><label class="check-line"><input type="checkbox" name="rememberLink" '+(state.rememberLink?'checked':'')+'><span>Guardar o link privado deste pedido neste aparelho por até 90 dias (opcional). Evite em aparelhos compartilhados.</span></label>';
  html+='<label class="sr-honeypot" aria-hidden="true">Website<input name="website" tabindex="-1" autocomplete="off"></label>';
  return html;
 }
@@ -133,6 +135,7 @@ content.addEventListener('change',event=>{
  }else if(e.name==='time'){state.time=e.value;persist();}
  else if(e.name==='flexibleDate'){state.flexibleDate=e.checked;persist();}
  else if(e.name==='ack'){state.ack=e.checked;}
+ else if(e.name==='rememberLink'){state.rememberLink=e.checked;}
 });
 function error(message,field){$('#form-error').textContent=message;if(field)content.querySelector('[name="'+field+'"]')?.focus();}
 form.addEventListener('submit',async event=>{
@@ -147,7 +150,7 @@ form.addEventListener('submit',async event=>{
   if(!/^(?:55)?\d{10,11}$/.test(state.phone.replace(/\D/g,'')))return error('Informe seu WhatsApp com DDD.','phone');
   if(!state.ack)return error('Confirme que o pedido depende de uma conversa com Mateus.','ack');
   tidy();sending=true;form.inert=true;$('#reset-draft').disabled=true;$('#next-step').disabled=true;$('#next-step').textContent='Enviando…';
-  try{const payload={...state,website:content.querySelector('[name="website"]')?.value||''};const token=submissionToken(payload);const {quote}=await api('/api/quotes',{method:'POST',body:{...payload,submissionToken:token}});saveBookmark(quote.id,token,quote.reference);showResult(quote,token);}
+  try{const payload={...state,privacyVersion:PRIVACY_VERSION,website:content.querySelector('[name="website"]')?.value||''};const token=submissionToken(payload);const {quote}=await api('/api/quotes',{method:'POST',body:{...payload,submissionToken:token}});saveBookmark(quote.id,token,quote.reference,{remember:state.rememberLink});showResult(quote,token);}
   catch(e){error(e.message);}
   finally{sending=false;form.inert=false;$('#reset-draft').disabled=false;$('#next-step').disabled=false;$('#next-step').innerHTML='Enviar meu pedido <span>↗</span>';}
   return;
@@ -184,4 +187,5 @@ function showResult(quote,token){
  });
  result.querySelector('h2').focus({preventScroll:true});result.scrollIntoView({behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth',block:'start'});
 }
+window.addEventListener('ff:saved-data-cleared',()=>{remember=false;$('#remember-draft').checked=false;});
 render();

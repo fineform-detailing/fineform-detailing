@@ -35,6 +35,7 @@ export function validateSelection(raw,now=new Date()){
  if(date&&(!validDate(date)||date<todaySP(now)))fail(400,'Escolha uma data de hoje em diante.');
  if(time&&(!date||!timesFor(date).includes(time)))fail(400,'Horário inválido para a data.');
  const state={vehicle,mode,service:mode==='single'?service.id:vehicle==='car'?'essential':'motoPremium',plan:mode==='plan'?plan.id:'',name,model,phone,date,time,flexibleDate:raw.flexibleDate!==false,notes:text(raw.notes,600),goals:Array.isArray(raw.goals)?raw.goals.slice(0,6).map(v=>text(v,40)):[],treatments,extras:additional};
+ if(typeof raw.privacyVersion==='string'&&/^\d{4}-\d{2}-\d{2}$/.test(raw.privacyVersion))state.privacyNoticeVersion=raw.privacyVersion;
  const preferenceError=validatePreference(state,now);if(preferenceError)fail(400,preferenceError);
  state.treatments=normalizeTreatments(state);state.extras=normalizeExtras(state);
  return {state,budget:quoteFor(state)};

@@ -61,3 +61,14 @@ test('texto e foco da camada de privacidade têm contraste AA nas superfícies u
  for(const [foreground,background] of [['0b0d0c','53c3b1'],['37483f','e9f6f2'],['4e5848','ffffff'],['17594f','ffffff']])assert.ok(ratio(foreground,background)>=4.5,foreground+' / '+background);
  assert.ok(ratio('176359','ffffff')>=3);
 });
+
+test('foco e bordas de contraste prevalecem sobre os estilos anteriores do formulário',async()=>{
+ const dom=new JSDOM('<!doctype html><html lang="pt-BR"><head></head><body data-design="kinetic" data-page="booking"><section class="booking-panel"><label class="field"><span>Modelo</span><input id="model"></label></section></body></html>',{pretendToBeVisual:true}),w=dom.window;
+ for(const name of ['style','editorial','clean','studio','system','compliance']){
+  const style=w.document.createElement('style');style.textContent=await readFile('dist/assets/'+name+'.css','utf8');w.document.head.append(style);
+ }
+ const input=w.document.getElementById('model');input.focus();const style=w.getComputedStyle(input);
+ assert.equal(style.borderTopColor,'rgb(116, 125, 114)');
+ assert.match(style.outline,/#176359/);assert.match(style.outline,/3px/);
+ w.close();
+});

@@ -2,19 +2,15 @@
 
 Revisão atualizada em 21/10/2026. Implementação técnica e textos correspondentes ao funcionamento observado do projeto. Não é certificação jurídica ou auditoria integral de acessibilidade.
 
-## Fase atual e controles confirmados
+## Solicitações e confirmação manual
 
-A Fine Form está em preparação para a inauguração: o showroom e a abertura da empresa ainda estão sendo preparados. O site e os materiais estão sendo estruturados antecipadamente. A ausência atual de identificação empresarial e endereço definitivo é uma tarefa da formalização, não uma falha do fluxo de aprovação.
+O site usa um fluxo permanente de solicitação e confirmação manual, sem avisos ou datas de abertura. A ausência de divulgação não impede acessos à URL pública. O site não promete que o estabelecimento está aberto, não confirma reservas sozinho e não cobra automaticamente.
 
-- O cliente envia uma solicitação de orçamento. O registro começa como `pending` / Recebido; não confirma agenda ou cobrança.
-- Aceitação, recusa e mudanças de andamento exigem acesso ao painel protegido. O link do cliente não concede essas permissões.
-- O Care originado por orçamento exige pedido aceito, pagamento confirmado manualmente e veículo com placa conferida. Não há cobrança bancária automática.
-- A placa não é solicitada no formulário público. O cadastro administrativo exige confirmação de conferência presencial; a confirmação de pagamento é exigida na ativação do Care, não isoladamente no cadastro da placa.
-- Avaliações exigem atendimento entregue, autorização do cliente e acesso pelo link correspondente.
-
-A fase está declarada em `dist/assets/business-stage.mjs`. Os novos orçamentos recebem `requestStage` no servidor; esse marcador não participa da identificação de reenvios, preservando a repetição segura de solicitações antigas. O painel e o acompanhamento informam a origem durante a preparação sem aceitar ou cancelar pedidos automaticamente.
-
-O site informa a preparação na apresentação, no hub de links, no formulário e nas páginas legais. Os horários estão identificados como planejados para após a inauguração. A confirmação de recebimento explica que o orçamento aguarda análise e aceitação de Mateus.
+- Novos pedidos ficam pendentes e recebem `requestStage: appointment` no servidor. Esse marcador não participa da identificação de reenvios. Metadados dos pedidos antigos são preservados, sem avisos de fase no painel ou acompanhamento.
+- O painel protege alterações com sessão, autenticador em produção, CSRF, origem e confirmação recente de acesso. Liberar o endereço não aceita o orçamento nem muda data, preço ou status.
+- O cadastro `business_profile` separa endereço operacional e identificação pública. O endereço fica privado por padrão. Só as opções de publicação selecionadas pelo administrador aparecem em `/api/business`.
+- A liberação cria uma cópia do local em `quotes.location_json`, acessível pelo link privado daquele pedido. Mudar o padrão não muda o que já foi enviado. Retirar o local não apaga mensagens ou cópias externas.
+- Valores, Care, conferência presencial de placa, pagamentos manuais e avaliações de pedidos entregues mantêm suas regras anteriores.
 
 | Ponto | Resultado e limite |
 | --- | --- |
@@ -32,7 +28,7 @@ O site informa a preparação na apresentação, no hub de links, no formulário
 | 12. Avaliações falsas | Publicação continua vinculada a pedido entregue e autorização específica; notas baixas não são suprimidas. Revogação autenticada pelo mesmo link despublica, remove nome e comentário e atualiza contagem/média. |
 | 13. Promessas | Serviços e preços preservados. Termos esclarecem avaliação de materiais, estado anterior, cura e resultado variável, sem renúncia a responsabilidade legal. |
 | 14. Imagens | `/creditos/` com autores, fontes e licença registrada; fotos explicitamente editoriais, sem alegar serviços prestados ou endosso de marcas. Confirmar direitos da identidade original e de todo material futuro. |
-| 15. Dados da empresa | Projeto em preparação, contato, região prevista e horários planejados estão identificados. Nome/razão social, identificação aplicável e endereço completo serão preenchidos quando definidos, antes de iniciar as contratações. Nenhum dado fictício foi criado. |
+| 15. Dados da empresa | Contato e região estão visíveis. Nome empresarial, CNPJ e endereço físico do fornecedor podem ser cadastrados e publicados pela aba Dados. Nenhum dado fictício foi criado. A funcionalidade não substitui a regularização e as informações exigidas na oferta eletrônica. |
 | 16. Conformidade LGPD | Melhorias técnicas aplicadas. Cumprimento integral também exige atendimento de direitos, regras internas de retenção, contratos com fornecedores e mecanismos de transferência internacional adequados. |
 | 17. Outros riscos | Pendências e rotina abaixo. Não há garantia de que um site com políticas não possa ser questionado judicialmente. |
 
@@ -42,7 +38,9 @@ O site informa a preparação na apresentação, no hub de links, no formulário
 - CNPJ ou identificação fiscal aplicável. Não publicar um número fictício, mascarado ou de terceiros.
 - Endereço físico completo para localização do fornecedor, incluindo CEP e complemento quando houver. “Mooca, São Paulo” é somente uma região.
 
-Na etapa de formalização, atualizar o gerador `scripts/build-legal.mjs`, o rodapé e a política de privacidade com esses dados verificados. Na inauguração, revisar os textos públicos, confirmar os horários efetivos e alterar a fase em `dist/assets/business-stage.mjs` para `open`; a troca desse marcador sozinha não preenche os dados da empresa nem atualiza textos que dependem da operação real. O Decreto nº 7.962/2013 orienta a identificação e os contatos na oferta eletrônica.
+Cadastre os dados reais em **Painel → Dados**, sem editar o código. Ao publicar a identificação, o servidor a entrega em `/informacoes/` mesmo sem JavaScript; o rodapé também a consulta. O local de atendimento pode ser diferente do endereço físico divulgado do fornecedor.
+
+O art. 2º do Decreto nº 7.962/2013 exige identificação e endereço físico e eletrônico nos meios usados para oferta ou conclusão de contratação. Enviar o local em particular não é uma dispensa dessa obrigação. O site pronto não resolve a falta dos dados reais, não regulariza a atividade e não garante ausência de questionamentos.
 
 ## Rotina que depende da operação
 
@@ -61,8 +59,9 @@ Na etapa de formalização, atualizar o gerador `scripts/build-legal.mjs`, o rod
 
 - Suite de testes do projeto, incluindo envio, Care, autenticação, proteção dos links, avaliações e revogação transacional.
 - Testes adicionais de escolha explícita de armazenamento, expiração, limpeza local, links das páginas legais e pares de contraste da camada nova.
-- Confirmação de orçamento permanece pendente e não dá ao cliente acesso de aceite; fase é atribuída pelo servidor, mesmo se o cliente informar outra. Falhas de conexão conservam a tentativa para reenvio; confirmações removem o conteúdo temporário de sessão. Reenvios de registros antigos continuam idempotentes.
-- Build repetido em diretório isolado mantém um aviso de preparação por página e um rodapé, sem duplicações.
+- Confirmação de orçamento permanece pendente e não dá ao cliente acesso de aceite; o fluxo é atribuído pelo servidor, mesmo se o cliente informar outro. Falhas de conexão conservam a tentativa para reenvio; confirmações removem o conteúdo temporário de sessão. Reenvios de registros antigos continuam idempotentes.
+- Build repetido em diretório isolado remove avisos antigos de abertura e mantém um rodapé por página, sem duplicações.
+- Testes de privacidade do endereço, origem, CSRF, concorrência, cópia por pedido, retirada, HTML tratado como texto, mapa seguro e informações públicas sem JavaScript.
 - Build dos assets e empacotamento do Worker em modo `wrangler deploy --dry-run`.
 - Publicação pela integração Workers Builds já conectada ao GitHub; conferir o resultado do commit e as novas páginas na URL de produção.
 

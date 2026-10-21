@@ -34,3 +34,12 @@
   Cache-Control: no-store
 /assets/fonts/*.woff2
   Cache-Control: public, max-age=31536000, immutable
+
+/assets/admin-business.mjs
+  Cache-Control: no-store
+/assets/business-profile.mjs
+  Cache-Control: no-store
+/api/business
+  Cache-Control: no-store
+/informacoes/*
+  Cache-Control: no-store

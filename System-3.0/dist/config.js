@@ -6,7 +6,9 @@ window.FINE_FORM_CONFIG = Object.freeze({
   instagram: 'https://www.instagram.com/fineform.detailing/',
   tiktok: 'https://www.tiktok.com/@fineform.detailing',
   email: 'fineformcare@gmail.com',
-  address: 'Mooca, São Paulo',
+  region: 'Mooca, São Paulo',
+  // Endereço de atendimento e identificação são gerenciados no painel, não neste arquivo.
+  address: '',
   mapsUrl: '',
   pricesApproved: true,
   timezone: 'America/Sao_Paulo',

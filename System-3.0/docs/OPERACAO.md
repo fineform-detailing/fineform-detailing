@@ -1,5 +1,21 @@
 # Rotina da Fine Form
 
+## Local e dados pelo painel
+
+O site usa solicitação e confirmação manual em qualquer época; não é preciso trocar uma fase no código para iniciar a operação.
+
+1. Abra **Dados**. Preencha endereço de atendimento, link de mapa e orientações reais. Salve. Por padrão, o local não fica público.
+2. Abra o pedido e a seção **Endereço para este cliente**. Confira o local e toque em **Liberar endereço neste pedido**. O mesmo link privado que o cliente já recebeu passa a mostrá-lo.
+3. Use **Preparar WhatsApp** para abrir a mensagem para o telefone do pedido; revise o destinatário e envie pelo aplicativo. Ou use **Copiar mensagem com endereço**.
+4. Combine data, horário, escopo e preço. A liberação do endereço não aceita nem agenda o pedido.
+5. Se necessário, use **Retirar endereço deste pedido**. Isso impede novas consultas ao local nesse acompanhamento, sem apagar mensagens ou cópias já recebidas.
+
+Editar o endereço padrão não modifica os pedidos que já receberam outro local. Para mudar um pedido, abra-o e use **Atualizar com o local cadastrado**. A ação usa a versão conferida e rejeita conflitos de edição.
+
+Na seção de identificação, preencha nome empresarial, CNPJ e endereço físico do fornecedor conforme os documentos e selecione a publicação. Os campos aceitam CNPJ como texto, inclusive letras. `/informacoes/` e o rodapé consomem esses dados; não é preciso novo deploy para preenchê-los. A publicação do local de atendimento é uma opção separada.
+
+O endereço privado não dispensa a identificação e o endereço físico exigidos na oferta eletrônica. O cadastro deve refletir os documentos e a operação real antes de oferecer e contratar serviços. O site não declara regularidade fiscal nem garante ausência de processos.
+
 ## Pedidos
 
 1. O cliente escolhe veículo, serviço/plano, adicionais, preferência de data, nome e WhatsApp. Ao enviar, o pedido é gravado no D1 e ele recebe um link privado.

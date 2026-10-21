@@ -131,7 +131,7 @@ Os novos **Previews** do Cloudflare são diferentes das antigas **Version URLs**
 
 Use a URL que o terminal do Wrangler mostrar:
 
-1. Abra `/api/health`. Deve exibir `version: "3.0.0"`, `ready: true`, `database: true`, `security: true`, `mfa: true` e `realtime: true`.
+1. Abra `/api/health`. Nesta revisão, confira `release: "2026-10-21-appointments"`, `locationSharing: true` e os indicadores `ready`, `database`, `security`, `mfa` e `realtime` verdadeiros. A migração aditiva `0007_business_profile.sql` cria o cadastro e a coluna de endereço por pedido, preservando os registros existentes. O deploy deve aplicar as migrações antes de publicar o Worker.
 2. Abra `/painel/`, pressione **Ctrl + F5**, informe a chave e o código atual do autenticador.
 3. Confira o site público, os preços e o envio de um pedido de teste.
 4. No painel, confirme que o pedido apareceu. Uma ativação/renovação só entra no total depois de você marcar que recebeu o pagamento real.

@@ -26,3 +26,5 @@ body[data-design=kinetic] :is(.check-line,.save-draft,.system-check){line-height
 @media(max-width:760px){.legal-page{padding-top:108px}.legal-layout{display:block;padding:24px 22px 60px}.legal-nav{position:static;display:flex;flex-wrap:wrap;gap:4px;margin-bottom:36px}.legal-nav a{padding:8px 10px;font-size:12px}.legal-content h1{font-size:36px}.privacy-banner{align-items:flex-start;flex-direction:column;gap:14px}.footer-legal{gap:8px 18px}.privacy-settings{padding:32px 22px}.privacy-actions .button{white-space:normal;text-align:left}.privacy-settings h2{font-size:27px}}
 @media(forced-colors:active){:focus-visible{outline:3px solid Highlight}.button,input,textarea,select{border:1px solid ButtonText}}
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;animation-duration:.001ms!important;transition-duration:.001ms!important}}
+
+.location-address{font-style:normal;font-weight:650;overflow-wrap:anywhere;line-height:1.65;margin:1rem 0}.supplier-details dd{margin:0 0 1rem;overflow-wrap:anywhere}#quote-location details{margin:1rem 0}#quote-location summary{cursor:pointer}.footer-company[data-public-supplier]:empty{display:none}

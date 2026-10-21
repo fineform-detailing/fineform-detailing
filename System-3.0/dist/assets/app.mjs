@@ -1,3 +1,4 @@
+import {mountPublicBusiness} from './public-business.mjs';
 import {mountCarePlans} from './care-plans.mjs';
 import {legalFooter} from './legal-footer.mjs';
 import {services,extras,plans,findService,money,extraPrice,polishIds} from './catalog.mjs';
@@ -16,6 +17,7 @@ const footer=$('[data-footer]');
 if(footer){footer.className='site-footer';footer.innerHTML='<div class="footer-strip"><span class="footer-copyright">© '+new Date().getFullYear()+' FINE FORM</span><a class="footer-symbol" href="'+root+'" aria-label="Fine Form, página inicial"><img src="'+root+'assets/logo-original.png" alt="" width="44" height="44"></a><nav class="footer-socials" aria-label="Redes sociais e contatos da Fine Form">'+socialContacts(cfg).map(s=>'<a data-social="'+s.key+'" href="'+escape(s.url)+'" aria-label="'+s.label+'"'+(s.key!=='email'?' target="_blank" rel="noopener noreferrer"':'')+'>'+socialIcons[s.key]+'</a>').join('')+'</nav></div><div class="footer-bottom"><a href="'+root+'links/">Todos os links ↗</a><div class="footer-utilities"><a href="'+root+'privacidade/">Privacidade</a><button type="button" data-cookie-settings>Cookies e dados</button><a href="'+root+'creditos/">Créditos</a><button class="motion-toggle" id="motion-toggle" type="button" aria-pressed="false" aria-label="Pausar animações decorativas"><span aria-hidden="true">Ⅱ</span><span class="motion-label">Animações</span></button></div></div>';}
 
 if(footer)footer.insertAdjacentHTML('beforeend',legalFooter);
+mountPublicBusiness();
 
 $$('[data-social-links]').forEach(nav=>nav.innerHTML=socialMarkup());
 $('.nav-toggle')?.addEventListener('click',e=>{const open=e.currentTarget.getAttribute('aria-expanded')!=='true';e.currentTarget.setAttribute('aria-expanded',String(open));e.currentTarget.setAttribute('aria-label',open?'Fechar menu':'Abrir menu');$('#main-nav').classList.toggle('open',open);});

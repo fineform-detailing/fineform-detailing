@@ -44,7 +44,7 @@ test('cliente envia pedido pelo assistente e recebe total e acompanhamento',asyn
  const text=w.document.getElementById('summary-result').textContent;assert.match(text,/Sua solicitação/);assert.match(text,/260/);assert.match(text,/Acompanhar pedido/);
  const url=new URL(w.document.querySelector('.tracking-link').href);quoteId=url.searchParams.get('id');quoteToken=new URLSearchParams(url.hash.slice(1)).get('t');
  const saved=await request('/api/quotes/'+quoteId,null,null,quoteToken);assert.equal(saved.data.quote.selection.phone,'5511900000100');assert.equal(saved.data.quote.kind,'plan');
- assert.equal(saved.data.quote.status,'pending');assert.equal(saved.data.quote.selection.requestStage,'prelaunch');
+ assert.equal(saved.data.quote.status,'pending');assert.equal(saved.data.quote.selection.requestStage,'appointment');
  assert.equal(w.sessionStorage.getItem('ff-pending-submission'),null);
 });
 test('painel autentica, aceita pedido e ativa assinatura com pagamento confirmado',async()=>{
@@ -285,13 +285,42 @@ test('orçamento conserva a tentativa durante falha, limpa dados ao confirmar e 
  assert.equal(w.localStorage.getItem('ff-orders-v2'),null);
  const link=new URL(w.document.querySelector('.tracking-link').href),id=link.searchParams.get('id'),token=new URLSearchParams(link.hash.slice(1)).get('t');
  const saved=(await request('/api/quotes/'+id,null,null,token)).data.quote;
- assert.equal(saved.status,'pending');assert.equal(saved.selection.requestStage,'prelaunch');
+ assert.equal(saved.status,'pending');assert.equal(saved.selection.requestStage,'appointment');
  assert.equal(saved.selection.plate,undefined);
  assert.equal((await request('/api/admin/quotes/'+id,{version:saved.version,status:'accepted'},null,token,'PATCH')).r.status,401);
  const tracking=await open('acompanhar','tracking',link.href);await until(()=>tracking.document.querySelector('[data-request-approval]'));
- assert.match(tracking.document.querySelector('[data-request-approval]').textContent,/preparação para inauguração/);
+ assert.match(tracking.document.querySelector('[data-request-approval]').textContent,/aguarda a análise e a aceitação/);
+ assert.doesNotMatch(tracking.document.body.textContent,/inauguração/i);
  // A retry of a request recorded before the phase metadata existed stays idempotent.
  await db.prepare("UPDATE quotes SET selection_json=json_remove(selection_json,'$.requestStage') WHERE id=?").bind(id).run();
  const retry=await request('/api/quotes',payloads[1]);assert.equal(retry.r.status,200);assert.equal(retry.data.quote.id,id);assert.equal(retry.data.duplicate,true);
  closeWindow(w);closeWindow(tracking);
+});
+
+test('painel cadastra local, libera para um pedido e prepara WhatsApp; retirada remove do cliente',async()=>{
+ const cap=Buffer.from(crypto.getRandomValues(new Uint8Array(32))).toString('base64url');
+ const created=await request('/api/quotes',{vehicle:'car',mode:'single',service:'essential',name:'Cliente endereço',phone:'11900000990',model:'Veículo de teste',date:'',time:'',treatments:[],extras:[],ack:true,submissionToken:cap});
+ const q=created.data.quote;
+ const admin=await open('painel','admin');await until(()=>admin.document.getElementById('access-form'));input(admin,'key',key);submit(admin,'access-form');
+ await until(()=>admin.document.querySelector('[data-tab="settings"]'));
+ admin.document.querySelector('[data-tab="settings"]').click();await until(()=>admin.document.getElementById('business-profile-form'));
+ input(admin,'visitAddress','Rua de teste <img src=x onerror=alert(1)>, 10');input(admin,'mapsUrl','https://maps.app.goo.gl/ExampleTest');input(admin,'arrivalNote','Aguarde no portão de teste.');
+ const form=admin.document.getElementById('business-profile-form');submit(admin,'business-profile-form');
+ await until(()=>admin.document.getElementById('business-profile-form')!==form);
+ admin.document.querySelector('[data-tab="quotes"]').click();await until(()=>admin.document.querySelector('[data-quote="'+q.id+'"]'));
+ admin.document.querySelector('[data-quote="'+q.id+'"]').click();await until(()=>admin.document.querySelector('[data-location-action="share"]'));
+ const client=await open('acompanhar','tracking','http://localhost/acompanhar/?id='+q.id+'#t='+cap);
+ await until(()=>client.document.querySelector('[data-customer-location]'));
+ assert.doesNotMatch(client.document.querySelector('[data-customer-location]').textContent,/Rua de teste/);
+ admin.document.querySelector('[data-location-action="share"]').click();await until(()=>admin.document.querySelector('[data-location-whatsapp]'));
+ const link=new URL(admin.document.querySelector('[data-location-whatsapp]').href);assert.equal(link.hostname,'wa.me');assert.equal(link.pathname,'/5511900000990');assert.match(link.searchParams.get('text'),/Rua de teste/);assert.match(link.searchParams.get('text'),/precisam estar confirmados/);
+ assert.equal(admin.document.querySelector('#quote-location img'),null);
+ client.document.querySelector('#refresh-order').click();await until(()=>client.document.querySelector('[data-customer-location]').textContent.includes('Rua de teste'));
+ assert.equal(client.document.querySelector('[data-customer-location] img'),null);
+ assert.match(client.document.querySelector('[data-customer-location] a').rel,/noreferrer/);
+ const saved=(await request('/api/quotes/'+q.id,null,null,cap)).data.quote;assert.equal(saved.status,'pending');assert.equal(saved.scheduledDate,null);
+ admin.document.querySelector('[data-location-action="revoke"]').click();await until(()=>!admin.document.querySelector('[data-location-whatsapp]')&&admin.document.querySelector('[data-location-action="share"]'));
+ client.document.querySelector('#refresh-order').click();await until(()=>!client.document.querySelector('[data-customer-location]').textContent.includes('Rua de teste'));
+ assert.equal((await request('/api/business')).data.location,null);
+ closeWindow(admin);closeWindow(client);
 });

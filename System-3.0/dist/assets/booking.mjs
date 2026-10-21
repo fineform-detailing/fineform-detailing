@@ -2,7 +2,7 @@ import {mountCustomerNotice} from './customer-notifications.mjs';
 import {api,submissionToken,trackingUrl,saveBookmark,copyText,clearPendingSubmission} from './system.mjs';
 import {preferredContact} from './contacts.mjs';
 import {PRIVACY_VERSION,DRAFT_TTL,readDraft} from './privacy-storage.mjs';
-import {IS_PRELAUNCH,REQUEST_NOTICE} from './business-stage.mjs';
+import {REQUEST_NOTICE} from './business-stage.mjs';
 import {services,extras,plans,money,findService,findPlan,compatibleExtras,extraPrice,extraPriceFor,polishIds,availableTreatments,treatmentPrice,hasCoating,normalizeExtras,normalizeTreatments,includedFor,baseFor,todaySP,validDate,timesFor,validatePreference,createSummary,quoteFor} from './catalog.mjs';
 const $=s=>document.querySelector(s);
 const content=$('#wizard-content'),form=$('#care-form');
@@ -99,7 +99,7 @@ function stepContact(){
  html+='<dl class="review-list"><div><dt>VEÍCULO</dt><dd>'+esc(state.model)+' · '+(state.vehicle==='car'?'Carro':'Moto')+'</dd></div><div><dt>INTERESSE</dt><dd>'+esc(interest())+'</dd></div><div><dt>PREFERÊNCIA</dt><dd>'+(state.date?esc(state.date.split('-').reverse().join('/')):'Data a combinar')+' · '+(state.time?esc(state.time):'Horário a combinar')+'</dd></div><div><dt>CUIDADOS ADICIONAIS</dt><dd>'+esc([...normalizeExtras(state).map(id=>extras.find(x=>x.id===id).label),...normalizeTreatments(state).map(id=>findService(id).label)].join(', ')||'Vamos definir pela conversa')+'</dd></div></dl>';
  html+='<label class="field"><span>Como podemos chamar você? *</span><input name="name" autocomplete="given-name" maxlength="80" value="'+esc(state.name)+'" placeholder="Seu nome" required></label><label class="field"><span>Seu WhatsApp com DDD *</span><input name="phone" type="tel" inputmode="tel" autocomplete="tel" maxlength="20" value="'+esc(state.phone)+'" placeholder="(11) 99999-9999" required><small>Usado por Mateus para combinar o atendimento.</small></label><label class="field"><span>Quer contar mais alguma coisa?</span><textarea name="notes" maxlength="600" placeholder="Ex.: manchas no banco, marcas na pintura, uma viagem chegando…">'+esc(state.notes)+'</textarea><small>Até 600 caracteres. Não envie documentos, dados sensíveis ou dados de terceiros. Fotos podem ser combinadas diretamente na conversa.</small></label><label class="check-line"><input type="checkbox" name="ack" '+(state.ack?'checked':'')+' required><span>Entendo que envio uma solicitação de orçamento, sujeita à aceitação de Mateus, sem reserva ou cobrança automática. Li as informações de privacidade e atendimento abaixo.</span></label>';
  html+='<p class="privacy-inline">Nome, telefone, veículo e escolhas serão usados pela Fine Form para responder ao pedido e organizar o atendimento. Isso não autoriza publicidade. <a href="../privacidade/">Privacidade</a> · <a href="../termos/">Termos</a> · <a href="../cancelamento-e-reembolso/">Cancelamento e reembolso</a>.</p><label class="check-line"><input type="checkbox" name="rememberLink" '+(state.rememberLink?'checked':'')+'><span>Guardar o link privado deste pedido neste aparelho por até 90 dias (opcional). Evite em aparelhos compartilhados.</span></label>';
- html+='<p class="request-disclosure">'+REQUEST_NOTICE+(IS_PRELAUNCH?' Os atendimentos começam após a inauguração.':'')+'</p>';
+ html+='<p class="request-disclosure">'+REQUEST_NOTICE+' O local será combinado antes da confirmação do atendimento.</p>';
  html+='<label class="sr-honeypot" aria-hidden="true">Website<input name="website" tabindex="-1" autocomplete="off"></label>';
  return html;
 }

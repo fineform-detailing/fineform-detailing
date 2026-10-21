@@ -9,6 +9,7 @@ export function quoteView(q,admin=false){
  const view={id:q.id,reference:q.reference,kind:q.kind,name:q.name,phone:q.phone,vehicle:q.vehicle,model:q.model,plate:q.plate||null,plateVerified:Boolean(q.plate_verified_at),plateVerifiedAt:q.plate_verified_at||null,plateCheckedAt:q.plate_checked_at||null,selection:JSON.parse(q.selection_json),budget:JSON.parse(q.budget_json),status:q.status,message:q.public_message,preferredDate:q.preferred_date,preferredTime:q.preferred_time,scheduledDate:q.scheduled_date,scheduledTime:q.scheduled_time,notes:q.notes,createdAt:q.created_at,updatedAt:q.updated_at,version:q.version,subscriptionId:q.subscription_id,creditKind:q.credit_kind};
  if(!view.plateVerified){delete view.selection.plate;delete view.selection.plateVerified;}
  view.confirmedTotal=q.confirmed_total_cents===null?null:q.confirmed_total_cents/100;
+ view.location=q.location_json?JSON.parse(q.location_json):null;
  if(admin){view.customerId=q.customer_id;view.internalNote=q.internal_note;}
  return view;
 }

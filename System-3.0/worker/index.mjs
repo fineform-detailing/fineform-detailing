@@ -9,6 +9,8 @@ import {notificationStatus,registerPush,removePush,testPush,wakePush,dispatchPus
 import {changePlate,registerQuotePlate} from './plates.mjs';
 import {publicReviews,authorizeReview,reviewState,saveReview,customerNotificationState,registerCustomerPush,removeCustomerPush,wakeReviewPush,dispatchReviewPush} from './reviews.mjs';
 import {withdrawReview} from './privacy.mjs';
+import {businessProfile,publicBusiness,saveBusinessProfile,shareQuoteLocation} from './business.mjs';
+import {publicBusinessDetails} from '../dist/assets/business-profile.mjs';
 export {LiveUpdates} from './live.mjs';
 const response=(data,status=200,headers={})=>new Response(JSON.stringify(data),{status,headers:{'Content-Type':'application/json; charset=utf-8','Cache-Control':'no-store','X-Content-Type-Options':'nosniff','Referrer-Policy':'no-referrer',...headers}});
 const idFrom=value=>{if(!idValid(value))fail(404,'Registro não encontrado.');return value;};
@@ -48,10 +50,12 @@ async function api(req,env,ctx){
  if(path==='/api/health'&&method==='GET'){
   let database=false;try{if(env.DB)await first(env,'SELECT id FROM quotes LIMIT 1');database=Boolean(env.DB);}catch{}
   let security=false;try{security=Boolean(database&&await first(env,'SELECT id FROM admin_sessions LIMIT 1')!==undefined&&await first(env,'SELECT id FROM payment_receipts LIMIT 1')!==undefined);}catch{}
-  return response({version:'3.0.0',ready:database&&security&&adminReady(req,env),database,security,realtime:Boolean(env.LIVE),mfa:mfaReady(env)});
+  let locationSharing=false;try{locationSharing=Boolean(await first(env,'SELECT location_json FROM quotes LIMIT 1')!==undefined&&await first(env,'SELECT id FROM business_profile WHERE id=1'));}catch{}
+  return response({version:'3.0.0',release:'2026-10-21-appointments',ready:database&&security&&locationSharing&&adminReady(req,env),database,security,locationSharing,realtime:Boolean(env.LIVE),mfa:mfaReady(env)});
  }
  if(method!=='GET')checkOrigin(req);
  if(!env.DB||!keyReady(env))fail(503,'O sistema ainda precisa da configuração do banco e da chave do painel.');
+ if(path==='/api/business'&&method==='GET')return response(await publicBusiness(env));
  if(path==='/api/reviews'&&method==='GET')return response(await publicReviews(env,url));
  const reviewMatch=path.match(/^\/api\/quotes\/([^/]+)\/(review|notifications)$/);
  if(reviewMatch){
@@ -133,7 +137,13 @@ async function api(req,env,ctx){
   if(path==='/api/admin/notifications/test'&&method==='POST')return response(await testPush(req,env,await jsonBody(req)));
   if(path==='/api/admin/notifications/subscription'&&method==='DELETE'){const body=await jsonBody(req);return response(await removePush(req,env,body.id));}
   if(path==='/api/admin/dashboard'&&method==='GET')return response(await dashboard(env));
+  if(path==='/api/admin/business'){
+   if(method==='GET')return response({profile:await businessProfile(env)});
+   if(method==='PUT'){const profile=await saveBusinessProfile(env,await jsonBody(req));emit(ctx,env,[]);return response({profile});}
+  }
   if(path==='/api/admin/quotes'&&method==='GET')return response(await quoteList(env,url));
+  match=path.match(/^\/api\/admin\/quotes\/([^/]+)\/location$/);
+  if(match&&method==='PUT'){const quote=await shareQuoteLocation(env,idFrom(match[1]),await jsonBody(req));emit(ctx,env,['quote:'+quote.id]);return response({quote});}
   match=path.match(/^\/api\/admin\/quotes\/([^/]+)$/);
   if(match){const id=idFrom(match[1]);if(method==='GET'){const q=await getQuote(env,id);return response({quote:quoteView(q,true),events:await all(env,'SELECT status,message,created_at FROM quote_events WHERE quote_id=? ORDER BY created_at LIMIT 80',id)});}if(method==='DELETE'){const result=await deleteQuote(env,id,await jsonBody(req));emit(ctx,env,['quote:'+id,...result.subscriptionIds.map(id=>'subscription:'+id)]);return response(result);}if(method==='PATCH'){const q=await updateQuote(env,id,await jsonBody(req));emit(ctx,env,['quote:'+id,...(q.subscriptionId?['subscription:'+q.subscriptionId]:[])]);if(q.status==='completed')wakeReviewPush(ctx,env);return response({quote:q});}}
   match=path.match(/^\/api\/admin\/quotes\/([^/]+)\/plate$/);
@@ -175,7 +185,7 @@ async function api(req,env,ctx){
    const [quotes,visits]=await Promise.all([all(env,"SELECT id,reference,name,model,plate,scheduled_date date,scheduled_time time,status,kind FROM quotes WHERE scheduled_date=? AND kind!='subscription_visit' AND status IN ('accepted','in_progress','ready','completed') ORDER BY scheduled_time",date),all(env,"SELECT v.id,c.name,s.model,v.plate,v.visit_date date,v.visit_time time,v.status,v.kind,v.quote_id,v.version,s.id subscriptionId FROM visits v JOIN cycles cy ON cy.id=v.cycle_id JOIN subscriptions s ON s.id=cy.subscription_id JOIN customers c ON c.id=s.customer_id WHERE v.visit_date=? AND v.status!='cancelled' ORDER BY v.visit_time",date)]);return response({date,quotes,visits});
   }
   if(path==='/api/admin/export'&&method==='GET'){
-   const tables=['customers','subscriptions','cycles','quotes','quote_events','visits','audit_events','payment_receipts','reviews'];const result={version:'3.0.0',exportedAt:now()};let count=0;
+   const tables=['customers','subscriptions','cycles','quotes','quote_events','visits','audit_events','payment_receipts','reviews','business_profile'];const result={version:'3.0.0',exportedAt:now()};let count=0;
    for(const table of tables){const rows=await all(env,'SELECT * FROM '+table+' LIMIT 5001');count+=rows.length;if(rows.length>5000||count>15000)fail(413,'Use o comando de backup D1 para exportar essa base completa.');result[table]=rows;}
    return response(result,200,{'Content-Disposition':'attachment; filename="fine-form-backup.json"'});
   }
@@ -185,6 +195,16 @@ async function api(req,env,ctx){
 export default {async fetch(req,env,ctx){
  const url=new URL(req.url),isApi=url.pathname.startsWith('/api/'),privatePage=/^\/(painel|assinatura|acompanhar|avaliar)(\/|$)/.test(url.pathname);
  if(url.protocol!=='https:'&&!isLocal(req)){if(!['GET','HEAD'].includes(req.method))return securityHeaders(req,response({error:'Use uma conexão HTTPS.'},403),{api:true});url.protocol='https:';return Response.redirect(url.href,308);}
- if(!isApi){const result=env.ASSETS?await env.ASSETS.fetch(req):new Response('Fine Form 3.0',{status:200});return securityHeaders(req,result,{privatePage});}
+ if(!isApi){
+  let result=env.ASSETS?await env.ASSETS.fetch(req):new Response('Fine Form 3.0',{status:200});
+  if(/^\/informacoes(?:\/|$)/.test(url.pathname)&&result.headers.get('Content-Type')?.includes('text/html')&&result.ok&&req.method==='GET'){
+   try{
+    const data=await publicBusiness(env),html=(await result.text()).replace(/<!-- ff:business:start -->[\s\S]*?<!-- ff:business:end -->/g,()=>'<!-- ff:business:start -->'+publicBusinessDetails(data)+'<!-- ff:business:end -->');
+    const headers=new Headers(result.headers);headers.delete('Content-Length');headers.delete('ETag');headers.set('Cache-Control','no-store');
+    result=new Response(html,{status:result.status,headers});
+   }catch{result=new Response('Não foi possível consultar as informações. Fale com Mateus pelo WhatsApp (11) 95947-3298 ou fineformcare@gmail.com.',{status:503,headers:{'Content-Type':'text/plain; charset=utf-8','Cache-Control':'no-store'}});}
+  }
+  return securityHeaders(req,result,{privatePage});
+ }
  try{return securityHeaders(req,await api(req,env,ctx),{api:true});}catch(error){const registrationMissing=String(error.message||'').includes('FF_VEHICLE_NOT_REGISTERED'),plateConflict=String(error.message||'').includes('FF_PLATE_MISMATCH');const status=registrationMissing||plateConflict?409:error instanceof AppError?error.status:500;return securityHeaders(req,response({error:registrationMissing?'Confira o veículo pessoalmente e cadastre a placa no painel antes de iniciar o atendimento ou ativar/utilizar o Care.':plateConflict?'A placa do veículo não corresponde à assinatura ou ainda precisa ser conferida. Atualize o cadastro no painel.':status===500?'Não foi possível concluir a operação. Tente novamente.':error.message,...(status===428?{code:'reauth_required'}:{})},status,status===429?{'Retry-After':'600'}:{}),{api:true});}
 },async scheduled(_controller,env){await Promise.all([dispatchPush(env),dispatchReviewPush(env)]);}};

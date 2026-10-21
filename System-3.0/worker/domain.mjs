@@ -1,5 +1,6 @@
 import {services,extras,plans,findService,findPlan,normalizeTreatments,normalizeExtras,quoteFor,validDate,timesFor,todaySP,validatePreference} from '../dist/assets/catalog.mjs';
 import {normalizePlate,isPlate} from '../dist/assets/plates.mjs';
+import {BUSINESS_STAGE} from '../dist/assets/business-stage.mjs';
 export function requirePlate(value){const plate=normalizePlate(value);if(!isPlate(plate))fail(400,'Informe uma placa válida: ABC-1234 ou ABC1D23.');return plate;}
 export function matchPlate(value,expected){if(!isPlate(expected))fail(409,'Cadastre a placa desta assinatura no Gerenciador de placas antes de utilizar o Care.');const plate=requirePlate(value);if(plate!==expected)fail(409,'A placa informada não pertence a esta assinatura. O Care é exclusivo do veículo cadastrado.');return plate;}
 export {services,extras,plans,todaySP,findPlan,quoteFor,validDate};
@@ -35,6 +36,7 @@ export function validateSelection(raw,now=new Date()){
  if(date&&(!validDate(date)||date<todaySP(now)))fail(400,'Escolha uma data de hoje em diante.');
  if(time&&(!date||!timesFor(date).includes(time)))fail(400,'Horário inválido para a data.');
  const state={vehicle,mode,service:mode==='single'?service.id:vehicle==='car'?'essential':'motoPremium',plan:mode==='plan'?plan.id:'',name,model,phone,date,time,flexibleDate:raw.flexibleDate!==false,notes:text(raw.notes,600),goals:Array.isArray(raw.goals)?raw.goals.slice(0,6).map(v=>text(v,40)):[],treatments,extras:additional};
+ state.requestStage=BUSINESS_STAGE;
  if(typeof raw.privacyVersion==='string'&&/^\d{4}-\d{2}-\d{2}$/.test(raw.privacyVersion))state.privacyNoticeVersion=raw.privacyVersion;
  const preferenceError=validatePreference(state,now);if(preferenceError)fail(400,preferenceError);
  state.treatments=normalizeTreatments(state);state.extras=normalizeExtras(state);

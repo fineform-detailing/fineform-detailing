@@ -6,7 +6,9 @@ import {queuePushStatement} from './push.mjs';
 import {queueReviewPushStatement} from './reviews.mjs';
 export async function saveQuote(env,{state,budget,token,subscription=null,cycle=null,creditKind=null}){
  if(!/^[A-Za-z0-9_-]{43}$/.test(token||''))fail(400,'Reabra o formulário para gerar seu link de acompanhamento.');
- const hash=await digest(token),payloadHash=await digest(JSON.stringify({state,subscription:subscription?.id||null,cycle:cycle?.id||null,creditKind}));
+ // Phase is server metadata, not a change to the customer's requested budget.
+ const comparableState={...state};delete comparableState.requestStage;
+ const hash=await digest(token),payloadHash=await digest(JSON.stringify({state:comparableState,subscription:subscription?.id||null,cycle:cycle?.id||null,creditKind}));
  const existing=await first(env,'SELECT * FROM quotes WHERE viewer_hash=?',hash);
  if(existing){if(existing.payload_hash!==payloadHash)fail(409,'Este envio já foi usado para outro pedido. Recomece o formulário.');return {quote:quoteView(existing),duplicate:true};}
  const id=uuid(),stamp=now(),reference='FF-'+id.slice(0,8).toUpperCase();

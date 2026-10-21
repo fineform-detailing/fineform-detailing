@@ -1,6 +1,20 @@
 # Fine Form — revisão dos 17 pontos
 
-Revisão em 20/10/2026. Implementação técnica e textos correspondentes ao funcionamento observado do projeto. Não é certificação jurídica, auditoria integral de acessibilidade ou garantia de ausência de processos.
+Revisão atualizada em 21/10/2026. Implementação técnica e textos correspondentes ao funcionamento observado do projeto. Não é certificação jurídica ou auditoria integral de acessibilidade.
+
+## Fase atual e controles confirmados
+
+A Fine Form está em preparação para a inauguração: o showroom e a abertura da empresa ainda estão sendo preparados. O site e os materiais estão sendo estruturados antecipadamente. A ausência atual de identificação empresarial e endereço definitivo é uma tarefa da formalização, não uma falha do fluxo de aprovação.
+
+- O cliente envia uma solicitação de orçamento. O registro começa como `pending` / Recebido; não confirma agenda ou cobrança.
+- Aceitação, recusa e mudanças de andamento exigem acesso ao painel protegido. O link do cliente não concede essas permissões.
+- O Care originado por orçamento exige pedido aceito, pagamento confirmado manualmente e veículo com placa conferida. Não há cobrança bancária automática.
+- A placa não é solicitada no formulário público. O cadastro administrativo exige confirmação de conferência presencial; a confirmação de pagamento é exigida na ativação do Care, não isoladamente no cadastro da placa.
+- Avaliações exigem atendimento entregue, autorização do cliente e acesso pelo link correspondente.
+
+A fase está declarada em `dist/assets/business-stage.mjs`. Os novos orçamentos recebem `requestStage` no servidor; esse marcador não participa da identificação de reenvios, preservando a repetição segura de solicitações antigas. O painel e o acompanhamento informam a origem durante a preparação sem aceitar ou cancelar pedidos automaticamente.
+
+O site informa a preparação na apresentação, no hub de links, no formulário e nas páginas legais. Os horários estão identificados como planejados para após a inauguração. A confirmação de recebimento explica que o orçamento aguarda análise e aceitação de Mateus.
 
 | Ponto | Resultado e limite |
 | --- | --- |
@@ -18,7 +32,7 @@ Revisão em 20/10/2026. Implementação técnica e textos correspondentes ao fun
 | 12. Avaliações falsas | Publicação continua vinculada a pedido entregue e autorização específica; notas baixas não são suprimidas. Revogação autenticada pelo mesmo link despublica, remove nome e comentário e atualiza contagem/média. |
 | 13. Promessas | Serviços e preços preservados. Termos esclarecem avaliação de materiais, estado anterior, cura e resultado variável, sem renúncia a responsabilidade legal. |
 | 14. Imagens | `/creditos/` com autores, fontes e licença registrada; fotos explicitamente editoriais, sem alegar serviços prestados ou endosso de marcas. Confirmar direitos da identidade original e de todo material futuro. |
-| 15. Dados da empresa | Marca, responsável de atendimento, região, telefone, e-mail e horários publicados. Razão social/nome civil completo, CNPJ ou identificação aplicável e endereço físico completo não estavam no projeto e continuam pendentes. |
+| 15. Dados da empresa | Projeto em preparação, contato, região prevista e horários planejados estão identificados. Nome/razão social, identificação aplicável e endereço completo serão preenchidos quando definidos, antes de iniciar as contratações. Nenhum dado fictício foi criado. |
 | 16. Conformidade LGPD | Melhorias técnicas aplicadas. Cumprimento integral também exige atendimento de direitos, regras internas de retenção, contratos com fornecedores e mecanismos de transferência internacional adequados. |
 | 17. Outros riscos | Pendências e rotina abaixo. Não há garantia de que um site com políticas não possa ser questionado judicialmente. |
 
@@ -28,7 +42,7 @@ Revisão em 20/10/2026. Implementação técnica e textos correspondentes ao fun
 - CNPJ ou identificação fiscal aplicável. Não publicar um número fictício, mascarado ou de terceiros.
 - Endereço físico completo para localização do fornecedor, incluindo CEP e complemento quando houver. “Mooca, São Paulo” é somente uma região.
 
-Atualizar o gerador `scripts/build-legal.mjs`, o rodapé gerado e a política de privacidade com esses dados verificados. O Decreto nº 7.962/2013 exige identificação e contatos na oferta eletrônica; encaminhar ao responsável jurídico a avaliação do enquadramento específico antes de considerar o item concluído.
+Na etapa de formalização, atualizar o gerador `scripts/build-legal.mjs`, o rodapé e a política de privacidade com esses dados verificados. Na inauguração, revisar os textos públicos, confirmar os horários efetivos e alterar a fase em `dist/assets/business-stage.mjs` para `open`; a troca desse marcador sozinha não preenche os dados da empresa nem atualiza textos que dependem da operação real. O Decreto nº 7.962/2013 orienta a identificação e os contatos na oferta eletrônica.
 
 ## Rotina que depende da operação
 
@@ -47,6 +61,8 @@ Atualizar o gerador `scripts/build-legal.mjs`, o rodapé gerado e a política de
 
 - Suite de testes do projeto, incluindo envio, Care, autenticação, proteção dos links, avaliações e revogação transacional.
 - Testes adicionais de escolha explícita de armazenamento, expiração, limpeza local, links das páginas legais e pares de contraste da camada nova.
+- Confirmação de orçamento permanece pendente e não dá ao cliente acesso de aceite; fase é atribuída pelo servidor, mesmo se o cliente informar outra. Falhas de conexão conservam a tentativa para reenvio; confirmações removem o conteúdo temporário de sessão. Reenvios de registros antigos continuam idempotentes.
+- Build repetido em diretório isolado mantém um aviso de preparação por página e um rodapé, sem duplicações.
 - Build dos assets e empacotamento do Worker em modo `wrangler deploy --dry-run`.
 - Publicação pela integração Workers Builds já conectada ao GitHub; conferir o resultado do commit e as novas páginas na URL de produção.
 

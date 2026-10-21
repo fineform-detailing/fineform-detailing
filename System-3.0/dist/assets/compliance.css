@@ -9,6 +9,8 @@ body[data-design=kinetic] :is(.privacy-note,.save-draft,.wizard-top,.hours-note,
 body[data-design=kinetic] :is(.check-line,.save-draft,.system-check){line-height:1.8}
 .field input,.field select,.field textarea,.system-field input,.system-field select,.system-field textarea{font-size:max(16px,1em)}
 .privacy-inline{font-size:13px;line-height:1.85;margin:18px 0;color:#4e5848}
+.business-stage{padding:15px 18px;margin:0 0 24px;border:1px solid #9ec1b8;border-radius:16px;background:#edf8f5;color:#17594f;text-align:left;max-width:600px}
+.business-stage>span{display:block;font-size:11px;font-weight:600;letter-spacing:.04em;line-height:1.6}.business-stage p{font-size:12px;line-height:1.8;margin:6px 0 0;color:#37483f}.booking-panel>.business-stage{max-width:none}.legal-content>.business-stage{margin-bottom:28px}.request-disclosure{padding:16px 18px;border:1px solid #9ec1b8;border-radius:12px;background:#edf8f5;font-size:13px;line-height:1.85;color:#37483f;margin:20px 0}
 .privacy-inline a,.legal-content a,.privacy-settings p a,.privacy-banner p a{color:#17594f;text-decoration:underline;text-underline-offset:3px}
 .footer-legal{display:flex;flex-wrap:wrap;gap:8px 22px;padding-top:20px;margin-top:20px;border-top:1px solid #e5e7e1;font-size:12px;line-height:1.8}
 .footer-legal a{min-height:30px;display:inline-flex;align-items:center}

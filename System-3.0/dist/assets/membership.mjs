@@ -1,4 +1,4 @@
-import {api,escape as e,dateLabel,visitLabel,trackingUrl,submissionToken,saveBookmark,copyText,watchUpdates} from './system.mjs';
+import {api,escape as e,dateLabel,visitLabel,trackingUrl,submissionToken,saveBookmark,copyText,watchUpdates,clearPendingSubmission} from './system.mjs';
 import {PRIVACY_VERSION} from './privacy-storage.mjs';
 import {creditKinds,chooseCredit,visitAvailability} from './membership-state.mjs';
 import {findPlan,money,todaySP,timesFor,compatibleExtras,extraPrice,extraPriceFor,includedFor,availableTreatments,treatmentPrice,polishIds,normalizeTreatments,normalizeExtras,planVisitQuote,validatePreference} from './catalog.mjs';
@@ -54,6 +54,7 @@ function renderForm(){
    saveBookmark(quote.id,submission,quote.reference,{remember:form.elements.rememberLink.checked});const link=trackingUrl(quote.id,submission);
    document.getElementById('visit-receipt').innerHTML='<div class="system-success"><strong>Visita solicitada · '+e(quote.reference)+'</strong><p>Seu saldo será reservado quando Mateus aceitar. Acompanhe este pedido pelo link abaixo.</p><a class="button orange" href="'+e(link)+'">Acompanhar visita ↗</a><div class="system-actions"><button class="button outline" id="another-visit" type="button">Solicitar outra lavagem</button></div></div>';
    form.hidden=true;
+   clearPendingSubmission('ff-care-request-'+id);
    document.getElementById('another-visit').onclick=()=>{draft={...draft,treatments:[],extras:[],date:'',time:'',notes:''};try{sessionStorage.removeItem('ff-care-request-'+id);}catch{}renderForm();syncAvailability();document.getElementById('visit-request').scrollIntoView({block:'start'});};
    try{await load();}catch(error){showError(error);}
   }catch(err){invalid(err.message);}

@@ -41,9 +41,11 @@ test('cliente envia pedido pelo assistente e recebe total e acompanhamento',asyn
  w.document.querySelector('[data-action="mode"][data-value="plan"]').click();submit(w,'care-form');submit(w,'care-form');submit(w,'care-form');
  input(w,'name','Cliente DOM');input(w,'phone','11900000100');const ack=w.document.querySelector('[name="ack"]');ack.checked=true;ack.dispatchEvent(new w.Event('change',{bubbles:true}));submit(w,'care-form');
  await until(()=>!w.document.getElementById('summary-result').hidden);
- const text=w.document.getElementById('summary-result').textContent;assert.match(text,/Seu pedido/);assert.match(text,/260/);assert.match(text,/Acompanhar pedido/);
+ const text=w.document.getElementById('summary-result').textContent;assert.match(text,/Sua solicitação/);assert.match(text,/260/);assert.match(text,/Acompanhar pedido/);
  const url=new URL(w.document.querySelector('.tracking-link').href);quoteId=url.searchParams.get('id');quoteToken=new URLSearchParams(url.hash.slice(1)).get('t');
  const saved=await request('/api/quotes/'+quoteId,null,null,quoteToken);assert.equal(saved.data.quote.selection.phone,'5511900000100');assert.equal(saved.data.quote.kind,'plan');
+ assert.equal(saved.data.quote.status,'pending');assert.equal(saved.data.quote.selection.requestStage,'prelaunch');
+ assert.equal(w.sessionStorage.getItem('ff-pending-submission'),null);
 });
 test('painel autentica, aceita pedido e ativa assinatura com pagamento confirmado',async()=>{
  const w=await open('painel','admin');await until(()=>w.document.getElementById('access-form'));input(w,'key',key);submit(w,'access-form');
@@ -62,6 +64,7 @@ test('portal mostra saldo e permite pedir uma visita com preço zero para lavage
  w.document.querySelector('#visit-request [name="ack"]').checked=true;submit(w,'visit-request');await until(()=>w.document.querySelector('#visit-receipt a'));
  const link=new URL(w.document.querySelector('#visit-receipt a').href),token=new URLSearchParams(link.hash.slice(1)).get('t');
  const saved=await request('/api/quotes/'+link.searchParams.get('id'),null,null,token);assert.equal(saved.data.quote.kind,'subscription_visit');assert.equal(saved.data.quote.budget.total,0);
+ assert.equal(w.sessionStorage.getItem('ff-care-request-'+subId),null);
 });
 test('acompanhamento mostra o pedido e abre Care pelo token do pedido de origem',async()=>{
  const w=await open('acompanhar','tracking','http://localhost/acompanhar/?id='+quoteId+'#t='+quoteToken);await until(()=>w.document.getElementById('refresh-order'));
@@ -254,4 +257,41 @@ test('portal mantém saldo e bloqueia novos usos quando a placa anterior ainda n
 });
 test('vitrificação de plásticos no Extra mostra complemento e substitui a revitalização na interface',async()=>{
  const w=await open('atendimento','booking','http://localhost/atendimento/?service=extra');input(w,'model','Civic');submit(w,'care-form');submit(w,'care-form');const coating=w.document.querySelector('[name="extra"][value="plasticCoating"]');assert.ok(coating);assert.match(coating.closest('label').textContent,/150/);coating.checked=true;coating.dispatchEvent(new w.Event('change',{bubbles:true}));const maintenance=w.document.querySelector('[name="extra"][value="exteriorPlastic"]');assert.equal(maintenance.disabled,true);assert.equal(maintenance.checked,false);assert.match(maintenance.closest('label').textContent,/SUBSTITUÍDO/);assert.match(w.document.querySelector('.quote-total').textContent,/1.740/);closeWindow(w);
+});
+
+test('orçamento conserva a tentativa durante falha, limpa dados ao confirmar e não concede aceite ao cliente',async()=>{
+ const payloads=[];
+ const w=await open('atendimento','booking','http://localhost/atendimento/',w=>{
+  const original=w.fetch;
+  w.fetch=async(path,options={})=>{
+   if(path==='/api/quotes'&&options.method==='POST'){
+    const body=JSON.parse(options.body);payloads.push(body);
+    if(payloads.length===1)throw Error('Falha temporária de teste.');
+    options={...options,body:JSON.stringify({...body,requestStage:'open'})};
+   }
+   return original(path,options);
+  };
+ });
+ input(w,'model','Civic orçamento futuro');submit(w,'care-form');submit(w,'care-form');submit(w,'care-form');submit(w,'care-form');
+ input(w,'name','Contato em preparação');input(w,'phone','11900001771');
+ const ack=w.document.querySelector('[name="ack"]');ack.checked=true;ack.dispatchEvent(new w.Event('change',{bubbles:true}));
+ assert.match(w.document.querySelector('.request-disclosure').textContent,/sem|Não há/);
+ assert.equal(w.document.querySelector('[name="plate"]'),null);
+ submit(w,'care-form');await until(()=>w.document.getElementById('form-error').textContent.includes('Falha temporária'));
+ assert.ok(w.sessionStorage.getItem('ff-pending-submission'));
+ submit(w,'care-form');await until(()=>!w.document.getElementById('summary-result').hidden);
+ assert.equal(payloads[0].submissionToken,payloads[1].submissionToken);
+ assert.equal(w.sessionStorage.getItem('ff-pending-submission'),null);
+ assert.equal(w.localStorage.getItem('ff-orders-v2'),null);
+ const link=new URL(w.document.querySelector('.tracking-link').href),id=link.searchParams.get('id'),token=new URLSearchParams(link.hash.slice(1)).get('t');
+ const saved=(await request('/api/quotes/'+id,null,null,token)).data.quote;
+ assert.equal(saved.status,'pending');assert.equal(saved.selection.requestStage,'prelaunch');
+ assert.equal(saved.selection.plate,undefined);
+ assert.equal((await request('/api/admin/quotes/'+id,{version:saved.version,status:'accepted'},null,token,'PATCH')).r.status,401);
+ const tracking=await open('acompanhar','tracking',link.href);await until(()=>tracking.document.querySelector('[data-request-approval]'));
+ assert.match(tracking.document.querySelector('[data-request-approval]').textContent,/preparação para inauguração/);
+ // A retry of a request recorded before the phase metadata existed stays idempotent.
+ await db.prepare("UPDATE quotes SET selection_json=json_remove(selection_json,'$.requestStage') WHERE id=?").bind(id).run();
+ const retry=await request('/api/quotes',payloads[1]);assert.equal(retry.r.status,200);assert.equal(retry.data.quote.id,id);assert.equal(retry.data.duplicate,true);
+ closeWindow(w);closeWindow(tracking);
 });

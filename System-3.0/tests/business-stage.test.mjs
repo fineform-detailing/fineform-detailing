@@ -26,6 +26,10 @@ test('build remove avisos antigos e mantém confirmação manual sem duplicar ro
   assert.equal(d.querySelectorAll('.business-stage').length,0,slug||'home');
   assert.doesNotMatch(d.body.textContent,/inaugura|atendimento ainda não começou/i);
   assert.equal(d.querySelectorAll('nav.footer-legal').length,1);
+  assert.equal(d.querySelectorAll('footer .footer-resources').length,1);
+  assert.equal(d.querySelectorAll('footer a[href="/privacidade/"]').length,1);
+  assert.equal(d.querySelectorAll('footer .footer-information:not([open])').length,1);
+  assert.doesNotMatch(html,/mooca|REGIÃO DE REFERÊNCIA/i);
   assert.equal(d.querySelectorAll('h1').length,1);
   assert.ok(!d.body.textContent.includes('Atendemos nos feriados'));
   dom.window.close();

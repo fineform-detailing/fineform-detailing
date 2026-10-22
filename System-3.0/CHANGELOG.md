@@ -1,3 +1,10 @@
+# 22/10/2026 — Rodapé e endereço privado
+
+- Privacidade visível e demais páginas reunidas no menu Informações, sem links ou contatos duplicados.
+- Preferências de dados acessíveis pelo menu; removido o aviso repetido ao fim da página.
+- Removida a região do conteúdo público. Endereços, mapas e orientações não são expostos pela API pública, mesmo com opções antigas de publicação.
+- Cadastro e liberação do endereço por pedido preservados, incluindo retirada e mensagem para WhatsApp.
+
 # 3.0.0 — Segurança e recebimentos
 
 Base: System-2.0.zip enviado por Mateus. Autenticador obrigatório em produção, sessões revogáveis, CSRF, reautenticação, limite global do segundo fator, headers/CSP do servidor e tickets de uso único. Recibos financeiros e auditoria preservados contra alteração e exclusão. Migração importa ciclos pagos existentes. Scripts de instalação, atualização com backup e preview com D1 separado. Interface, preços e correções de visitas/exclusões da 2.0 preservados.

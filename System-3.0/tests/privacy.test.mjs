@@ -41,18 +41,24 @@ test('documentos legais abrem sem JS, têm navegação, alternativas de imagem e
  }
 });
 test('preferências removem rascunhos e links sem consentimento fictício de publicidade',async()=>{
- const html='<body data-page="legal"><button data-cookie-settings>Cookies e dados</button></body>';
+ const {legalFooter}=await import('../scripts/build-legal.mjs');
+ const html='<body data-page="legal">'+legalFooter()+'</body>';
  const dom=new JSDOM(html,{url:'https://fine-form.test/',runScripts:'outside-only'}),w=dom.window;
  w.HTMLDialogElement.prototype.showModal=function(){this.setAttribute('open','');};
  w.HTMLDialogElement.prototype.close=function(){this.removeAttribute('open');};
  w.localStorage.setItem('ff-care-draft-v1','{}');w.localStorage.setItem('ff-orders-v2','[]');
  const result=await build({entryPoints:['dist/assets/privacy.mjs'],bundle:true,format:'iife',write:false});w.eval(result.outputFiles[0].text);
- w.document.querySelector('[data-cookie-settings]').click();assert.ok(w.document.getElementById('privacy-settings').hasAttribute('open'));
+ const disclosure=w.document.querySelector('.footer-information');disclosure.open=true;
+ w.document.querySelector('[data-cookie-settings]').click();assert.ok(w.document.getElementById('privacy-settings').hasAttribute('open'));assert.equal(disclosure.open,false);
  assert.equal(w.document.querySelectorAll('#privacy-settings input').length,0);
  w.document.querySelector('[data-clear-saved]').click();
  assert.equal(w.localStorage.getItem('ff-care-draft-v1'),null);assert.equal(w.localStorage.getItem('ff-orders-v2'),null);
  assert.match(w.document.getElementById('privacy-settings-status').textContent,/removidos/);
- w.document.querySelector('.privacy-banner button').click();assert.equal(w.document.querySelector('.privacy-banner'),null);
+ w.document.querySelector('[data-close-privacy]').click();
+ assert.equal(w.document.activeElement,disclosure.querySelector('summary'));
+ assert.equal(w.document.querySelector('.privacy-banner'),null);
+ disclosure.open=true;w.document.dispatchEvent(new w.KeyboardEvent('keydown',{key:'Escape',bubbles:true}));assert.equal(disclosure.open,false);
+ disclosure.open=true;w.document.body.click();assert.equal(disclosure.open,false);
  w.close();
 });
 test('texto e foco da camada de privacidade têm contraste AA nas superfícies utilizadas',()=>{

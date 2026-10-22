@@ -50,19 +50,23 @@ test('cadastro exige sessão, CSRF, origem e campos consistentes',async()=>{
  assert.equal((await call('/api/admin/business',{method:'PUT',body,auth:true,origin:'https://outro.example'})).status,403);
  assert.equal((await save({mapsUrl:'javascript:alert(1)'})).status,400);
  assert.equal((await save({publishIdentity:true,cnpj:''})).status,400);
- assert.equal((await save({publishVisitAddress:true,visitAddress:''})).status,400);
  assert.equal((await save({visitAddress:'a'.repeat(501)})).status,400);
  assert.equal((await save({publishIdentity:'false'})).status,400);
  assert.equal((await save({cnpj:'123'})).status,400);
 });
 
-test('dados privados não são projetados na API pública e publicação é explícita',async()=>{
+test('endereço e mapa nunca são públicos, mesmo com opções antigas de publicação',async()=>{
  const saved=await save();assert.equal(saved.status,200);assert.equal(saved.data.profile.cnpj,'AA.AAA.AAA/0001-00');
  let visible=(await call('/api/business')).data;assert.deepEqual(visible,{supplier:null,location:null});
  assert.equal((await save({publishIdentity:true})).status,200);
  visible=(await call('/api/business')).data;assert.equal(visible.supplier.legalName,'Empresa de teste');assert.equal(visible.location,null);assert.ok(!JSON.stringify(visible).includes('Local privado A'));assert.ok(!JSON.stringify(visible).includes('maps.app'));
  assert.equal((await save({publishVisitAddress:true})).status,200);
- assert.equal((await call('/api/business')).data.location.address,'Local privado A, número 10');
+ assert.equal((await call('/api/admin/business',{auth:true})).data.profile.publishVisitAddress,false);
+ // Simulate a stored profile saved by the previous version before this deployment.
+ await db.prepare("UPDATE business_profile SET data_json=json_set(data_json,'$.publishIdentity',json('true'),'$.publishVisitAddress',json('true')) WHERE id=1").run();
+ visible=(await call('/api/business')).data;
+ assert.deepEqual(visible,{supplier:{legalName:'Empresa de teste',cnpj:'AA.AAA.AAA/0001-00'},location:null});
+ for(const privateValue of ['Endereço cadastral','Local privado A','maps.app','Portão de teste'])assert.ok(!JSON.stringify(visible).includes(privateValue));
  assert.equal((await save()).status,200);assert.deepEqual((await call('/api/business')).data,{supplier:null,location:null});
 });
 
@@ -98,7 +102,7 @@ test('informações públicas são servidas sem JavaScript e escapam texto cadas
  assert.equal(res.status,200);assert.equal(res.headers.get('ETag'),null);assert.match(res.headers.get('Cache-Control'),/no-store/);
  const dom=new JSDOM(await res.text()),block=dom.window.document.querySelector('[data-public-business]');
  assert.equal(dom.window.document.querySelectorAll('[data-public-business]').length,1);
- assert.match(block.textContent,/Nome de teste <img/);assert.equal(block.querySelector('img'),null);assert.ok(!block.textContent.includes('Local privado'));
+ assert.match(block.textContent,/Nome de teste <img/);assert.equal(block.querySelector('img'),null);assert.ok(!block.textContent.includes('Local privado'));assert.ok(!block.textContent.includes('Endereço cadastral'));
  dom.window.close();await save();
 });
 

@@ -1,5 +1,4 @@
-import {PRIVACY_VERSION,clearSavedData} from './privacy-storage.mjs';
-const noticeKey='ff-privacy-notice-v1';
+import {clearSavedData} from './privacy-storage.mjs';
 let previousFocus=null;
 const panel=document.createElement('dialog');
 panel.id='privacy-settings';panel.className='dialog privacy-settings';panel.setAttribute('aria-labelledby','privacy-settings-title');
@@ -15,14 +14,16 @@ panel.querySelector('[data-clear-saved]').addEventListener('click',()=>{
 });
 document.addEventListener('click',event=>{
  if(!event.target.closest('[data-cookie-settings]'))return;
- previousFocus=event.target.closest('button');panel.querySelector('[role=status]').textContent='';panel.showModal();
+ previousFocus=event.target.closest('.footer-information')?.querySelector('summary')||event.target.closest('button');panel.querySelector('[role=status]').textContent='';panel.showModal();
 });
-let dismissed=false;try{dismissed=localStorage.getItem(noticeKey)===PRIVACY_VERSION;}catch{}
-if(!dismissed&&document.body.dataset.page!=='admin'){
- const notice=document.createElement('aside');notice.className='privacy-banner';notice.setAttribute('aria-label','Aviso de cookies e privacidade');
- notice.innerHTML='<div><strong>Sua privacidade, com clareza.</strong><p>Sem cookies de publicidade ou análise de visitantes. Rascunhos e links privados só ficam salvos se você escolher. <a href="/cookies/">Saiba como funciona</a>.</p></div><button class="button outline" type="button">Entendi</button>';
- notice.querySelector('button').addEventListener('click',()=>{try{localStorage.setItem(noticeKey,PRIVACY_VERSION);}catch{}notice.remove();document.body.classList.remove('has-privacy-banner');});
- notice.hidden=document.documentElement.hasAttribute('data-ff-intro');
- document.addEventListener('ff:intro-complete',()=>{notice.hidden=false;},{once:true});
- document.body.append(notice);document.body.classList.add('has-privacy-banner');
-}
+// Keep the footer disclosure small, with keyboard and outside-click dismissal.
+document.addEventListener('click',event=>{
+ for(const disclosure of document.querySelectorAll('.footer-information[open]')){
+  if(!disclosure.contains(event.target)||event.target.closest('[data-cookie-settings]'))disclosure.open=false;
+ }
+});
+document.addEventListener('keydown',event=>{
+ if(event.key!=='Escape'||panel.open)return;
+ const disclosure=document.querySelector('.footer-information[open]');
+ if(disclosure){disclosure.open=false;disclosure.querySelector('summary').focus();}
+});

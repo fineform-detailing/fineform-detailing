@@ -1,5 +1,5 @@
-// Public notice version; never a marketing-consent flag.
-export const PRIVACY_VERSION='2026-10-21.2';
+// Policy version presented with an order; never a marketing-consent flag.
+export const PRIVACY_VERSION='2026-10-22';
 export const DRAFT_TTL=30*86400000;
 export const LINK_TTL=90*86400000;
 export function readOrders(storage,timestamp=Date.now()){

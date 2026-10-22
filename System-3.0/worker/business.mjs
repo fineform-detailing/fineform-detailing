@@ -15,8 +15,8 @@ export async function publicBusiness(env){
  const p=await businessProfile(env);
  // Explicit projection: never spread a private profile into a public response.
  return {
-  supplier:p.publishIdentity?{legalName:p.legalName,cnpj:p.cnpj,registeredAddress:p.registeredAddress}:null,
-  location:p.publishVisitAddress?{address:p.visitAddress,mapsUrl:p.mapsUrl,arrivalNote:p.arrivalNote}:null
+  supplier:p.publishIdentity?{legalName:p.legalName,cnpj:p.cnpj}:null,
+  location:null
  };
 }
 
@@ -31,11 +31,12 @@ export async function saveBusinessProfile(env,body){
   if(typeof body[key]!=='boolean')fail(400,'Confira as opções de publicação.');
   p[key]=body[key];
  }
+ // Legacy publication flags must never expose a location. Share it per order.
+ p.publishVisitAddress=false;
  p.cnpj=p.cnpj.toUpperCase();
  if(p.cnpj&&!/^[A-Z0-9]{12}[0-9]{2}$/.test(p.cnpj.replace(/[.\/-]/g,'')))fail(400,'Copie o CNPJ completo do documento, com 14 posições.');
  if(p.mapsUrl){const url=safeMapUrl(p.mapsUrl);if(!url)fail(400,'Use um link HTTPS de mapa do Google Maps, Waze ou Apple Maps.');p.mapsUrl=url;}
- if(p.publishIdentity&&(!p.legalName||!p.cnpj||!p.registeredAddress))fail(400,'Para publicar, preencha nome empresarial, CNPJ e endereço do fornecedor.');
- if(p.publishVisitAddress&&!p.visitAddress)fail(400,'Preencha o endereço de atendimento antes de publicá-lo.');
+ if(p.publishIdentity&&(!p.legalName||!p.cnpj))fail(400,'Para publicar, preencha nome empresarial e CNPJ.');
  const op=uuid(),stamp=now();
  const result=await env.DB.batch([
   stmt(env,'UPDATE business_profile SET data_json=?,version=version+1,updated_at=?,last_op=? WHERE id=1 AND version=?',JSON.stringify(p),stamp,op,body.version),

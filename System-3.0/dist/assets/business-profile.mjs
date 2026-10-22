@@ -23,7 +23,7 @@ export function locationDetails(location){
 
 export function publicBusinessDetails(data){
  const e=escapeBusiness,s=data?.supplier;
- return (s?'<dl class="supplier-details"><dt>IDENTIFICAÇÃO DO FORNECEDOR</dt><dd>'+e(s.legalName)+'</dd><dt>CNPJ</dt><dd>'+e(s.cnpj)+'</dd><dt>ENDEREÇO DO FORNECEDOR</dt><dd>'+e(s.registeredAddress)+'</dd></dl>':'')+(data?.location?'<h3>Local de atendimento</h3>'+locationDetails(data.location):'<p>'+LOCATION_NOTICE+'</p>');
+ return (s?'<dl class="supplier-details"><dt>IDENTIFICAÇÃO DO FORNECEDOR</dt><dd>'+e(s.legalName)+'</dd><dt>CNPJ</dt><dd>'+e(s.cnpj)+'</dd></dl>':'')+'<p>'+LOCATION_NOTICE+'</p>';
 }
 
 export function locationMessage(quote){

@@ -9,13 +9,11 @@
 .hero-assurance{animation:ff-copy-arrive .7s .22s var(--motion-out) both}
 .hero-image{animation:ff-photo-arrive .9s .12s var(--motion-out) both}
 .hero-content h1>span{position:relative;display:inline-block;isolation:isolate;background:none}
-.hero-content h1>span:after{content:"";position:absolute;z-index:-1;left:0;right:0;bottom:.06em;height:.16em;background:#bde8e1;border-radius:3px;transform-origin:0 50%;animation:ff-underline .8s .23s var(--motion-out) both}
 .ff-hero:before{content:"";position:absolute;z-index:-1;pointer-events:none;width:min(440px,68vw);aspect-ratio:1;left:-7%;top:-6%;background:radial-gradient(ellipse,#53c3b124,transparent 68%);animation:ff-ambient 18s ease-in-out infinite alternate;animation-play-state:paused}
 .ff-hero.is-in-view:before{animation-play-state:running}
 @keyframes ff-title-arrive{from{opacity:.85;transform:translate3d(0,20px,0)}to{opacity:1;transform:none}}
 @keyframes ff-copy-arrive{from{opacity:.65;transform:translate3d(0,14px,0)}to{opacity:1;transform:none}}
 @keyframes ff-photo-arrive{from{opacity:.9;transform:translate3d(0,24px,0) rotate(.8deg) scale(.975)}to{opacity:1;transform:none}}
-@keyframes ff-underline{from{transform:scaleX(.08)}to{transform:scaleX(1)}}
 @keyframes ff-ambient{from{transform:translate3d(0,0,0) scale(.94)}to{transform:translate3d(42px,22px,0) scale(1.08)}}
 
 /* Short, staggered reveals; there is no JavaScript scroll loop on phones. */
@@ -98,11 +96,11 @@
 }
 body.motion-paused .native-marquee-track,body.motion-paused .ff-hero:before,body.is-page-hidden .native-marquee-track,body.is-page-hidden .ff-hero:before{animation-play-state:paused!important}
 body.motion-paused .native-card,body.motion-paused .folder-front,body.motion-paused .folder-back,body.motion-paused .folder-sheet{transition:none}
-body.motion-paused .hero-assurance,body.motion-paused .hero-secondary>span,body.motion-paused .hero-content h1>span:after{animation:none;opacity:1;transform:none}
+body.motion-paused .hero-assurance,body.motion-paused .hero-secondary>span{animation:none;opacity:1;transform:none}
 body.motion-paused .native-glow:before{transition:none}
 body.motion-paused .site-header:after{display:none}
 @media(prefers-reduced-motion:reduce){
- .hero-content h1,.hero-lead,.hero-actions,.hero-assurance,.hero-image,.hero-content h1>span:after,.hero-secondary>span,.ff-hero:before{animation:none;opacity:1;transform:none}
+ .hero-content h1,.hero-lead,.hero-actions,.hero-assurance,.hero-image,.hero-secondary>span,.ff-hero:before{animation:none;opacity:1;transform:none}
  [data-reveal-state]{transition:none;opacity:1;transform:none}
  .native-card,.gallery-dots button:before,.native-glow:before{transition:none}
  .native-marquee-track{animation:none}.native-marquee-track>span+span{display:none}

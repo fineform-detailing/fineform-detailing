@@ -1,59 +1,132 @@
-# Fine Form 3.0
+<picture>
+  <source media="(max-width: 600px) and (prefers-color-scheme: dark)" srcset="docs/readme/brand-dark-mobile.svg">
+  <source media="(max-width: 600px)" srcset="docs/readme/brand-light-mobile.svg">
+  <source media="(prefers-color-scheme: dark)" srcset="docs/readme/brand-dark.svg">
+  <img src="docs/readme/brand-light.svg" width="1200" alt="Fine Form — seu veículo, em boa forma. Identidade ciano e mascote original da marca.">
+</picture>
 
-Projeto completo de site, atendimento, painel, agenda e Fine Form Care. Esta revisão inclui cadastro presencial de placas pelo administrador, assinaturas vinculadas ao veículo conferido, vitrificação de plásticos e as notificações limitadas a cinco aparelhos. O cartão de total financeiro permanece removido.
+# Plataforma Fine Form 3.0
 
-**Pelo celular: comece por [ATUALIZAR-PELO-CELULAR.md](ATUALIZAR-PELO-CELULAR.md).** O aplicativo está na pasta `System-3.0` deste repositório; essa é a raiz a selecionar no Cloudflare. A configuração já identifica a conta, o Worker e o D1 existentes, conferidos na conta do proprietário em 17/10/2026.
+Site, atendimento e operação diária no mesmo projeto. A experiência pública apresenta os cuidados para carros e motos; o painel organiza pedidos, agenda, clientes, veículos e **Fine Form Care**.
 
-Os detalhes das mudanças estão em [LEIA-ME-PLACAS-E-ASSINATURAS.md](LEIA-ME-PLACAS-E-ASSINATURAS.md). Para instalação com computador e informações técnicas, consulte [docs/DEPLOY-CLOUDFLARE.md](docs/DEPLOY-CLOUDFLARE.md). Os comandos das seções seguintes são para instalação pelo terminal.
+**[Site publicado](https://fine-form-3-0.fineformcare.workers.dev/) · [Painel](https://fine-form-3-0.fineformcare.workers.dev/painel/) · [Atualizar pelo celular](ATUALIZAR-PELO-CELULAR.md) · [Apresentação da marca](../README.md)**
 
-## Atualizar mantendo os dados
+## O que a plataforma faz
 
-Extraia o ZIP em uma nova pasta System-3.0. No PowerShell dessa pasta:
+| Área | Recursos |
+| --- | --- |
+| Site e contatos | Catálogo para carros e motos, cuidados por área, planos, avaliações, galeria e página de links. |
+| Atendimento | Escolha do cuidado, adicionais, preferência de data, resumo e envio de solicitação. |
+| Acompanhamento | Link privado do pedido, atualizações e endereço liberado individualmente pelo administrador. |
+| Operação | Painel de pedidos, agenda, cadastro de clientes e veículos, placas e mensagens para o cliente. |
+| Fine Form Care | Assinaturas vinculadas ao veículo conferido, ciclos, saldo e registro de visitas. |
+| Atualizações | WebSocket e notificações push opcionais, com cadastro limitado a cinco aparelhos. |
+| Privacidade | Documentos públicos, preferências locais e remoção de rascunhos e links salvos no aparelho. |
 
-```powershell
-npm.cmd ci
-npx.cmd wrangler login
-npm.cmd run reuse -- "C:\Users\Mateus Monteiro\Downloads\fine-form\project\System-2.0"
-npm.cmd run db:remote
-npm.cmd run security:setup
-npm.cmd run deploy
+**Atendimento por confirmação.** A solicitação e a preferência de data não reservam uma vaga automaticamente. Mateus confirma disponibilidade, duração, preço e escopo antes de aceitar. O endereço de atendimento permanece fora do conteúdo público e é liberado em cada pedido privado.
+
+Os pagamentos Care são confirmados manualmente pelo administrador. Os registros de pagamento continuam no banco; o cartão de total financeiro foi removido do painel. Não há cobrança automática nem integração bancária.
+
+## Identidade e interface
+
+O ciano **`#53C3B1`** é o acento da marca, acompanhado de preto, tons claros, **Manrope** e **Barlow Condensed**, com fontes servidas pelo próprio projeto. O tentáculo original aparece na abertura e pode ser revisto pelo controle do site.
+
+- Espaço em branco faz parte do layout: conteúdo e contatos devem aparecer com propósito, sem repetições.
+- O rodapé mantém redes sociais, privacidade e informações complementares de forma compacta.
+- Menus e painéis precisam caber na largura disponível, com rolagem interna quando necessário.
+- Animações decorativas respeitam a preferência de movimento reduzido e o controle do visitante.
+
+## Como o projeto está organizado
+
+| Caminho | Responsabilidade |
+| --- | --- |
+| `dist/` | Páginas, estilos, fontes, imagens e módulos do navegador servidos como Assets. |
+| `src/` | Fontes da abertura com o mascote e das interações compiladas. |
+| `worker/` | API, regras de atendimento, autenticação, assinaturas, privacidade e atualizações ao vivo. |
+| `migrations/` | Evolução do banco D1. |
+| `scripts/` | Build, configuração, publicação e preparação dos ambientes. |
+| `tests/` | Testes de interface, regras de negócio, segurança e integração com banco local fictício. |
+| `docs/` | Operação, preços, arquitetura e manutenção. |
+| `wrangler.jsonc` | Worker, Assets e bindings `DB` e `LIVE` do ambiente existente. |
+
+**Base técnica:** JavaScript com módulos ES, React em interações específicas, Motion e esbuild. A publicação usa **Cloudflare Workers + Assets + D1 + Durable Objects SQLite**. O banco guarda os registros; o Durable Object distribui os avisos de mudança ao vivo.
+
+## Rodar localmente
+
+Use uma versão de Node compatível com `package.json`. O projeto foi validado com **Node 24.19.0**. Na pasta `System-3.0`:
+
+```bash
+npm ci
+cp .dev.vars.example .dev.vars
 ```
 
-`reuse` exporta um backup antes de copiar a configuração real do Worker/D1 antigos. O código é 3.0 mesmo mantendo o nome técnico e a URL do Worker antigo. Desconecte builds do código 2.0 no Cloudflare e depois conecte o repositório com os arquivos novos. Não apague o D1 para atualizar.
+Defina uma chave de desenvolvimento em `.dev.vars`. Depois:
 
-## Instalação nova
-
-Crie um Worker chamado `fine-form-3-0` no Cloudflare. No projeto:
-
-```powershell
-npm.cmd ci
-npx.cmd wrangler login
-npm.cmd run configure
-npm.cmd run deploy
+```bash
+npm run db:local
+npm run dev
 ```
 
-`configure` cria/encontra o D1 e configura a chave e o autenticador. A instalação nova começa com banco vazio. O `wrangler.jsonc` entregue usa um UUID fictício até a configuração.
+No PowerShell, use `Copy-Item .dev.vars.example .dev.vars` para copiar o arquivo. Quando necessário no Windows, execute `npm.cmd` e `npx.cmd`.
 
-## O que muda na segurança
+As migrações locais usam um banco separado de produção. O painel publicado exige chave e autenticador TOTP; a exceção de desenvolvimento é restrita aos hosts locais definidos pelo projeto.
 
-- Chave aleatória forte e autenticador TOTP exigidos no painel publicado.
-- Sessão opaca de 256 bits, guardada como hash no D1, cookie HttpOnly/Secure/SameSite Strict com prefixo de host em HTTPS.
-- Sessão de até duas horas, com expiração após vinte minutos sem requisições relacionadas à atividade do operador. Requisições automáticas de recuperação não mantêm a sessão aberta.
-- Nova autenticação em operações administrativas e exportação após dez minutos da última confirmação. A sessão gira e a anterior é revogada.
-- Validação de Origin/Fetch Metadata e token CSRF nas alterações. Limites de tentativas por IP e de segundo fator entre IPs.
-- Valores calculados no servidor, dinheiro em centavos e operações concorrentes sem duplicar pagamentos/créditos.
-- Recibos e auditoria sem edição/exclusão pela API; triggers protegem alterações no SQL normal. Recibos preservados ao excluir clientes ou assinaturas.
-- Headers no servidor e nos assets, CSP restrita no painel, proteção contra iframe, MIME sniffing, vazamento por referrer e cache de dados privados.
-- Links de cliente restritos ao registro autorizado. Tickets ao vivo com host/sessão, uso único, expiração e revogação.
+## Verificar antes de publicar
 
-Os registros de pagamentos Care continuam no banco, com confirmação manual e sem integração bancária ou cobrança automática. O alcance e as limitações estão em [docs/SEGURANCA.md](docs/SEGURANCA.md).
-
-## Verificar
-
-```powershell
-npm.cmd run check
+```bash
+npm run check
 ```
 
-Depois de publicar, `/api/health` precisa indicar versão 3.0.0 e `ready:true`. Abra `/painel/` com chave e autenticador. Os testes usam dados e bancos fictícios, sem consultar ou alterar sua conta Cloudflare.
+Esse comando executa a suíte de testes, gera os arquivos da aplicação e valida o empacotamento do Worker com `wrangler deploy --dry-run`. Ele não publica a aplicação.
 
-O projeto usa Cloudflare Workers + Assets + D1 + Durable Objects SQLite. Os serviços e preços originais estão em `docs/PRECOS.md`. A operação diária está em `docs/OPERACAO.md`. As dependências são fixadas por `package-lock.json`; `node_modules` não acompanha o ZIP.
+O build atualiza os módulos compilados da abertura e das interações, gera os documentos legais e mantém a inclusão do rodapé nas páginas. Revise o resultado do build junto com as fontes alteradas.
+
+## Atualizar a produção existente
+
+A aplicação fica dentro de **`System-3.0`**, na branch **`main`** de `fineform-detailing/fineform-detailing`. O `wrangler.jsonc` já identifica o Worker **`fine-form-3-0`** e seu D1 existente.
+
+Configuração conferida na integração **Workers Builds**:
+
+| Campo | Valor |
+| --- | --- |
+| Branch de produção | `main` |
+| Root directory | `System-3.0` |
+| Build command | `npm run check` |
+| Deploy command | `npm run deploy` |
+| Caminhos que disparam build | `System-3.0/**` |
+
+Alterações apenas no README da raiz não disparam o build por esse filtro. As mudanças na aplicação são verificadas e publicadas pela integração existente.
+
+Para publicação manual por uma máquina já autenticada na conta correta:
+
+```bash
+npm run check
+npm run deploy
+```
+
+`deploy` gera os assets, aplica as migrações D1 pendentes e publica o Worker. Preserve os identificadores e secrets do ambiente existente. `configure`, `reuse` e a criação de outro ambiente são fluxos específicos descritos no [guia de deploy](docs/DEPLOY-CLOUDFLARE.md).
+
+Depois da publicação, confira **[`/api/health`](https://fine-form-3-0.fineformcare.workers.dev/api/health)**: versão `3.0.0` e `ready: true`. Confira também o site, o menu de Informações no celular e o acesso ao painel.
+
+## Segurança e dados
+
+O painel usa chave e TOTP, sessão opaca em cookie seguro, proteção CSRF e limites de tentativas. Os preços são recalculados no servidor; links privados ficam restritos ao registro autorizado. Detalhes, prazos e limites estão em [Segurança](docs/SEGURANCA.md) e [Privacidade e riscos](docs/PRIVACIDADE-E-RISCOS.md).
+
+Credenciais de execução ficam nos secrets do Worker. `.dev.vars`, `.env`, backups, `node_modules` e o estado local do Wrangler não pertencem ao versionamento.
+
+## Documentação para cada momento
+
+| Preciso de… | Abrir |
+| --- | --- |
+| Atualizar pelo celular | [Passo a passo no GitHub e Cloudflare](ATUALIZAR-PELO-CELULAR.md) |
+| Publicar, migrar ou configurar preview | [Deploy no Cloudflare](docs/DEPLOY-CLOUDFLARE.md) |
+| Cuidar da operação diária | [Operação](docs/OPERACAO.md) |
+| Consultar serviços e preços | [Preços](docs/PRECOS.md) |
+| Entender placas e assinaturas | [Placas e assinaturas](docs/PLACAS-E-ASSINATURAS.md) |
+| Entender as notificações | [Notificações](docs/NOTIFICACOES.md) |
+| Trabalhar no mascote e na abertura | [Loader e tentáculo](docs/LOADER-TENTACULO.md) |
+| Consultar créditos e licenças | [Terceiros](docs/TERCEIROS.md) |
+
+---
+
+**Fine Form · Um veículo por vez. Atenção por inteiro.**

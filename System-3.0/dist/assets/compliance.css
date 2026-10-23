@@ -12,16 +12,16 @@ body[data-design=kinetic] :is(.check-line,.save-draft,.system-check){line-height
 .business-stage{padding:15px 18px;margin:0 0 24px;border:1px solid #9ec1b8;border-radius:16px;background:#edf8f5;color:#17594f;text-align:left;max-width:600px}
 .business-stage>span{display:block;font-size:11px;font-weight:600;letter-spacing:.04em;line-height:1.6}.business-stage p{font-size:12px;line-height:1.8;margin:6px 0 0;color:#37483f}.booking-panel>.business-stage{max-width:none}.legal-content>.business-stage{margin-bottom:28px}.request-disclosure{padding:16px 18px;border:1px solid #9ec1b8;border-radius:12px;background:#edf8f5;font-size:13px;line-height:1.85;color:#37483f;margin:20px 0}
 .privacy-inline a,.legal-content a,.privacy-settings p a{color:#17594f;text-decoration:underline;text-underline-offset:3px}
-.footer-resources{display:flex;align-items:center;gap:22px;font-size:12px;line-height:1.6;color:#4e5848;letter-spacing:0}
+.footer-resources{display:flex;align-items:center;gap:22px;min-width:0;font-size:12px;line-height:1.6;color:#4e5848;letter-spacing:0}
 .footer-resources>a,.footer-information>summary{display:inline-flex;align-items:center;min-height:44px;color:inherit}
 .footer-information{position:relative}
 .footer-information>summary{gap:12px;cursor:pointer;list-style:none}
 .footer-information>summary::-webkit-details-marker{display:none}
 .footer-information>summary span{font-size:18px;line-height:1}
 .footer-information[open]>summary span{transform:rotate(45deg)}
-.footer-information-panel{position:absolute;right:0;bottom:calc(100% + 8px);z-index:5;width:min(288px,calc(100vw - 44px));padding:12px;background:#fff;border:1px solid #d8e0db;border-radius:14px;box-shadow:0 12px 40px #0b0d0c14}
+.footer-information-panel{position:absolute;right:0;bottom:calc(100% + 8px);z-index:5;width:min(288px,calc(100vw - 44px));max-height:calc(100vh - 150px);max-height:calc(100svh - 150px);overflow-y:auto;overscroll-behavior:contain;padding:12px;background:#fff;border:1px solid #d8e0db;border-radius:14px;box-shadow:0 12px 40px #0b0d0c14}
 .footer-legal{display:grid;gap:2px;font-size:13px;line-height:1.6}
-.footer-legal a{display:flex;align-items:center;min-height:44px;padding:10px 12px;border-radius:8px;color:#37483f}
+.footer-legal a{display:flex;align-items:center;min-height:44px;padding:10px 12px;border-radius:8px;color:#37483f;overflow-wrap:anywhere}
 .footer-legal a:hover,.footer-resources .footer-data-settings:hover{background:#e9f6f2;color:#17594f}
 .footer-resources .footer-data-settings{display:block;width:100%;margin-top:8px;padding:12px;min-height:44px;border:0;border-top:1px solid #e5e7e1;background:none;border-radius:0;font:inherit;font-size:12px;text-align:left;color:#17594f;letter-spacing:0;cursor:pointer}
 .links-end{flex-wrap:wrap}.links-end>.footer-resources{margin-left:auto}
@@ -29,6 +29,18 @@ body[data-design=kinetic] :is(.check-line,.save-draft,.system-check){line-height
 .privacy-settings{max-width:680px}.privacy-settings h2{font-size:30px;line-height:1.2;margin-bottom:24px}.privacy-settings p{font-size:14px;line-height:1.85;margin:18px 0;color:#37483f}.privacy-actions{display:flex;flex-wrap:wrap;gap:18px;align-items:center;margin:24px 0}
 .legal-page{padding-top:140px}.legal-layout{max-width:1120px;margin:auto;padding:32px 24px 80px;display:grid;grid-template-columns:220px minmax(0,1fr);gap:70px}.legal-nav{align-self:start;position:sticky;top:125px;display:grid;gap:8px}.legal-nav a{display:block;padding:10px 12px;border-radius:8px;font-size:13px;line-height:1.5;color:#37483f}.legal-nav a[aria-current=page]{background:#e9f6f2;color:#17594f;font-weight:600}
 .legal-content{min-width:0}.legal-content h1{font:600 clamp(34px,4.5vw,54px)/1.12 FF Sans,Arial,sans-serif;letter-spacing:-.04em;margin:16px 0 22px}.legal-content h2{font:600 23px/1.35 FF Sans,Arial,sans-serif;letter-spacing:-.025em;margin:36px 0 14px}.legal-content p,.legal-content li,.legal-content td,.legal-content th,.legal-content dd{font-size:15px;line-height:1.9;color:#37483f}.legal-content p{margin:14px 0}.legal-content ul,.legal-content ol{padding-left:24px;margin:18px 0}.legal-content li{margin:10px 0}.legal-content .legal-date{font-size:12px;color:#4e5848}.legal-content .legal-lead{font-size:17px;line-height:1.85}.legal-content .notice-box{padding:20px;border:1px solid #91b4aa;background:#e9f6f2;border-radius:12px}.legal-table-wrap{overflow:auto;margin:24px 0}.legal-content table{border-collapse:collapse;width:100%;min-width:480px;text-align:left}.legal-content th,.legal-content td{padding:14px 12px;border-bottom:1px solid #bcc9bf;vertical-align:top;font-size:13px}.legal-content th{font-weight:600;color:#0b0d0c}.legal-content code{font-size:12px;overflow-wrap:anywhere}.legal-content dl{margin:24px 0}.legal-content dt{font-size:12px;color:#4e5848;margin-top:20px}.legal-content dd{margin:4px 0}.legal-content .button{margin:12px 0;color:#0b0d0c;text-decoration:none}
+/* On small screens, anchor the disclosure to the footer row rather than its label.
+   The closed footer keeps its whitespace; long menus scroll inside the viewport. */
+@media(max-width:760px){
+ .footer-bottom{flex-wrap:wrap;row-gap:12px}
+ .footer-utilities{width:100%;min-width:0;gap:8px 20px}
+ .footer-resources{position:relative;flex-wrap:wrap;gap:0 18px}
+ .footer-utilities>.footer-resources{flex:1}
+ .footer-information{position:static}
+ .footer-information-panel{left:0;right:auto;width:min(360px,calc(100vw - 2*var(--gutter,22px)));max-height:calc(100vh - 150px);max-height:calc(100svh - 150px)}
+ .links-end>.footer-resources{width:100%;margin-left:0}
+ .footer-bottom>a,.footer-utilities .motion-toggle{min-height:44px;display:inline-flex;align-items:center}
+}
 @media(max-width:760px){.legal-page{padding-top:108px}.legal-layout{display:block;padding:24px 22px 60px}.legal-nav{position:static;display:flex;flex-wrap:wrap;gap:4px;margin-bottom:36px}.legal-nav a{padding:8px 10px;font-size:12px}.legal-content h1{font-size:36px}.privacy-settings{padding:32px 22px}.privacy-actions .button{white-space:normal;text-align:left}.privacy-settings h2{font-size:27px}}
 @media(forced-colors:active){:focus-visible{outline:3px solid Highlight}.button,input,textarea,select{border:1px solid ButtonText}}
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;animation-duration:.001ms!important;transition-duration:.001ms!important}}

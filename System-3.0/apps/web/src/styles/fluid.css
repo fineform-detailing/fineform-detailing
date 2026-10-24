@@ -334,3 +334,32 @@ body:has(.home-composition) .footer-socials a,body:has(.home-composition) .foote
 @media(max-width:370px){.story-chapters button{padding:7px 6px;font-size:9px}.story-chapters button span{display:none}.story-copy-links{gap:14px}.drive-steering .drive-pedal{min-width:44px}.drive-pedals .drive-pedal{padding:0 10px;font-size:10px}}
 @media(max-height:560px) and (min-width:761px){.drive-dialog{height:100dvh;width:100vw;border-radius:0}.drive-header{padding:10px 24px}.drive-footer{padding:8px 24px}.drive-toolbar p{display:none}.drive-controls{position:absolute;bottom:50px;left:24px;right:24px;pointer-events:none}.drive-controls button{pointer-events:auto}.drive-viewport{min-height:200px}}
 @media(prefers-reduced-motion:reduce){.drive-spinner{animation:none}.drive-pedal{transition:none}}
+
+
+/* Responsive safety: avoid clipping the hero and chapter controls on short phones. */
+@media (max-width:760px) {
+  .car-story,
+  .car-story.with-scroll,
+  .story-stage { min-height:0; }
+  .story-stage { height:100svh; }
+  .story-copy-links { max-width:100%; gap:12px; }
+  .story-copy-links .story-skip,
+  .story-drive { white-space:normal; line-height:1.35; }
+}
+@media (max-width:390px) {
+  .story-chapters { display:grid; grid-template-columns:repeat(5,minmax(0,1fr)); gap:2px; }
+  .story-chapters button { min-width:0; justify-content:center; white-space:normal; line-height:1.15; font-size:9px; padding:7px 3px; }
+  .story-chapters button span { display:none; }
+}
+@media (max-width:760px) and (max-height:700px) {
+  .story-label { top:80px; }
+  .story-title { top:106px; font-size:clamp(36px,10vw,58px)!important; }
+  .story-visual { top:150px; }
+  .story-copy { bottom:116px; gap:6px; }
+  .story-copy>p { font-size:12px; line-height:1.45; }
+  .story-action { padding:11px 17px; }
+  .story-copy-links .story-skip,
+  .story-drive { min-height:36px; padding:5px 0; }
+  .story-bottom { bottom:9px; }
+  .story-meta { margin-top:6px; }
+}

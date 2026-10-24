@@ -9,15 +9,61 @@ import {
   CareFolder,
   ClosingCTA,
 } from "./HomeSections";
-import { CarStory } from "../experience/CarStory";
 import { PublicReviews } from "../reviews/PublicReviews";
 export function HomeView() {
   const { contact } = useApp();
   const [privacy, setPrivacy] = useState(false);
   return (
     <>
-      <main id="conteudo" className="home-composition" tabIndex={-1}>
-        <CarStory />
+      <main id="conteudo" tabIndex={-1}>
+        <section className="ff-hero" aria-labelledby="hero-title">
+          <div className="hero-content">
+            <h1 id="hero-title">
+              {"Seu veículo."}
+              <br />
+              <span>{"Em boa forma."}</span>
+            </h1>
+            <p className="hero-lead">
+              {
+                "Cuidado para carros e motos, do primeiro olhar ao último acabamento. Com atenção aos detalhes e conversa direta com Mateus."
+              }
+            </p>
+            <div className="hero-actions">
+              <a className="button orange" href="atendimento/">
+                {"Escolher meu cuidado "}
+                <span aria-hidden="true">{"↗"}</span>
+              </a>
+              <a className="hero-secondary" href="#cuidados">
+                {"Conhecer os serviços "}
+                <span aria-hidden="true">{"↓"}</span>
+              </a>
+            </div>
+            <p className="hero-assurance">
+              <span className="assurance-dot" aria-hidden="true"></span>
+              {"Um veículo por vez. Atenção por inteiro."}
+            </p>
+          </div>
+          <figure className="hero-image" data-hero-image="">
+            <img
+              src="/assets/modern-gt3.webp"
+              srcSet="/assets/modern-gt3-mobile.webp 560w, /assets/modern-gt3.webp 933w"
+              sizes="(max-width:700px) calc(100vw - 44px), 520px"
+              decoding="async"
+              alt="Detalhe da frente de um Porsche 911 GT3 moderno, fotografia editorial de Erik Fabian"
+              width="933"
+              height="1400"
+              fetchPriority="high"
+            />
+            <figcaption>
+              <span>
+                {"FINE FORM "}
+                <b>{"CAR CARE"}</b>
+              </span>
+              <span className="hero-photo-note">{"FOTOGRAFIA EDITORIAL"}</span>
+            </figcaption>
+          </figure>
+        </section>
+        <VelocityBand />
         <section
           className="ff-section manifesto"
           aria-labelledby="manifesto-title"
@@ -38,11 +84,14 @@ export function HomeView() {
               {"Encontre seu ponto de partida "}
               <span>{"↗"}</span>
             </a>
+            <a className="underlined-link" href="/experiencia-3d/">
+              {"Conhecer a experiência interativa "}<span aria-hidden="true">{"↗"}</span>
+            </a>
           </div>
           <div className="manifesto-mark" aria-hidden="true"><img src="/assets/tentacle.svg" alt="" /></div>
         </section>
-        <GallerySection />
         <ServiceMenu />
+        <GallerySection />
         <section
           className="ff-section process-section"
           id="como-funciona"
@@ -57,7 +106,7 @@ export function HomeView() {
                 {"Eu "}
                 <span>{"cuido."}</span>
               </h2>
-
+              <CareFolder />
             </div>
             <div className="process-steps">
               <article>

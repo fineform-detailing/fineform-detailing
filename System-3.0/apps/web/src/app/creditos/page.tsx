@@ -29,7 +29,7 @@ export default function Page() {
             "As fotos são editoriais. Não representam veículos atendidos, resultados de serviços da Fine Form nem parceria ou autorização de fabricantes."
           }
         </p>
-        <h2>{"Fotografias"}</h2>
+        <section id="modelo"><h2>Demonstração do cuidado</h2><p>Sequência conceitual do mesmo Porsche 911 (930) Turbo de 1975. Não representa atendimento de cliente ou parceria com o fabricante.</p><p>Modelo de <a href="https://sketchfab.com/3d-models/free-1975-porsche-911-930-turbo-8568d9d14a994b9cae59499f0dbed21e" rel="noreferrer">Lionsharp Studios (Karol Miklas)</a>, sob <a href="https://creativecommons.org/licenses/by/4.0/" rel="noreferrer">CC BY 4.0</a>. Adaptado com pintura, espuma procedural, iluminação, câmera e compressão. Renderizado em Blender / Cycles. A cabine detalhada não faz parte deste modelo de demonstração.</p></section><h2>{"Fotografias"}</h2>
         <ul>
           <li>
             {"McLaren: "}
@@ -72,7 +72,7 @@ export default function Page() {
         <h2>{"Identidade, fontes e componentes"}</h2>
         <p>
           {
-            "O símbolo e o mascote preservam a identidade original fornecida para a Fine Form. As fontes Manrope e Barlow têm licença SIL Open Font License. Componentes Stack, ScrollVelocity e Border Glow foram adaptados de React Bits / David Haz, com MIT + Commons Clause; a interação de pasta foi adaptada para a Fine Form. Avisos de licença acompanham os arquivos do projeto."
+            "O símbolo e o mascote preservam a identidade original fornecida para a Fine Form. As fontes Syne, DM Sans, Instrument Serif, Manrope e Barlow têm licença SIL Open Font License. Componentes Stack, ScrollVelocity e Border Glow foram adaptados de React Bits / David Haz, com MIT + Commons Clause; a interação de pasta foi adaptada para a Fine Form. Avisos de licença acompanham os arquivos do projeto."
           }
         </p>
         <p>

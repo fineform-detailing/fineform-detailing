@@ -1,0 +1,22 @@
+{
+  "count": 101,
+  "sizes": {
+    "desktop": 960,
+    "mobile": 640
+  },
+  "bytes": {
+    "desktop": 1909132,
+    "mobile": 1053562
+  },
+  "source": {
+    "author": "Lionsharp Studios (Karol Miklas)",
+    "license": "CC-BY-4.0",
+    "source": "https://sketchfab.com/3d-models/free-1975-porsche-911-930-turbo-8568d9d14a994b9cae59499f0dbed21e",
+    "title": "FREE 1975 Porsche 911 (930) Turbo",
+    "sourceSha256": "8a3f723e56ceaa4b9f9dcd9b73726474fbc3d789e759ae64ee70a56dc43ef1e7",
+    "geometrySha256": "36db5a9592f2e4f30be9624ff59eeb7dbeb5b744cd0ac1daa944b2a49e6b398f",
+    "changes": "Renderização do exterior original, material de pintura, espuma procedural, iluminação, câmera, enquadramento e compressão. Cabine detalhada não incluída na amostra."
+  },
+  "renderer": "Blender 4.5 LTS / Cycles",
+  "description": "Demonstração conceitual do mesmo veículo em todas as etapas. Não representa trabalho de cliente."
+}

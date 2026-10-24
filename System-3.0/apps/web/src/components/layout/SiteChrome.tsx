@@ -47,7 +47,7 @@ export function SiteChrome({ children }: { children: ReactNode }) {
       {!admin && (
         <header className="site-header">
           <a className="brand" href="/" aria-label="Fine Form, página inicial">
-            <span className="brand-title">FINE FORM</span>
+            <img className="brand-symbol" src="/assets/logo-original.png" alt="" width={32} height={32} /><span className="brand-title">FINE FORM</span>
           </a>
           <nav
             id="main-nav"
@@ -68,7 +68,7 @@ export function SiteChrome({ children }: { children: ReactNode }) {
           </nav>
           <div className="header-actions">
             <a className="header-cta" href="/atendimento/">
-              Vamos conversar ↗
+              <span className="cta-prefix">Vamos </span>conversar ↗
             </a>
             <button
               className="nav-toggle"

@@ -11,6 +11,7 @@
 @import "./folder-float.css";
 @import "./compliance.css";
 @import "./intro.css";
+@import "./fluid.css";
 @theme {
   --color-brand: #53c3b1;
   --color-ink: #0b0d0c;

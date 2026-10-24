@@ -8,6 +8,8 @@ A restrição considera o IP de saída, não nacionalidade ou localização fís
 
 As cidades dos datacenters (`colo`) indicam onde a Cloudflare atende a requisição e são diferentes do país do visitante (`country`). Uma requisição aparecer no painel não comprova invasão; as recusadas podem continuar aparecendo nas métricas. Referências: [metadados da requisição](https://developers.cloudflare.com/workers/runtime-apis/request/#incomingrequestcfproperties) e [Worker antes dos assets](https://developers.cloudflare.com/workers/static-assets/routing/worker-script/).
 
+As URLs públicas de versões anteriores e seus aliases ficam desativados na conta (`previews_enabled: false`) e no projeto (`preview_urls: false`), impedindo acesso público a uma versão antiga sem a restrição de país. O endereço principal `fine-form-3-0.fineformcare.workers.dev` continua habilitado.
+
 Os testes de geografia exercitam páginas e assets reais no Miniflare, Brasil, países externos, localização desconhecida, cabeçalhos falsificados, escritas, HEAD, OPTIONS, HTTP e WebSocket. A revisão histórica abaixo mantém o contexto da entrega inicial.
 
 ## Revisão inicial

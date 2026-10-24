@@ -10,6 +10,7 @@ let mf;
 before(async()=>{
  const config=JSON.parse(await readFile('wrangler.jsonc','utf8'));
  assert.equal(config.assets.run_worker_first,true,'every asset must pass through the country check');
+ assert.equal(config.preview_urls,false,'older versions must not remain publicly routable');
  const bundle=await build({entryPoints:[config.main],bundle:true,format:'esm',write:false});
  mf=new Miniflare({modules:true,script:bundle.outputFiles[0].text,compatibilityDate:config.compatibility_date,cf:{country:'BR'},assets:{directory:config.assets.directory,binding:config.assets.binding,routerConfig:{has_user_worker:true,invoke_user_worker_ahead_of_assets:config.assets.run_worker_first}},log:new Log(LogLevel.ERROR)});
 });

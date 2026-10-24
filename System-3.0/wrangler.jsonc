@@ -5,6 +5,7 @@
   "main": "worker/index.mjs",
   "compatibility_date": "2026-07-30",
   "keep_vars": true,
+  "preview_urls": false,
   "triggers": {
     "crons": [
       "* * * * *"

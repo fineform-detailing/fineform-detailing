@@ -11,7 +11,6 @@
 @import "./folder-float.css";
 @import "./compliance.css";
 @import "./intro.css";
-@import "./fluid.css";
 @theme {
   --color-brand: #53c3b1;
   --color-ink: #0b0d0c;
@@ -182,4 +181,70 @@ html[data-motion="paused"] *:after {
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
   }
+}
+
+/* Reforços da interface clássica Fine Form (versão 3), sem alterar regras de negócio. */
+body[data-page="home"] #service-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+body[data-page="home"] #service-grid > .service-row {
+  min-width: 0;
+  border: 1px solid var(--line);
+  border-radius: 22px;
+  background: #fff;
+  padding: 30px;
+}
+body[data-page="home"] #service-grid > .service-complete {
+  background: #fffaf3;
+  border-color: #b9dcd6;
+}
+body[data-page="home"] .manifesto-copy .underlined-link + .underlined-link {
+  margin-left: clamp(10px, 2vw, 25px);
+}
+body[data-page="home"] .manifesto-mark img {
+  display: block;
+  width: 100%;
+  max-height: 150px;
+  object-fit: contain;
+}
+body[data-page="home"] .plan-card.system-card {
+  display: grid;
+  gap: 16px;
+  max-width: 640px;
+  margin: 0 auto;
+  padding: clamp(24px, 4vw, 38px);
+}
+body[data-page="home"] .plan-card.system-card > strong {
+  display: block;
+  line-height: 1.25;
+  margin: 10px 0;
+}
+body[data-page="admin"] .admin-nav button { gap: 14px; }
+body[data-page="admin"] .dashboard-grid { gap: 20px; }
+body[data-page="admin"] .admin-main .system-card { min-width: 0; }
+@media (min-width: 1100px) {
+  body[data-page="home"] #service-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 24px;
+  }
+  body[data-page="home"] #service-grid > .service-row {
+    min-height: 330px;
+    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-rows: auto 1fr auto;
+    gap: 25px 16px;
+    padding: 32px;
+    align-items: start;
+  }
+}
+@media (max-width: 600px) {
+  body[data-page="home"] #service-grid { gap: 14px; }
+  body[data-page="home"] #service-grid > .service-row { padding: 22px; }
+  body[data-page="home"] .manifesto-copy .underlined-link + .underlined-link {
+    margin-left: 0;
+    margin-top: 8px;
+  }
+  body[data-page="home"] .plan-card.system-card { padding: 24px; gap: 12px; }
 }

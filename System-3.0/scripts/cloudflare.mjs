@@ -5,11 +5,22 @@ const cli = new URL(
   "../node_modules/wrangler/bin/wrangler.js",
   import.meta.url,
 );
-export function wrangler(args, { capture = false } = {}) {
+export function wranglerEnvironment(source = process.env, auxiliary = false) {
+  const env = { ...source, WRANGLER_SEND_METRICS: "false" };
+  if (auxiliary) {
+    // Workers Builds pins its primary target. A separately configured internal
+    // service must use its own name; authentication/account permissions remain.
+    delete env.WRANGLER_CI_OVERRIDE_NAME;
+    delete env.WRANGLER_CI_MATCH_TAG;
+    env.WRANGLER_CI_GENERATE_PREVIEW_ALIAS = "false";
+  }
+  return env;
+}
+export function wrangler(args, { capture = false, auxiliary = false } = {}) {
   const result = spawnSync(process.execPath, [fileURLToPath(cli), ...args], {
     stdio: capture ? ["inherit", "pipe", "inherit"] : "inherit",
     encoding: "utf8",
-    env: { ...process.env, WRANGLER_SEND_METRICS: "false" },
+    env: wranglerEnvironment(process.env, auxiliary),
   });
   if (result.error) throw result.error;
   if (result.status !== 0)

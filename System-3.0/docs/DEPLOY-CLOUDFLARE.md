@@ -32,3 +32,7 @@ O deploy não publica versões sem antes compilar. Para CI que acabou de executa
 ## Reversão
 
 Use as versões do Worker ou o histórico Git correspondente, mantendo o D1 atual. Uma mudança de interface não exige restaurar o banco. Consulte a documentação de `wrangler rollback` antes de selecionar a versão de destino.
+
+## Dois serviços no Workers Builds
+
+O Workers Builds injeta `WRANGLER_CI_OVERRIDE_NAME` e `WRANGLER_CI_MATCH_TAG` para fixar seu Worker principal. `scripts/cloudflare.mjs` conserva essas verificações no gateway. Somente o subprocesso que publica o serviço web usa o nome de sua própria configuração, sem herdar o alvo do gateway; o token e a conta continuam os mesmos. O deploy verifica que o serviço web tem nome diferente, mesma conta e exposição pública desativada antes de publicar.

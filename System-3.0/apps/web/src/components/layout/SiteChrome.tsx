@@ -68,7 +68,7 @@ export function SiteChrome({ children }: { children: ReactNode }) {
           </nav>
           <div className="header-actions">
             <a className="header-cta" href="/atendimento/">
-              <span className="cta-prefix">Vamos </span>conversar ↗
+              <span className="cta-prefix">Vamos&nbsp;</span>conversar ↗
             </a>
             <button
               className="nav-toggle"

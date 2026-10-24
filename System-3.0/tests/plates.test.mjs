@@ -3,8 +3,8 @@ import assert from 'node:assert/strict';
 import {build} from 'esbuild';
 import {Miniflare,Log,LogLevel} from 'miniflare';
 import {applyMigrations} from './helpers/database.mjs';
-import {createSummary,todaySP} from '../dist/assets/catalog.mjs';
-import {digest,REAUTH_SECONDS} from '../worker/security.mjs';
+import {createSummary,todaySP} from '../packages/domain/catalog.mjs';
+import {digest,REAUTH_SECONDS} from '../services/api/src/infrastructure/security.mjs';
 let mf,db,cookie,csrf,ip=1,sequence=0,source;
 const key='test-only-in-person-registration-access-key-more-than-32-chars';
 const token=()=>Buffer.from(crypto.getRandomValues(new Uint8Array(32))).toString('base64url');
@@ -13,7 +13,7 @@ const selection=(extra={})=>({vehicle:'car',mode:'single',service:'essential',mo
 async function call(path,{method='GET',body,auth=false,cap,headers={}}={}){
  const response=await mf.dispatchFetch('http://localhost'+path,{method,headers:{Origin:'http://localhost','CF-Connecting-IP':'192.0.2.'+(ip++%250),...(body?{'Content-Type':'application/json'}:{}),...(auth?{Cookie:cookie,'X-FF-CSRF':csrf}:{}),...(cap?{Authorization:'Bearer '+cap}:{}),...headers},body:body?JSON.stringify(body):undefined});return {status:response.status,data:await response.json(),response};
 }
-before(async()=>{source=(await build({entryPoints:['worker/index.mjs'],bundle:true,format:'esm',write:false})).outputFiles[0].text;mf=new Miniflare({modules:true,script:source,compatibilityDate:'2026-07-30',cf:false,bindings:{ADMIN_KEY:key},d1Databases:{DB:'in-person-test'},log:new Log(LogLevel.ERROR)});db=await mf.getD1Database('DB');await applyMigrations(db);const login=await call('/api/admin/session',{method:'POST',body:{key}});assert.equal(login.status,200);cookie=login.response.headers.get('Set-Cookie').split(';')[0];csrf=login.data.csrfToken;});
+before(async()=>{source=(await build({entryPoints:['services/api/src/http/worker.mjs'],bundle:true,format:'esm',write:false})).outputFiles[0].text;mf=new Miniflare({modules:true,script:source,compatibilityDate:'2026-07-30',cf:false,bindings:{ADMIN_KEY:key},d1Databases:{DB:'in-person-test'},log:new Log(LogLevel.ERROR)});db=await mf.getD1Database('DB');await applyMigrations(db);const login=await call('/api/admin/session',{method:'POST',body:{key}});assert.equal(login.status,200);cookie=login.response.headers.get('Set-Cookie').split(';')[0];csrf=login.data.csrfToken;});
 after(async()=>{await mf?.dispose();});
 async function quote(extra={}){const body=selection(extra),result=await call('/api/quotes',{method:'POST',body});assert.equal(result.status,201,JSON.stringify(result.data));return {q:result.data.quote,body};}
 const register=(q,extra={})=>call('/api/admin/quotes/'+q.id+'/plate',{method:'PATCH',auth:true,body:{version:q.version,plate:plate(),confirm:true,...extra}});
@@ -106,7 +106,7 @@ test('busca por placa e exportação usam o registro administrativo',async()=>{
 
 test('migração do pacote anterior preserva dados e exige conferência presencial mesmo com placa preenchida',async t=>{
  const legacy=new Miniflare({modules:true,script:source,compatibilityDate:'2026-07-30',cf:false,bindings:{ADMIN_KEY:key},d1Databases:{DB:'registration-previous'},log:new Log(LogLevel.ERROR)});t.after(()=>legacy.dispose());const database=await legacy.getD1Database('DB');await applyMigrations(database,{files:['0001_initial.sql','0002_security.sql','0003_admin_notifications.sql','0004_vehicle_plates.sql']});
- const customer=crypto.randomUUID(),sub=crypto.randomUUID(),cycle=crypto.randomUUID(),qid=crypto.randomUUID(),scheduled=crypto.randomUUID(),completed=crypto.randomUUID(),cap=token(),qcap=token(),stamp=new Date().toISOString(),value='OLD1A23';const {nextMonth}=await import('../worker/domain.mjs');
+ const customer=crypto.randomUUID(),sub=crypto.randomUUID(),cycle=crypto.randomUUID(),qid=crypto.randomUUID(),scheduled=crypto.randomUUID(),completed=crypto.randomUUID(),cap=token(),qcap=token(),stamp=new Date().toISOString(),value='OLD1A23';const {nextMonth}=await import('../services/api/src/domain/model.mjs');
  const state=selection({plate:value});delete state.submissionToken;const budget={items:[{id:'plan_credit',label:'Essencial incluída',price:0,kind:'credit'}],total:0,gross:0,discount:0,hasBase:true};
  await database.batch([
   database.prepare('INSERT INTO customers(id,name,phone,vehicle,model,created_at,updated_at) VALUES (?,?,?,?,?,?,?)').bind(customer,'Cliente anterior','5511900001590','car','Civic',stamp,stamp),
@@ -127,7 +127,7 @@ test('migração do pacote anterior preserva dados e exige conferência presenci
 });
 
 test('base 3.0 sem placas recebe cadastro presencial sem perder reserva nem inventar placa histórica',async t=>{
- const legacy=new Miniflare({modules:true,script:source,compatibilityDate:'2026-07-30',cf:false,bindings:{ADMIN_KEY:key},d1Databases:{DB:'registration-pre-plates'},log:new Log(LogLevel.ERROR)});t.after(()=>legacy.dispose());const database=await legacy.getD1Database('DB');await applyMigrations(database,{files:['0001_initial.sql','0002_security.sql','0003_admin_notifications.sql']});const ids=Array.from({length:5},()=>crypto.randomUUID()),[customer,sub,cycle,scheduled,completed]=ids,cap=token(),stamp=new Date().toISOString(),{nextMonth}=await import('../worker/domain.mjs');
+ const legacy=new Miniflare({modules:true,script:source,compatibilityDate:'2026-07-30',cf:false,bindings:{ADMIN_KEY:key},d1Databases:{DB:'registration-pre-plates'},log:new Log(LogLevel.ERROR)});t.after(()=>legacy.dispose());const database=await legacy.getD1Database('DB');await applyMigrations(database,{files:['0001_initial.sql','0002_security.sql','0003_admin_notifications.sql']});const ids=Array.from({length:5},()=>crypto.randomUUID()),[customer,sub,cycle,scheduled,completed]=ids,cap=token(),stamp=new Date().toISOString(),{nextMonth}=await import('../services/api/src/domain/model.mjs');
  await database.batch([
   database.prepare('INSERT INTO customers(id,name,phone,vehicle,model,created_at,updated_at) VALUES (?,?,?,?,?,?,?)').bind(customer,'Cliente sem placa','5511900001591','car','Civic',stamp,stamp),
   database.prepare('INSERT INTO subscriptions(id,customer_id,plan_id,vehicle,model,viewer_hash,billing_day,created_at,updated_at) VALUES (?,?,?,?,?,?,?,?,?)').bind(sub,customer,'careEssential','car','Civic',await digest(cap),17,stamp,stamp),

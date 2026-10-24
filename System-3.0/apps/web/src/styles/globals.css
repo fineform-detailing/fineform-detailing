@@ -1,0 +1,184 @@
+@layer theme, base, components, utilities;
+@import "tailwindcss/theme.css" layer(theme);
+@import "tailwindcss/utilities.css" layer(utilities);
+@import "./style.css";
+@import "./editorial.css";
+@import "./clean.css";
+@import "./studio.css";
+@import "./system.css";
+@import "./reviews.css";
+@import "./studio-motion.css";
+@import "./folder-float.css";
+@import "./compliance.css";
+@import "./intro.css";
+@theme {
+  --color-brand: #53c3b1;
+  --color-ink: #0b0d0c;
+  --color-paper: #f2f0ea;
+  --font-sans: "FF Sans", Arial, sans-serif;
+}
+:root {
+  --orange: #53c3b1;
+  --cyan: #53c3b1;
+  --paper: #f2f0ea;
+  --ink: #0b0d0c;
+}
+[hidden] {
+  display: none !important;
+}
+.fieldset-clean {
+  border: 0;
+  padding: 0;
+  margin: 0;
+  min-width: 0;
+}
+.system-field textarea {
+  min-height: 100px;
+}
+.system-heading {
+  margin-bottom: 32px;
+}
+.system-heading h1 {
+  font-size: clamp(38px, 6vw, 72px);
+}
+.wizard-progress {
+  display: block;
+  width: 100%;
+  height: 4px;
+  border: 0;
+  margin: 0 0 35px;
+  background: #e8eeeb;
+  color: #53c3b1;
+}
+.wizard-progress::-webkit-progress-bar {
+  background: #e8eeeb;
+}
+.wizard-progress::-webkit-progress-value {
+  background: #53c3b1;
+}
+.wizard-progress::-moz-progress-bar {
+  background: #53c3b1;
+}
+.gallery-react {
+  display: block;
+  aspect-ratio: 4/5;
+  width: 100%;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  overflow: hidden;
+  cursor: pointer;
+  border-radius: 22px;
+}
+.gallery-react img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.native-marquee-track {
+  white-space: nowrap;
+  display: flex;
+  width: max-content;
+  animation: ff-marquee 32s linear infinite;
+}
+.native-marquee-track span {
+  padding: 0 16px;
+}
+.motion-paused,
+html[data-motion="paused"] *,
+html[data-motion="paused"] *:before,
+html[data-motion="paused"] *:after {
+  animation-play-state: paused !important;
+  scroll-behavior: auto !important;
+}
+.admin-dialog {
+  width: min(900px, 94vw);
+  max-height: 90dvh;
+  overflow: auto;
+}
+.admin-dialog h2 {
+  padding-right: 38px;
+}
+.admin-dialog .system-card {
+  margin-top: 24px;
+}
+.admin-table button {
+  white-space: normal;
+}
+.dashboard-stat {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 18px;
+}
+.review-card {
+  padding: 26px;
+  border: 1px solid #0b0d0c22;
+  border-radius: 20px;
+}
+.review-card blockquote {
+  margin: 14px 0;
+}
+.rating-options input {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+.rating-options label:focus-within {
+  outline: 2px solid #247467;
+  outline-offset: 4px;
+}
+.rating-options label {
+  position: relative;
+  cursor: pointer;
+}
+.rating-options .is-selected {
+  color: #247467;
+}
+@keyframes ff-marquee {
+  to {
+    transform: translateX(-25%);
+  }
+}
+@media (max-width: 760px) {
+  .dashboard-grid {
+    grid-template-columns: 1fr;
+  }
+  .admin-main {
+    min-width: 0;
+  }
+  .admin-toolbar {
+    flex-wrap: wrap;
+  }
+  .admin-toolbar input,
+  .admin-toolbar select {
+    max-width: 100%;
+  }
+  .system-heading {
+    padding-top: 20px;
+  }
+  .site-footer .footer-socials {
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+  .site-footer .footer-socials a {
+    font-size: 11px;
+  }
+  .wizard-title {
+    font-size: clamp(32px, 8vw, 48px);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *:before,
+  *:after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

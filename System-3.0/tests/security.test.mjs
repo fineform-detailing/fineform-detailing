@@ -5,8 +5,8 @@ import {build} from 'esbuild';
 import {Miniflare,Log,LogLevel} from 'miniflare';
 import {readFile} from 'node:fs/promises';
 import {applyMigrations} from './helpers/database.mjs';
-import {totpCode,totpStep,SESSION_SECONDS,IDLE_SECONDS,REAUTH_SECONDS,digest} from '../worker/security.mjs';
-import {todaySP} from '../worker/domain.mjs';
+import {totpCode,totpStep,SESSION_SECONDS,IDLE_SECONDS,REAUTH_SECONDS,digest} from '../services/api/src/infrastructure/security.mjs';
+import {todaySP} from '../services/api/src/domain/model.mjs';
 const key='integration-security-only-random-admin-key-64-characters-long-01',secret='GEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQ',origin='https://fine-form.test';
 let mf,db,cookie,csrf,ip=1,bundle;
 async function call(path,{method='GET',body,auth=true,headers={},raw,urlOrigin=origin}={}){
@@ -16,7 +16,7 @@ async function call(path,{method='GET',body,auth=true,headers={},raw,urlOrigin=o
 }
 function keepSession(result){cookie=result.res.headers.get('Set-Cookie').split(';')[0];csrf=result.data.csrfToken;}
 before(async()=>{
- bundle=(await build({entryPoints:['worker/index.mjs'],bundle:true,format:'esm',write:false})).outputFiles[0].text;
+ bundle=(await build({entryPoints:['services/api/src/http/worker.mjs'],bundle:true,format:'esm',write:false})).outputFiles[0].text;
  mf=new Miniflare({modules:true,script:bundle,compatibilityDate:'2026-07-30',cf:{country:'BR'},bindings:{ADMIN_KEY:key,ADMIN_TOTP_SECRET:secret},d1Databases:{DB:'security-test'},durableObjects:{LIVE:{className:'LiveUpdates',useSQLite:true}},log:new Log(LogLevel.ERROR)});
  db=await mf.getD1Database('DB');await applyMigrations(db);
  const login=await call('/api/admin/session',{method:'POST',auth:false,body:{key,code:await totpCode(secret,Math.floor(Date.now()/30000)-1)}});assert.equal(login.status,200);keepSession(login);
@@ -128,7 +128,7 @@ test('migration imports prior paid cycles without changing customers or subscrip
  }finally{await legacy.dispose();}
 });
 test('expired realtime sockets close without repeatedly scheduling an alarm in the past',async()=>{
- const {LiveUpdates}=await import('../worker/live.mjs');let scheduled=null,deleted=false;
+ const {LiveUpdates}=await import('../services/api/src/infrastructure/realtime.mjs');let scheduled=null,deleted=false;
  const expired={readyState:1,deserializeAttachment:()=>({expiresAt:Date.now()-1}),close(){this.readyState=2;}},futureTime=Date.now()+60000,future={readyState:1,deserializeAttachment:()=>({expiresAt:futureTime})};
  const sockets=[expired,future],ctx={getWebSockets:()=>sockets,storage:{async setAlarm(t){scheduled=t;},async deleteAlarm(){deleted=true;}}};const live=new LiveUpdates(ctx);await live.alarm();assert.equal(expired.readyState,2);assert.equal(scheduled,futureTime);
  sockets.pop();await live.schedule();assert.equal(deleted,true);

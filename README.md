@@ -49,4 +49,4 @@ Este repositório também guarda a plataforma que conecta o site, o atendimento,
 
 **[Abrir a documentação do projeto →](System-3.0/README.md)**
 
-Código e aplicação em [`System-3.0/`](System-3.0/). Publicação em Cloudflare Workers, com banco D1 e atualizações ao vivo.
+Código e aplicação em [`System-3.0/`](System-3.0/). Interface completa em React, Next.js, TypeScript e Tailwind CSS, com hooks e organização MVVM. Serviços web e API em Cloudflare Workers, banco D1 e atualizações ao vivo.

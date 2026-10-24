@@ -1,6 +1,6 @@
 import {test} from 'node:test';
 import assert from 'node:assert/strict';
-import {visitAvailability,chooseCredit} from '../dist/assets/membership-state.mjs';
+import {visitAvailability,chooseCredit} from '../packages/domain/membership-state.mjs';
 const now='2026-10-13';
 const care=()=>({plate:'ABC1D23',plateVerified:true,status:'active',cycle:{paid:1,starts_on:'2026-10-01',ends_on:'2026-11-01',notStarted:false,expired:false,credits:{premium:{quota:1,available:1},essential:{quota:1,available:1},moto:{quota:0,available:0}}}});
 test('saldo válido libera a visita independentemente da conexão de atualização',()=>{assert.equal(visitAvailability(care(),'premium',now).allowed,true);});

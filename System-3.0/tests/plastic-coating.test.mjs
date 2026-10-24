@@ -1,6 +1,6 @@
 import {test} from 'node:test';
 import assert from 'node:assert/strict';
-import {extras,extraPrice,extraPriceFor,quoteFor,planVisitQuote,normalizeExtras,includedFor,createSummary} from '../dist/assets/catalog.mjs';
+import {extras,extraPrice,extraPriceFor,quoteFor,planVisitQuote,normalizeExtras,includedFor,createSummary} from '../packages/domain/catalog.mjs';
 const car={vehicle:'car',mode:'single',service:'essential',extras:[],treatments:[],flexibleDate:true,model:'Civic',name:'Cliente',phone:'11900001601'};
 const coating=extras.find(x=>x.id==='plasticCoating');
 test('vitrificação de plásticos tem preço e escopo próprios para carro e moto',()=>{assert.equal(extraPrice(coating,'car'),220);assert.equal(extraPrice(coating,'moto'),150);assert.match(coating.description,/externos sem pintura/);assert.match(coating.description,/cura/);assert.match(coating.description,/motos/);assert.doesNotMatch(coating.description,/anos|meses|garantia/);});

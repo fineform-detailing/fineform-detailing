@@ -2,7 +2,7 @@
   "$schema": "node_modules/wrangler/config-schema.json",
   "name": "fine-form-3-0",
   "account_id": "aec28ee9f801e3222a0f9e733d397596",
-  "main": "worker/index.mjs",
+  "main": "services/api/src/http/worker.mjs",
   "compatibility_date": "2026-07-30",
   "keep_vars": true,
   "preview_urls": false,
@@ -42,5 +42,11 @@
   ],
   "observability": {
     "enabled": false
-  }
+  },
+  "services": [
+    {
+      "binding": "WEB",
+      "service": "fine-form-web"
+    }
+  ]
 }

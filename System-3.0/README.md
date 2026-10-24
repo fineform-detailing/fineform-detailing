@@ -1,132 +1,68 @@
-<picture>
-  <source media="(max-width: 600px) and (prefers-color-scheme: dark)" srcset="docs/readme/brand-dark-mobile.svg">
-  <source media="(max-width: 600px)" srcset="docs/readme/brand-light-mobile.svg">
-  <source media="(prefers-color-scheme: dark)" srcset="docs/readme/brand-dark.svg">
-  <img src="docs/readme/brand-light.svg" width="1200" alt="Fine Form — seu veículo, em boa forma. Identidade ciano e mascote original da marca.">
-</picture>
+# Fine Form 4.0
 
-# Plataforma Fine Form 3.0
+Toda a interface é desenvolvida com **React 19, Next.js 16 App Router, TypeScript e Tailwind CSS 4**. Páginas, formulários, diálogos, painel e portal Care são componentes React. CSS preserva a identidade ciano da Fine Form; hooks coordenam estado e efeitos.
 
-Site, atendimento e operação diária no mesmo projeto. A experiência pública apresenta os cuidados para carros e motos; o painel organiza pedidos, agenda, clientes, veículos e **Fine Form Care**.
+A aplicação continua em `System-3.0` para preservar a integração existente do GitHub com Cloudflare. A versão funcional é 4.0; o Worker público mantém o nome e o endereço anteriores.
 
-**[Site publicado](https://fine-form-3-0.fineformcare.workers.dev/) · [Painel](https://fine-form-3-0.fineformcare.workers.dev/painel/) · [Atualizar pelo celular](ATUALIZAR-PELO-CELULAR.md) · [Apresentação da marca](../README.md)**
+## Estrutura
 
-## O que a plataforma faz
-
-| Área | Recursos |
+| Local | Responsabilidade |
 | --- | --- |
-| Site e contatos | Catálogo para carros e motos, cuidados por área, planos, avaliações, galeria e página de links. |
-| Atendimento | Escolha do cuidado, adicionais, preferência de data, resumo e envio de solicitação. |
-| Acompanhamento | Link privado do pedido, atualizações e endereço liberado individualmente pelo administrador. |
-| Operação | Painel de pedidos, agenda, cadastro de clientes e veículos, placas e mensagens para o cliente. |
-| Fine Form Care | Assinaturas vinculadas ao veículo conferido, ciclos, saldo e registro de visitas. |
-| Atualizações | WebSocket e notificações push opcionais, com cadastro limitado a cinco aparelhos. |
-| Privacidade | Documentos públicos, preferências locais e remoção de rascunhos e links salvos no aparelho. |
+| `apps/web/src/app/` | Rotas Next.js, layout, metadados e tratamento de erro. |
+| `apps/web/src/features/` | Telas e ViewModels por funcionalidade: home, orçamento, acompanhamento, Care, avaliações, painel e informações. |
+| `apps/web/src/components/` | Componentes de interface, catálogo, navegação e tentáculo. |
+| `apps/web/src/hooks/` | Recursos assíncronos, atualizações ao vivo, links privados e notificações. |
+| `apps/web/src/models/` | Contratos TypeScript e configuração pública. |
+| `apps/web/src/services/` | Transporte HTTP, sessão, notificações e integração de animação. |
+| `apps/web/src/styles/` | Tailwind, tokens da marca e CSS organizado. |
+| `apps/web/public/` | Imagens, fontes, mascote e Service Workers do painel/acompanhamento. |
+| `packages/domain/` | Catálogo, cálculo de preços, placas, Care, contatos e política de armazenamento compartilhados. |
+| `services/api/src/domain/` | Modelos e invariantes do servidor. |
+| `services/api/src/application/` | Casos de uso de pedidos, assinaturas, placas, avaliações, privacidade e cadastro. |
+| `services/api/src/infrastructure/` | D1, autenticação, Web Push e Durable Object de atualizações. |
+| `services/api/src/http/` | Gateway HTTP, autorização, roteamento e respostas. |
+| `services/web/` | Microsserviço interno que entrega a aplicação React compilada. |
+| `migrations/` | Evolução versionada do banco existente. |
+| `tests/` | Regressão do domínio/API, integração React e validação do export Next.js. |
 
-**Atendimento por confirmação.** A solicitação e a preferência de data não reservam uma vaga automaticamente. Mateus confirma disponibilidade, duração, preço e escopo antes de aceitar. O endereço de atendimento permanece fora do conteúdo público e é liberado em cada pedido privado.
+## Desenvolvimento
 
-Os pagamentos Care são confirmados manualmente pelo administrador. Os registros de pagamento continuam no banco; o cartão de total financeiro foi removido do painel. Não há cobrança automática nem integração bancária.
-
-## Identidade e interface
-
-O ciano **`#53C3B1`** é o acento da marca, acompanhado de preto, tons claros, **Manrope** e **Barlow Condensed**, com fontes servidas pelo próprio projeto. O tentáculo original aparece na abertura e pode ser revisto pelo controle do site.
-
-- Espaço em branco faz parte do layout: conteúdo e contatos devem aparecer com propósito, sem repetições.
-- O rodapé mantém redes sociais, privacidade e informações complementares de forma compacta.
-- Menus e painéis precisam caber na largura disponível, com rolagem interna quando necessário.
-- Animações decorativas respeitam a preferência de movimento reduzido e o controle do visitante.
-
-## Como o projeto está organizado
-
-| Caminho | Responsabilidade |
-| --- | --- |
-| `dist/` | Páginas, estilos, fontes, imagens e módulos do navegador servidos como Assets. |
-| `src/` | Fontes da abertura com o mascote e das interações compiladas. |
-| `worker/` | API, regras de atendimento, autenticação, assinaturas, privacidade e atualizações ao vivo. |
-| `migrations/` | Evolução do banco D1. |
-| `scripts/` | Build, configuração, publicação e preparação dos ambientes. |
-| `tests/` | Testes de interface, regras de negócio, segurança e integração com banco local fictício. |
-| `docs/` | Operação, preços, arquitetura e manutenção. |
-| `wrangler.jsonc` | Worker, Assets e bindings `DB` e `LIVE` do ambiente existente. |
-
-**Base técnica:** JavaScript com módulos ES, React em interações específicas, Motion e esbuild. A publicação usa **Cloudflare Workers + Assets + D1 + Durable Objects SQLite**. O banco guarda os registros; o Durable Object distribui os avisos de mudança ao vivo.
-
-## Rodar localmente
-
-Use uma versão de Node compatível com `package.json`. O projeto foi validado com **Node 24.19.0**. Na pasta `System-3.0`:
+Use Node.js conforme `engines` de `package.json`.
 
 ```bash
 npm ci
-cp .dev.vars.example .dev.vars
-```
-
-Defina uma chave de desenvolvimento em `.dev.vars`. Depois:
-
-```bash
 npm run db:local
 npm run dev
 ```
 
-No PowerShell, use `Copy-Item .dev.vars.example .dev.vars` para copiar o arquivo. Quando necessário no Windows, execute `npm.cmd` e `npx.cmd`.
+`npm run dev` inicia Next.js em `http://localhost:3000` e os Workers locais em `http://localhost:8787`. Configure uma **chave somente de desenvolvimento** em `.dev.vars` para testar o painel local. Nunca copie credenciais de produção para o código.
 
-As migrações locais usam um banco separado de produção. O painel publicado exige chave e autenticador TOTP; a exceção de desenvolvimento é restrita aos hosts locais definidos pelo projeto.
+A interface usa MVVM: a View renderiza componentes; o hook ViewModel coordena estado, validação e chamadas; modelos e serviços permanecem independentes da apresentação. A API conserva validação e autorização próprias. O navegador não decide pagamento, aceitação, crédito ou permissão de acesso.
 
-## Verificar antes de publicar
+## Verificação
 
 ```bash
 npm run check
 ```
 
-Esse comando executa a suíte de testes, gera os arquivos da aplicação e valida o empacotamento do Worker com `wrangler deploy --dry-run`. Ele não publica a aplicação.
+O comando verifica TypeScript, testa domínio e API com D1 local, exercita componentes React contra a API, compila todas as rotas, verifica arquivos e hashes CSP e executa o dry run dos dois Workers. Os testes não alteram o banco de produção.
 
-O build atualiza os módulos compilados da abertura e das interações, gera os documentos legais e mantém a inclusão do rodapé nas páginas. Revise o resultado do build junto com as fontes alteradas.
-
-## Atualizar a produção existente
-
-A aplicação fica dentro de **`System-3.0`**, na branch **`main`** de `fineform-detailing/fineform-detailing`. O `wrangler.jsonc` já identifica o Worker **`fine-form-3-0`** e seu D1 existente.
-
-Configuração conferida na integração **Workers Builds**:
-
-| Campo | Valor |
-| --- | --- |
-| Branch de produção | `main` |
-| Root directory | `System-3.0` |
-| Build command | `npm run check` |
-| Deploy command | `npm run deploy` |
-| Caminhos que disparam build | `System-3.0/**` |
-
-Alterações apenas no README da raiz não disparam o build por esse filtro. As mudanças na aplicação são verificadas e publicadas pela integração existente.
-
-Para publicação manual por uma máquina já autenticada na conta correta:
+## Publicação
 
 ```bash
-npm run check
 npm run deploy
 ```
 
-`deploy` gera os assets, aplica as migrações D1 pendentes e publica o Worker. Preserve os identificadores e secrets do ambiente existente. `configure`, `reuse` e a criação de outro ambiente são fluxos específicos descritos no [guia de deploy](docs/DEPLOY-CLOUDFLARE.md).
+O deploy compila Next.js, publica primeiro o serviço interno `fine-form-web`, aplica somente migrações versionadas pendentes no D1 existente e publica o gateway `fine-form-3-0`. O binding privado `WEB` conecta os serviços. O serviço web não oferece endereço `workers.dev` nem URLs públicas de versões.
 
-Depois da publicação, confira **[`/api/health`](https://fine-form-3-0.fineformcare.workers.dev/api/health)**: versão `3.0.0` e `ready: true`. Confira também o site, o menu de Informações no celular e o acesso ao painel.
+A interface é exportada pelo próprio Next.js. Os dados continuam dinâmicos pela API e pelos WebSockets; o export não transforma o código-fonte em HTML manual. `dist/`, `.next/` e `out/` são resultados de compilação e não devem ser editados.
+
+O endereço público continua: <https://fine-form-3-0.fineformcare.workers.dev/>. Consulte `/api/health` para confirmar versão, banco, segurança e serviço web. A restrição de acesso ao Brasil continua no gateway, inclusive para arquivos do framework.
 
 ## Segurança e dados
 
-O painel usa chave e TOTP, sessão opaca em cookie seguro, proteção CSRF e limites de tentativas. Os preços são recalculados no servidor; links privados ficam restritos ao registro autorizado. Detalhes, prazos e limites estão em [Segurança](docs/SEGURANCA.md) e [Privacidade e riscos](docs/PRIVACIDADE-E-RISCOS.md).
+O D1 existente, o namespace `LiveUpdates`, as sessões, as chaves de ambiente, os links privados, os pagamentos e o histórico permanecem vinculados aos recursos atuais. Esta migração de interface não cria um banco substituto nem reaplica dados de exemplo em produção.
 
-Credenciais de execução ficam nos secrets do Worker. `.dev.vars`, `.env`, backups, `node_modules` e o estado local do Wrangler não pertencem ao versionamento.
+A autenticação mantém MFA, CSRF, expiração, confirmação recente e revogação. O build calcula hashes das instruções inline geradas pelo Next.js para a política CSP, sem liberar scripts inline arbitrários. Pedidos e portais usam `no-store`. Nenhuma chave do painel é persistida no navegador.
 
-## Documentação para cada momento
-
-| Preciso de… | Abrir |
-| --- | --- |
-| Atualizar pelo celular | [Passo a passo no GitHub e Cloudflare](ATUALIZAR-PELO-CELULAR.md) |
-| Publicar, migrar ou configurar preview | [Deploy no Cloudflare](docs/DEPLOY-CLOUDFLARE.md) |
-| Cuidar da operação diária | [Operação](docs/OPERACAO.md) |
-| Consultar serviços e preços | [Preços](docs/PRECOS.md) |
-| Entender placas e assinaturas | [Placas e assinaturas](docs/PLACAS-E-ASSINATURAS.md) |
-| Entender as notificações | [Notificações](docs/NOTIFICACOES.md) |
-| Trabalhar no mascote e na abertura | [Loader e tentáculo](docs/LOADER-TENTACULO.md) |
-| Consultar créditos e licenças | [Terceiros](docs/TERCEIROS.md) |
-
----
-
-**Fine Form · Um veículo por vez. Atenção por inteiro.**
+Veja [arquitetura e modelagem](docs/ARQUITETURA.md), [migração React](docs/MIGRACAO-REACT.md), [publicação](docs/DEPLOY-CLOUDFLARE.md) e [operação](docs/OPERACAO.md).

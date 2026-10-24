@@ -4,8 +4,8 @@ import assert from 'node:assert/strict';
 import {readFile} from 'node:fs/promises';
 import {build} from 'esbuild';
 import {Miniflare,Log,LogLevel} from 'miniflare';
-import {nextMonth,todaySP} from '../worker/domain.mjs';
-import {planVisitQuote} from '../dist/assets/catalog.mjs';
+import {nextMonth,todaySP} from '../services/api/src/domain/model.mjs';
+import {planVisitQuote} from '../packages/domain/catalog.mjs';
 let mf,db,cookie,csrf,ip=1;
 import {applyMigrations} from './helpers/database.mjs';
 const key='test-only-64-character-admin-key-used-in-local-integration-tests-01';
@@ -18,7 +18,7 @@ async function call(path,{method='GET',body,auth=false,cap,origin='http://localh
 }
 const selection=(overrides={})=>({vehicle:'car',mode:'single',service:'premium',plate:fixturePlate(),model:'Honda Civic de teste',name:'Cliente de teste',phone:'11900000001',date:'',time:'',flexibleDate:true,treatments:[],extras:[],ack:true,submissionToken:token(),...overrides});
 before(async()=>{
- const bundle=await build({entryPoints:['worker/index.mjs'],bundle:true,format:'esm',write:false,target:'es2022'});
+ const bundle=await build({entryPoints:['services/api/src/http/worker.mjs'],bundle:true,format:'esm',write:false,target:'es2022'});
  mf=new Miniflare({modules:true,script:bundle.outputFiles[0].text,compatibilityDate:'2026-07-30',cf:{country:'BR'},bindings:{ADMIN_KEY:key},d1Databases:{DB:'fine-form-test'},durableObjects:{LIVE:{className:'LiveUpdates',useSQLite:true}},log:new Log(LogLevel.ERROR)});
  db=await mf.getD1Database('DB');await applyMigrations(db);
  const login=await call('/api/admin/session',{method:'POST',body:{key}});assert.equal(login.status,200);cookie=login.res.headers.get('Set-Cookie').split(';')[0];csrf=login.data.csrfToken;
@@ -272,7 +272,7 @@ test('excluir pedido notifica acompanhamento e saldo do Care em tempo real',asyn
 test('alteração entre conferência e transação bloqueia a exclusão inteira do cliente',async()=>{
  const active=(await call('/api/admin/subscriptions',{method:'POST',auth:true,body:{name:'Cliente entre etapas',phone:'11900000721',model:'Teste',planId:'careEssential',paidConfirmed:true,startsOn:date}})).data;
  const id=active.subscription.customerId,preview=(await call('/api/admin/customers/'+id,{auth:true})).data;
- const {deleteCustomer}=await import('../worker/deletions.mjs');let batches=0,newQuote;
+ const {deleteCustomer}=await import('../services/api/src/application/deletions.mjs');let batches=0,newQuote;
  const env={DB:{prepare:sql=>db.prepare(sql),batch:async statements=>{
   batches++;if(batches===3)newQuote=(await call('/api/quotes',{method:'POST',body:selection({phone:'11900000721'})})).data.quote;
   return db.batch(statements);

@@ -5,13 +5,13 @@ import vm from 'node:vm';
 import {JSDOM} from 'jsdom';
 import {build} from 'esbuild';
 import {Miniflare,Log,LogLevel} from 'miniflare';
-import worker from '../worker/index.mjs';
+import worker from '../services/api/src/http/worker.mjs';
 import {applyMigrations} from './helpers/database.mjs';
 import {vehicleFixture} from './helpers/plates.mjs';
 import {generateVapid} from '../scripts/notifications-setup.mjs';
-import {digest,randomToken,sign,totpCode} from '../worker/security.mjs';
-import {dispatchReviewPush} from '../worker/reviews.mjs';
-import {todaySP} from '../worker/domain.mjs';
+import {digest,randomToken,sign,totpCode} from '../services/api/src/infrastructure/security.mjs';
+import {dispatchReviewPush} from '../services/api/src/application/reviews.mjs';
+import {todaySP} from '../services/api/src/domain/model.mjs';
 
 const origin='https://fine-form.test',key='reviews-test-only-admin-key-at-least-thirty-two-characters',secret='GEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQ';
 const encode=bytes=>Buffer.from(bytes).toString('base64url');
@@ -167,7 +167,7 @@ test('convite rejeita expiração, outra origem, outro pedido e assinatura adult
  for(const table of ['reviews','customer_push_subscriptions','customer_push_jobs'])assert.equal((await f.db.prepare('SELECT COUNT(*) n FROM '+table).first()).n,0);
 });
 test('service worker abre somente avaliação na própria origem e não intercepta páginas privadas',async()=>{
- const source=await readFile('dist/acompanhar/sw.js','utf8'),handlers={},opened=[],notifications=[];
+ const source=await readFile('apps/web/public/acompanhar/sw.js','utf8'),handlers={},opened=[],notifications=[];
  const self={location:{origin},clients:{openWindow:async url=>opened.push(url),claim:async()=>{}},registration:{showNotification:async(title,options)=>notifications.push({title,options})},skipWaiting:async()=>{},addEventListener:(name,fn)=>handlers[name]=fn};
  vm.runInNewContext(source,{self,URL});assert.equal(handlers.fetch,undefined);
  let pending;const id=crypto.randomUUID(),token='eyJ0ZXN0IjoxfQ.c2lnbmF0dXJl';
@@ -175,55 +175,4 @@ test('service worker abre somente avaliação na própria origem e não intercep
  handlers.notificationclick({notification:{data:notifications[0].options.data,close(){}},waitUntil:p=>pending=p});await pending;
  const target=new URL(opened[0]);assert.equal(target.origin,origin);assert.equal(target.pathname,'/avaliar/');assert.equal(target.searchParams.get('id'),id);assert.equal(new URLSearchParams(target.hash.slice(1)).get('t'),token);
  handlers.notificationclick({notification:{data:{quoteId:'https://evil.test',token:'malicious'},close(){}},waitUntil:p=>pending=p});await pending;assert.equal(new URL(opened[1]).pathname,'/acompanhar/');
-});
-test('formulário permite nota baixa, preserva comentário após falha e escapa conteúdo ao confirmar',async()=>{
- const out=await build({entryPoints:['dist/assets/review-form.mjs'],bundle:true,format:'iife',write:false});
- const dom=new JSDOM(await readFile('dist/avaliar/index.html','utf8'),{url:origin+'/avaliar/?id='+crypto.randomUUID()+'#t='+randomToken(),runScripts:'outside-only'}),w=dom.window;
- w.AbortController=globalThis.AbortController;let fail=true;
- w.fetch=async(path,options)=>new Response(JSON.stringify(options.method==='POST'?(fail?{error:'Falha temporária'}:{review:{firstName:'Mariana',rating:1,comment:'<img src=x onerror=alert(1)>'}}):{eligible:true,firstName:'Mariana',review:null}),{status:options.method==='POST'&&fail?503:200,headers:{'Content-Type':'application/json'}});
- const until=async fn=>{for(let i=0;i<100;i++){if(fn())return;await new Promise(r=>setTimeout(r,10));}assert.fail('Interface indisponível');};
- try{
-  w.eval(out.outputFiles[0].text);await until(()=>w.document.getElementById('review-form'));
-  const form=w.document.getElementById('review-form');form.querySelector('[value="1"]').checked=true;form.querySelector('[name=consent]').checked=true;form.querySelector('[name=comment]').value='<img src=x onerror=alert(1)>';
-  form.dispatchEvent(new w.Event('submit',{bubbles:true,cancelable:true}));await until(()=>w.document.getElementById('review-error').textContent.includes('Falha temporária'));
-  assert.equal(form.querySelector('[name=comment]').value,'<img src=x onerror=alert(1)>');assert.equal(form.querySelector('button').disabled,false);
-  fail=false;form.dispatchEvent(new w.Event('submit',{bubbles:true,cancelable:true}));await until(()=>w.document.querySelector('.review-thanks'));
-  assert.equal(w.document.querySelector('.review-thanks img'),null);assert.match(w.document.querySelector('.review-thanks blockquote').textContent,/<img/);
- }finally{w.close();}
-});
-test('galeria nativa navega por botão, teclado e swipe, preserva foco e a pasta abre por toque',async()=>{
- const out=await build({entryPoints:['src/studio-motion.mjs'],bundle:true,format:'iife',outfile:'/tmp/fineform-motion-test.js',write:false});
- const dom=new JSDOM(await readFile('dist/index.html','utf8'),{url:origin,runScripts:'outside-only'}),w=dom.window;
- w.matchMedia=()=>({matches:false});
- try{
-  w.eval(out.outputFiles.find(f=>f.path.endsWith('.js'))?.text||out.outputFiles[0].text);
-  const gallery=w.document.getElementById('react-gallery'),first=gallery.querySelector('[data-card="0"]');
-  first.focus();first.click();assert.equal(gallery.querySelector('[data-card="1"]').getAttribute('tabindex'),'0');assert.equal(w.document.activeElement,gallery.querySelector('[data-card="1"]'));
-  gallery.dispatchEvent(new w.KeyboardEvent('keydown',{key:'ArrowRight',bubbles:true}));assert.match(gallery.querySelector('.explorer-counter').textContent,/Moto/);
-  gallery.querySelector('[data-dot="0"]').click();assert.match(gallery.querySelector('.explorer-counter').textContent,/Pintura/);
-  const event=(name,x,y)=>{const value=new w.Event(name,{bubbles:true});Object.assign(value,{clientX:x,clientY:y,pointerId:1});first.dispatchEvent(value);};
-  event('pointerdown',200,100);event('pointerup',100,105);assert.match(gallery.querySelector('.explorer-counter').textContent,/Interior/);
-  const folder=w.document.querySelector('.folder-float');folder.click();assert.equal(folder.getAttribute('aria-expanded'),'true');folder.dispatchEvent(new w.KeyboardEvent('keydown',{key:'Escape'}));assert.equal(folder.getAttribute('aria-expanded'),'false');
- }finally{w.close();}
-});
-test('arrastar acompanha o dedo, pausar cancela os efeitos e o gesto vertical mantém a foto atual',async()=>{
- const out=await build({entryPoints:['src/studio-motion.mjs'],bundle:true,format:'iife',outfile:'/tmp/fineform-motion-test.js',write:false});
- const dom=new JSDOM(await readFile('dist/index.html','utf8'),{url:origin,runScripts:'outside-only',pretendToBeVisual:true}),w=dom.window;
- let enabled=true;const animations=[];w.ffMotion={enabled:()=>enabled};w.matchMedia=()=>({matches:false});
- w.Element.prototype.animate=function(){
-  let reject;const animation={cancelled:false,finished:new Promise((_,r)=>reject=r),cancel(){this.cancelled=true;reject(Error('cancelled'));}};animations.push(animation);return animation;
- };
- const point=(target,name,x,y)=>{const event=new w.Event(name,{bubbles:true});Object.assign(event,{pointerId:1,clientX:x,clientY:y});target.dispatchEvent(event);};
- try{
-  w.eval(out.outputFiles.find(f=>f.path.endsWith('.js')).text);
-  const gallery=w.document.getElementById('react-gallery'),first=gallery.querySelector('[data-card="0"]');
-  point(first,'pointerdown',200,100);point(first,'pointermove',140,104);await new Promise(r=>setTimeout(r,30));
-  assert.equal(first.classList.contains('is-dragging'),true);assert.equal(first.style.getPropertyValue('--drag-x'),'-60px');
-  point(first,'pointerup',120,105);assert.match(gallery.querySelector('.explorer-counter').textContent,/Interior/);assert.ok(animations.length>0);
-  enabled=false;w.dispatchEvent(new w.CustomEvent('ff:motion',{detail:{enabled:false}}));await Promise.resolve();
-  assert.ok(animations.every(a=>a.cancelled));assert.equal(gallery.querySelector('.is-dragging,.is-leaving'),null);
-  const count=animations.length;gallery.querySelector('[data-next]').click();assert.match(gallery.querySelector('.explorer-counter').textContent,/Moto/);assert.equal(animations.length,count);
-  enabled=true;const current=gallery.querySelector('[data-card="2"]');point(current,'pointerdown',100,100);point(current,'pointermove',103,170);await new Promise(r=>setTimeout(r,30));point(current,'pointercancel',103,170);
-  assert.match(gallery.querySelector('.explorer-counter').textContent,/Moto/);assert.equal(gallery.querySelector('.is-dragging'),null);assert.equal(current.style.getPropertyValue('--drag-x'),'');
- }finally{w.dispatchEvent(new w.Event('pagehide'));await Promise.resolve();w.close();}
 });

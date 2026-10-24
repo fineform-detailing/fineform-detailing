@@ -1,0 +1,18 @@
+{
+  "$schema": "../../node_modules/wrangler/config-schema.json",
+  "name": "fine-form-web",
+  "account_id": "aec28ee9f801e3222a0f9e733d397596",
+  "main": "worker.mjs",
+  "compatibility_date": "2026-10-13",
+  "workers_dev": false,
+  "preview_urls": false,
+  "assets": {
+    "directory": "../../dist",
+    "binding": "ASSETS",
+    "html_handling": "auto-trailing-slash"
+  },
+  "observability": {
+    "enabled": true,
+    "head_sampling_rate": 0.1
+  }
+}

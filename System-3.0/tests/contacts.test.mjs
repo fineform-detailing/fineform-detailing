@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {socialContacts,emailMessage,preferredContact,whatsappMessage} from '../dist/assets/contacts.mjs';
+import {socialContacts,emailMessage,preferredContact,whatsappMessage} from '../packages/domain/contacts.mjs';
 const config={instagram:'https://www.instagram.com/fineform.detailing/',tiktok:'https://www.tiktok.com/@fineform.detailing',email:'fineformcare@gmail.com'};
 test('contatos preservam o perfil informado e oferecem os três destinos',()=>{
  const links=socialContacts(config);assert.equal(links.length,3);assert.equal(links[0].url,config.instagram);assert.equal(links[1].url,config.tiktok);assert.equal(links[2].url,'mailto:fineformcare@gmail.com');

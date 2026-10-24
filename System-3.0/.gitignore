@@ -11,3 +11,10 @@ backup.sql
 backups/
 *.sqlite
 *.sqlite3
+
+# Framework output and local verification
+apps/web/.next/
+apps/web/out/
+apps/web/tsconfig.tsbuildinfo
+dist/
+.test-web-build/

@@ -5,11 +5,11 @@ import {readFile} from 'node:fs/promises';
 import vm from 'node:vm';
 import {Miniflare,Log,LogLevel,createFetchMock} from 'miniflare';
 import {build} from 'esbuild';
-import worker from '../worker/index.mjs';
+import worker from '../services/api/src/http/worker.mjs';
 import {applyMigrations} from './helpers/database.mjs';
 import {generateVapid,notificationOrigin,notificationCron} from '../scripts/notifications-setup.mjs';
-import {pushSettings,pushEndpoint,validatePushSubscription,dispatchPush,testPush} from '../worker/push.mjs';
-import {totpCode,digest,REAUTH_SECONDS} from '../worker/security.mjs';
+import {pushSettings,pushEndpoint,validatePushSubscription,dispatchPush,testPush} from '../services/api/src/infrastructure/push.mjs';
+import {totpCode,digest,REAUTH_SECONDS} from '../services/api/src/infrastructure/security.mjs';
 
 const origin='https://fine-form.test',key='test-only-notifications-admin-key-more-than-thirty-two-characters',secret='GEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQ';
 const encode=bytes=>Buffer.from(bytes).toString('base64url'),decode=value=>Buffer.from(value,'base64url');
@@ -176,7 +176,7 @@ test('migração de notificações preserva clientes, ciclos, recibos e estrutur
 
 async function serviceWorkerHarness(windows=[]){
  const listeners=new Map(),notifications=[],opened=[],self={location:{origin},skipWaiting:async()=>{},clients:{claim:async()=>{},matchAll:async()=>windows,openWindow:async url=>opened.push(url)},registration:{showNotification:async(title,options)=>notifications.push({title,options})},addEventListener:(name,handler)=>listeners.set(name,handler)};
- vm.runInNewContext(await readFile('dist/painel/sw.js','utf8'),{self,URL});
+ vm.runInNewContext(await readFile('apps/web/public/painel/sw.js','utf8'),{self,URL});
  const run=async(name,event)=>{let promise;listeners.get(name)({...event,waitUntil:p=>promise=p});await promise;};return {listeners,notifications,opened,run};
 }
 test('service worker mostra aviso com vibração sem página aberta e ignora links ou nomes do payload',async()=>{
@@ -196,7 +196,7 @@ test('Worker real no Miniflare envia Web Push criptografado com as APIs nativas 
  mock.get('https://fcm.googleapis.com').intercept({method:'POST',path:'/fcm/send/test-workerd'}).reply(options=>{
   deliveries.push({endpoint:browser.subscription.endpoint,options:{body:options.body,headers:options.headers}});return {statusCode:201,data:''};
  });
- const script=(await build({entryPoints:['worker/index.mjs'],bundle:true,format:'esm',write:false})).outputFiles[0].text;
+ const script=(await build({entryPoints:['services/api/src/http/worker.mjs'],bundle:true,format:'esm',write:false})).outputFiles[0].text;
  const mf=new Miniflare({modules:true,script,compatibilityDate:'2026-07-30',cf:{country:'BR'},bindings:{ADMIN_KEY:key,ADMIN_TOTP_SECRET:secret,PUSH_VAPID:JSON.stringify(vapid)},d1Databases:{DB:'workerd-push'},fetchMock:mock,log:new Log(LogLevel.ERROR)});t.after(()=>mf.dispose());
  const db=await mf.getD1Database('DB');await applyMigrations(db);let cookie='',csrf='',ip=1;
  async function call(path,body,authenticated=true){

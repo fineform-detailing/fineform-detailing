@@ -1,0 +1,221 @@
+.summary-folder {
+  margin-top: 36px;
+  max-width: 390px;
+}
+.folder-float {
+  position: relative;
+  display: block;
+  width: 100%;
+  height: 275px;
+  padding: 0;
+  border: 0;
+  background: none;
+  text-align: left;
+  cursor: pointer;
+  isolation: isolate;
+  touch-action: manipulation;
+}
+.folder-float:focus-visible {
+  outline: 2px solid #53c3b1;
+  outline-offset: 6px;
+  border-radius: 18px;
+}
+.folder-back {
+  position: absolute;
+  bottom: 0;
+  left: 9%;
+  width: 82%;
+  height: 143px;
+  border-radius: 12px 12px 15px 15px;
+  background: #388a7d;
+  transform: rotate(-3deg);
+  transition: transform 0.65s cubic-bezier(0.2, 1.35, 0.3, 1);
+}
+.folder-back:before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: -17px;
+  width: 40%;
+  height: 30px;
+  background: inherit;
+  border-radius: 10px 12px 0 0;
+}
+.folder-front {
+  position: absolute;
+  z-index: 2;
+  bottom: 0;
+  left: 7%;
+  width: 86%;
+  height: 145px;
+  padding: 23px 24px;
+  border-radius: 10px 10px 17px 17px;
+  color: #0b0d0c;
+  background: #53c3b1;
+  box-shadow: 0 -1px 0 #a3dfd5 inset;
+  transform-origin: 50% 100%;
+  transition: transform 0.65s cubic-bezier(0.2, 1.35, 0.3, 1);
+}
+.folder-front > span:first-child {
+  display: block;
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  margin-bottom: 16px;
+}
+.folder-front > b {
+  display: block;
+  font-size: 23px;
+  line-height: 1.2;
+  font-weight: 600;
+  letter-spacing: -0.035em;
+}
+.folder-plus {
+  position: absolute;
+  right: 24px;
+  bottom: 21px;
+  font-size: 24px;
+  line-height: 1;
+}
+.folder-notes {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+.folder-sheet {
+  position: absolute;
+  bottom: 12px;
+  left: calc(50% - 65px);
+  width: 130px;
+  height: 157px;
+  padding: 18px;
+  border-radius: 9px;
+  background: #f2f0ea;
+  color: #0b0d0c;
+  box-shadow: 0 3px 14px #0003;
+  border: 1px solid #fff6;
+  transform: translate(0, 0) rotate(var(--angle));
+  transition: transform 0.7s cubic-bezier(0.2, 1.35, 0.3, 1);
+  will-change: auto;
+}
+.sheet-0 {
+  --angle: -12deg;
+  background: #d9dece;
+}
+.sheet-1 {
+  --angle: 2deg;
+  background: #f2f0ea;
+}
+.sheet-2 {
+  --angle: 13deg;
+  background: #e7e2d8;
+}
+.sheet-number {
+  display: block;
+  font-size: 9px;
+  letter-spacing: 0.08em;
+  color: #67705d;
+  margin-bottom: 14px;
+}
+.folder-sheet > b {
+  display: block;
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1.45;
+  margin-bottom: 18px;
+}
+.sheet-line {
+  display: block;
+  height: 3px;
+  background: #b9c0ad;
+  border-radius: 2px;
+  margin-bottom: 9px;
+}
+.sheet-line.short {
+  width: 64%;
+}
+.is-open .sheet-0 {
+  transform: translate(-76px, -104px) rotate(-17deg);
+}
+.is-open .sheet-1 {
+  transform: translate(0, -132px) rotate(0);
+}
+.is-open .sheet-2 {
+  transform: translate(76px, -100px) rotate(15deg);
+}
+.is-open .folder-front {
+  transform: perspective(650px) rotateX(-17deg) translateY(6px);
+}
+.is-open .folder-back {
+  transform: rotate(0);
+}
+.folder-hint {
+  font-size: 11px;
+  line-height: 1.8;
+  color: #adb8a2;
+  margin: 24px 0 0;
+  padding-left: 7%;
+}
+.folder-still .folder-sheet,
+.folder-still .folder-front,
+.folder-still .folder-back {
+  transition: none;
+}
+@media (max-width: 600px) {
+  .summary-folder {
+    margin-top: 18px;
+    max-width: 350px;
+  }
+  .folder-float {
+    height: 285px;
+  }
+  .folder-front {
+    padding: 23px;
+  }
+  .folder-sheet {
+    width: 116px;
+    height: 148px;
+    left: calc(50% - 58px);
+    padding: 17px;
+  }
+  .is-open .sheet-0 {
+    transform: translate(-62px, -99px) rotate(-15deg);
+  }
+  .is-open .sheet-1 {
+    transform: translate(0, -124px);
+  }
+  .is-open .sheet-2 {
+    transform: translate(62px, -96px) rotate(13deg);
+  }
+  .folder-front > b {
+    font-size: 22px;
+  }
+  .folder-hint {
+    font-size: 11px;
+    margin-top: 22px;
+  }
+}
+@media (max-width: 359px) {
+  .folder-sheet {
+    width: 105px;
+    height: 142px;
+    left: calc(50% - 52.5px);
+    padding: 14px;
+  }
+  .is-open .sheet-0 {
+    transform: translate(-54px, -98px) rotate(-14deg);
+  }
+  .is-open .sheet-2 {
+    transform: translate(54px, -96px) rotate(13deg);
+  }
+  .folder-front > b {
+    font-size: 20px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .folder-sheet,
+  .folder-front,
+  .folder-back {
+    transition: none;
+  }
+}

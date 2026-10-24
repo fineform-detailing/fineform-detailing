@@ -1,7 +1,9 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
+import dynamic from "next/dynamic";
 import { useApp } from "../../components/layout/AppProvider";
 import { clampProgress, frameAt, stageAt, stages } from "./story";
+const DriveDialog = dynamic(() => import("./DriveDialog").then(m => m.DriveDialog), { ssr: false });
 
 /** Scroll owns the frame. React only updates at chapter boundaries. */
 export function CarStory() {
@@ -16,6 +18,7 @@ export function CarStory() {
   const [ready, setReady] = useState(false);
   const [failed, setFailed] = useState(false);
   const [load, setLoad] = useState(false);
+  const [driveOpen, setDriveOpen] = useState(false);
   const scrolling = load && !reduced && !paused && !manual && !failed;
   const chapterData = stages[chapter];
 
@@ -128,34 +131,35 @@ export function CarStory() {
   };
 
   return (
-    <section ref={section} id="o-cuidado" className={`car-story ${scrolling ? "with-scroll" : "without-scroll"}`} aria-label="O cuidado Fine Form, em quatro etapas do exterior">
+    <section ref={section} id="o-cuidado" className={`car-story ${scrolling ? "with-scroll" : "without-scroll"}`} aria-label="O cuidado Fine Form, por fora e por dentro">
       <div className="story-stage" data-chapter={chapter}>
         <div className="story-label"><span>Cuidado automotivo</span><span>Um veículo por vez.</span></div>
         <h1 className="story-title" id="hero-title"><span>{chapterData.title}</span><em>{chapterData.accent}</em></h1>
-        <div className={`story-visual ${ready && !failed && !reduced ? "is-ready" : ""}`} aria-hidden="true">
-          <img src={`/assets/experience/poster-${chapter}.webp`} alt="" width={960} height={720} fetchPriority="high" className="story-poster" />
+        <div className={`story-visual ${chapter === 3 ? "is-cabin" : ""} ${ready && !failed && !reduced && chapter !== 3 ? "is-ready" : ""}`} aria-hidden="true">
+          <img src={`/assets/experience/${chapterData.poster}`} srcSet={chapter === 3 ? "/assets/experience/cabin-mobile.webp 720w, /assets/experience/cabin.webp 1448w" : undefined} sizes={chapter === 3 ? "(max-width: 760px) 100vw, 82vw" : undefined} alt="" width={960} height={720} fetchPriority={chapter === 0 ? "high" : "auto"} className="story-poster" />
           <canvas ref={canvas} className="story-canvas" />
         </div>
         <div className="story-copy">
           <p>{chapterData.text}</p>
           <a href={chapterData.href} className="story-action">{chapterData.action}<span aria-hidden="true">↗</span></a>
-          <a href="#cuidados" className="story-skip">Ver os serviços <span aria-hidden="true">↓</span></a>
+          <div className="story-copy-links"><a href="#cuidados" className="story-skip">Ver os serviços <span aria-hidden="true">↓</span></a><button type="button" className="story-drive" onClick={() => setDriveOpen(true)}>Assumir o volante <span aria-hidden="true">↗</span></button></div>
         </div>
         <span className="story-signature" aria-hidden="true">Do primeiro olhar<br/>ao último detalhe.</span>
         <div className="story-bottom">
           <div className="story-chapters" role="group" aria-label="Explorar etapas do cuidado">
             {stages.map((s, index) => <button key={s.label} type="button" aria-pressed={index === chapter} onClick={() => choose(index)} onKeyDown={e => {
               if (e.key !== "ArrowLeft" && e.key !== "ArrowRight") return;
-              e.preventDefault(); const next = (index + (e.key === "ArrowRight" ? 1 : 3)) % 4;
+              e.preventDefault(); const next = (index + (e.key === "ArrowRight" ? 1 : stages.length - 1)) % stages.length;
               choose(next); (e.currentTarget.parentElement?.children[next] as HTMLElement)?.focus();
             }}><span>0{index + 1}</span>{s.label}</button>)}
           </div>
-          <div className="story-meta"><a href="/creditos/#modelo">Porsche 930 · cena conceitual ↗</a>
+          <div className="story-meta"><a href="/creditos/#modelo">Porsche 930 · {chapter === 3 ? "cabine ilustrativa" : "cena conceitual"} ↗</a>
             {reduced ? <span>Movimento reduzido</span> : <button type="button" onClick={toggleMode} aria-pressed={manual}>{manual ? "Ativar ao rolar" : "Explorar sem rolagem"}</button>}
             {!load && !reduced && <button type="button" onClick={() => setLoad(true)}>Carregar sequência</button>}
           </div>
         </div>
       </div>
+      {driveOpen && <DriveDialog onClose={() => setDriveOpen(false)} />}
     </section>
   );
 }

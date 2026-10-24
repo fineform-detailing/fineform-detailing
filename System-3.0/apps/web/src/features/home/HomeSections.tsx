@@ -237,8 +237,8 @@ const images = [
     area: "pintura",
   },
   {
-    src: "modern-interior",
-    alt: "Interior BMW, fotografia editorial de Divaris Shirichena",
+    src: "experience/cabin",
+    alt: "Visualização conceitual da cabine clássica do Porsche 930, com bancos e painel pretos",
     title: "De dentro para fora.",
     description:
       "Bancos, plásticos, painel e carpete. Cada material pede um cuidado.",
@@ -319,7 +319,7 @@ export function GallerySection() {
               height={1100}
             />
           </button>
-          <span className="photo-tag">FINE FORM / OLHAR EDITORIAL</span>
+          <span className="photo-tag">FINE FORM / {active === 1 ? "CABINE ILUSTRATIVA" : "OLHAR EDITORIAL"}</span>
         </div>
         <div className="explorer-detail">
           <div className="explorer-navigation">

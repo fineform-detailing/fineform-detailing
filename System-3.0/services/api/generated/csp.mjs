@@ -1,88 +1,88 @@
 // Generated from the exact Next.js output. Never allow unsafe-inline scripts.
 export const scriptPolicies = {
   "/404/": [
-    "'sha256-omheDNHs3KhMsDj4k6CmhbeNorqu4coa2kvANTwSZDY='",
+    "'sha256-Iw97d8Vh9FPPTIiR48ZmlLHlpwCPflEx8TXOqgRLYaI='",
     "'sha256-OBTN3RiyCV4Bq7dFqZ5a2pAXjnCcCYeTJMO2I/LYKeo='",
-    "'sha256-uvs/A+gbe6xjLTcIJpFV2Kd7S8I5056OaGXTwmEribs='"
+    "'sha256-TpQaDiYn/v6erYxsw5Pb8GDTrnFp+W2Cuz4yRE7lGaE='"
   ],
   "/404.html": [
-    "'sha256-omheDNHs3KhMsDj4k6CmhbeNorqu4coa2kvANTwSZDY='",
+    "'sha256-Iw97d8Vh9FPPTIiR48ZmlLHlpwCPflEx8TXOqgRLYaI='",
     "'sha256-OBTN3RiyCV4Bq7dFqZ5a2pAXjnCcCYeTJMO2I/LYKeo='",
-    "'sha256-uvs/A+gbe6xjLTcIJpFV2Kd7S8I5056OaGXTwmEribs='"
+    "'sha256-TpQaDiYn/v6erYxsw5Pb8GDTrnFp+W2Cuz4yRE7lGaE='"
   ],
   "/_not-found/": [
-    "'sha256-omheDNHs3KhMsDj4k6CmhbeNorqu4coa2kvANTwSZDY='",
+    "'sha256-Iw97d8Vh9FPPTIiR48ZmlLHlpwCPflEx8TXOqgRLYaI='",
     "'sha256-OBTN3RiyCV4Bq7dFqZ5a2pAXjnCcCYeTJMO2I/LYKeo='",
-    "'sha256-uvs/A+gbe6xjLTcIJpFV2Kd7S8I5056OaGXTwmEribs='"
+    "'sha256-TpQaDiYn/v6erYxsw5Pb8GDTrnFp+W2Cuz4yRE7lGaE='"
   ],
   "/acessibilidade/": [
-    "'sha256-omheDNHs3KhMsDj4k6CmhbeNorqu4coa2kvANTwSZDY='",
+    "'sha256-Iw97d8Vh9FPPTIiR48ZmlLHlpwCPflEx8TXOqgRLYaI='",
     "'sha256-OBTN3RiyCV4Bq7dFqZ5a2pAXjnCcCYeTJMO2I/LYKeo='",
-    "'sha256-OqN+w/ZGqcXcGrJkVuGJwNJ7wcziENDMpLnny25IW4c='"
+    "'sha256-CuuoQ6muTWpaSUBZeg78OAWOHl5gcpsMq5SNDAPo4j0='"
   ],
   "/acompanhar/": [
-    "'sha256-omheDNHs3KhMsDj4k6CmhbeNorqu4coa2kvANTwSZDY='",
+    "'sha256-Iw97d8Vh9FPPTIiR48ZmlLHlpwCPflEx8TXOqgRLYaI='",
     "'sha256-OBTN3RiyCV4Bq7dFqZ5a2pAXjnCcCYeTJMO2I/LYKeo='",
-    "'sha256-L603fJzIgkGppTeoTGtdqq4/f3AO7LKCFz/9YPinUww='"
+    "'sha256-QYCqS987bBiqWs5wx4ueNTUKhXnUXEDEQ5VYTjiXDTg='"
   ],
   "/assinatura/": [
-    "'sha256-omheDNHs3KhMsDj4k6CmhbeNorqu4coa2kvANTwSZDY='",
+    "'sha256-Iw97d8Vh9FPPTIiR48ZmlLHlpwCPflEx8TXOqgRLYaI='",
     "'sha256-OBTN3RiyCV4Bq7dFqZ5a2pAXjnCcCYeTJMO2I/LYKeo='",
-    "'sha256-8WLgyn9EK7nVDoNvPSrQ3a3EaytJniL/jzuY/x/L490='"
+    "'sha256-UZ0EAP90pchcdn5VaawODGKfXMw8PWsbg5dd7Ur9zkY='"
   ],
   "/atendimento/": [
-    "'sha256-omheDNHs3KhMsDj4k6CmhbeNorqu4coa2kvANTwSZDY='",
+    "'sha256-Iw97d8Vh9FPPTIiR48ZmlLHlpwCPflEx8TXOqgRLYaI='",
     "'sha256-OBTN3RiyCV4Bq7dFqZ5a2pAXjnCcCYeTJMO2I/LYKeo='",
-    "'sha256-RHgFBnlLq+mq18YkCnmvZdGRHOcpcO2YPA6DuaCFSHg='"
+    "'sha256-dLp3FzxSeC6swL8phwrw2lUbGBFH9BL9b8IPHouY+AE='"
   ],
   "/avaliar/": [
-    "'sha256-omheDNHs3KhMsDj4k6CmhbeNorqu4coa2kvANTwSZDY='",
+    "'sha256-Iw97d8Vh9FPPTIiR48ZmlLHlpwCPflEx8TXOqgRLYaI='",
     "'sha256-OBTN3RiyCV4Bq7dFqZ5a2pAXjnCcCYeTJMO2I/LYKeo='",
-    "'sha256-OP1QDqHJ+ZWzJZ3f3CaJ1uVHSgUZFrAxlwT0dpklsls='"
+    "'sha256-IXLARNIz9znkoJNcA2Ei3x6pUrn0EpWr39YWEpZyEHY='"
   ],
   "/cancelamento-e-reembolso/": [
-    "'sha256-omheDNHs3KhMsDj4k6CmhbeNorqu4coa2kvANTwSZDY='",
+    "'sha256-Iw97d8Vh9FPPTIiR48ZmlLHlpwCPflEx8TXOqgRLYaI='",
     "'sha256-OBTN3RiyCV4Bq7dFqZ5a2pAXjnCcCYeTJMO2I/LYKeo='",
-    "'sha256-/Kh05NTiDZ4dOriwjSiFtvpOO0tCHTYPfApYckq6Fhg='"
+    "'sha256-r/WHNNlREaqBVLAYMfXrNa1yjQIVF1WH7YEsL25PoEE='"
   ],
   "/cookies/": [
-    "'sha256-omheDNHs3KhMsDj4k6CmhbeNorqu4coa2kvANTwSZDY='",
+    "'sha256-Iw97d8Vh9FPPTIiR48ZmlLHlpwCPflEx8TXOqgRLYaI='",
     "'sha256-OBTN3RiyCV4Bq7dFqZ5a2pAXjnCcCYeTJMO2I/LYKeo='",
-    "'sha256-gjgXYza1bOale7En1cId5ftg8Dan4Cnlb1VV+desRLM='"
+    "'sha256-iQljuQqNXWxLUGn+qy/5wkZXuTXYCNK0AoRdvGlqGGk='"
   ],
   "/creditos/": [
-    "'sha256-omheDNHs3KhMsDj4k6CmhbeNorqu4coa2kvANTwSZDY='",
+    "'sha256-Iw97d8Vh9FPPTIiR48ZmlLHlpwCPflEx8TXOqgRLYaI='",
     "'sha256-OBTN3RiyCV4Bq7dFqZ5a2pAXjnCcCYeTJMO2I/LYKeo='",
-    "'sha256-ZBB5bjrYou78gbg6Jc4joxOPx7WftccF6o0j+WXoHbM='"
+    "'sha256-AzTmaUlU+lVCMJAMPm1gFflxIV27+JkYKd8xcliAuoY='"
   ],
   "/": [
-    "'sha256-omheDNHs3KhMsDj4k6CmhbeNorqu4coa2kvANTwSZDY='",
+    "'sha256-Iw97d8Vh9FPPTIiR48ZmlLHlpwCPflEx8TXOqgRLYaI='",
     "'sha256-OBTN3RiyCV4Bq7dFqZ5a2pAXjnCcCYeTJMO2I/LYKeo='",
-    "'sha256-wNvJSzqrO+fHTawdn0hplmSwNW6n0KQhMfH08eylwOM='"
+    "'sha256-sdL8VgsPQ1O2TfgMbBVCADwNbwoNxsNGtJLiYbokt6E='"
   ],
   "/informacoes/": [
-    "'sha256-omheDNHs3KhMsDj4k6CmhbeNorqu4coa2kvANTwSZDY='",
+    "'sha256-Iw97d8Vh9FPPTIiR48ZmlLHlpwCPflEx8TXOqgRLYaI='",
     "'sha256-OBTN3RiyCV4Bq7dFqZ5a2pAXjnCcCYeTJMO2I/LYKeo='",
-    "'sha256-lgUj0Xkdk2hbthjUZVMxWpXd4wFIhrDCbxGKxSphj7c='"
+    "'sha256-sLUgcqTSmQVODn1TPndlQNwSx+9nsiMU0uESzuyJ+Ac='"
   ],
   "/links/": [
-    "'sha256-omheDNHs3KhMsDj4k6CmhbeNorqu4coa2kvANTwSZDY='",
+    "'sha256-Iw97d8Vh9FPPTIiR48ZmlLHlpwCPflEx8TXOqgRLYaI='",
     "'sha256-OBTN3RiyCV4Bq7dFqZ5a2pAXjnCcCYeTJMO2I/LYKeo='",
-    "'sha256-0Ljz9JkZHaqxKsvDvDqH/Wop9t1X6e64PhJHyLcjG6Y='"
+    "'sha256-YSdfB4qGZ0UQyYyIsM87DJMVP5rz9/XSWOxz9VBWf14='"
   ],
   "/painel/": [
-    "'sha256-omheDNHs3KhMsDj4k6CmhbeNorqu4coa2kvANTwSZDY='",
+    "'sha256-Iw97d8Vh9FPPTIiR48ZmlLHlpwCPflEx8TXOqgRLYaI='",
     "'sha256-OBTN3RiyCV4Bq7dFqZ5a2pAXjnCcCYeTJMO2I/LYKeo='",
-    "'sha256-1XpuNTg1GAIDznaG3inPukgPGxLw655yt5jpXHa/EIw='"
+    "'sha256-+ccS73wOHuQvaU3hl5beXHVisSBqRarPKwM9Yt6yf3M='"
   ],
   "/privacidade/": [
-    "'sha256-omheDNHs3KhMsDj4k6CmhbeNorqu4coa2kvANTwSZDY='",
+    "'sha256-Iw97d8Vh9FPPTIiR48ZmlLHlpwCPflEx8TXOqgRLYaI='",
     "'sha256-OBTN3RiyCV4Bq7dFqZ5a2pAXjnCcCYeTJMO2I/LYKeo='",
-    "'sha256-SVNLLGxUSa4IQO/CurSEgY1P6emEylxKYatkmaXL0nI='"
+    "'sha256-C/hzbdN/u8txzQqhZ03NVSrs6K7uOC3sFNamAQVXA2o='"
   ],
   "/termos/": [
-    "'sha256-omheDNHs3KhMsDj4k6CmhbeNorqu4coa2kvANTwSZDY='",
+    "'sha256-Iw97d8Vh9FPPTIiR48ZmlLHlpwCPflEx8TXOqgRLYaI='",
     "'sha256-OBTN3RiyCV4Bq7dFqZ5a2pAXjnCcCYeTJMO2I/LYKeo='",
-    "'sha256-E2lhY2tv3i79+cxkZXTQhr4rtTeF2zpwP/Hn4IDhsx0='"
+    "'sha256-RnmxL23Z/aCh08294B0fWyMGlUOxWcptStDq1n4hTBQ='"
   ]
 };

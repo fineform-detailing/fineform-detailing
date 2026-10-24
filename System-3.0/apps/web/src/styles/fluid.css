@@ -269,3 +269,68 @@ body:has(.home-composition) .footer-socials a,body:has(.home-composition) .foote
 }
 @media(max-width:370px){.header-cta .cta-prefix{display:none}.story-title{font-size:11.4vw!important}.story-chapters button{padding:7px 5px;font-size:9px}.story-skip{position:static;justify-self:start;padding:0;font-size:10px}.story-copy{bottom:136px}.story-action{font-size:11px;padding:13px 17px}.home-composition .care-tabs .button{padding:9px;font-size:9px}}
 @media(prefers-reduced-motion:reduce){.car-story.with-scroll,.car-story{height:100svh;min-height:760px}.story-stage{position:relative}.story-action,.gallery-react img{transition:none!important}}
+
+/* Complete the exterior/interior story and keep the optional drive separate. */
+.story-title>em{font-size:1em}
+.story-stage[data-chapter="4"] .story-title{font-size:clamp(58px,7.2vw,120px)!important}
+.story-visual.is-cabin{mask-image:radial-gradient(ellipse 68% 66% at 52% 52%,#000 42%,transparent 84%)}
+.story-copy{width:300px}
+.story-copy-links{display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.story-copy-links .story-skip{position:static;white-space:nowrap;font-size:11px;padding:12px 0;gap:8px;min-height:44px}
+.story-drive{display:inline-flex;align-items:center;gap:8px;white-space:nowrap;min-height:44px;padding:12px 0;background:transparent;color:var(--ff-paper);font-size:11px;border:0;text-decoration:underline;text-underline-offset:4px}
+.story-chapters{gap:6px}.story-chapters button{padding:10px 12px}
+.drive-dialog{position:fixed;inset:0;width:min(1240px,calc(100vw - 32px));height:min(860px,calc(100dvh - 32px));max-width:none;max-height:none;margin:auto;padding:0;border:0;border-radius:24px;background:#f2f0ea;color:#16271f;box-shadow:0 30px 120px #0007;overflow:auto;font-family:var(--ff-body)}
+.drive-dialog[open]{display:flex;flex-direction:column}
+.drive-dialog::backdrop{background:#08120ee8;backdrop-filter:blur(8px)}
+.drive-header{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:24px 30px;flex-shrink:0}
+.drive-eyebrow{display:block;font-size:9px;letter-spacing:.14em;color:#496052;margin-bottom:7px}
+.drive-dialog .drive-header h2{font-family:var(--ff-display);font-size:26px!important;line-height:1.1;letter-spacing:-.04em;margin:0;color:#16271f}
+.drive-close{display:flex;gap:14px;align-items:center;background:transparent;color:inherit;border:0;font-size:12px;min-height:44px;padding:10px}
+.drive-close span{font-size:27px;line-height:1}
+.drive-viewport{position:relative;flex:1 1 auto;min-height:210px;background:#d9ded4;overflow:hidden;isolation:isolate}
+.drive-viewport canvas{display:block;width:100%;height:100%;position:absolute;inset:0;outline-offset:-5px}
+.drive-readout{position:absolute;left:28px;top:22px;pointer-events:none;display:flex;align-items:baseline;gap:8px;flex-wrap:wrap;max-width:150px;color:#172e22;text-shadow:0 1px 14px #fff8}
+.drive-readout strong{font:600 54px/.95 var(--ff-display);letter-spacing:-.065em;font-variant-numeric:tabular-nums}
+.drive-readout>span{font-size:11px}.drive-readout small{flex-basis:100%;font-size:10px;letter-spacing:.02em}
+.drive-car-label{position:absolute;right:24px;top:26px;font-size:10px;color:#284a38;pointer-events:none}
+.drive-overlay{position:absolute;inset:0;z-index:3;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;padding:24px;text-align:center;background:#e7ede4e8;backdrop-filter:blur(10px)}
+.drive-overlay h3{font-family:var(--ff-display);font-size:25px;margin:0;letter-spacing:-.04em}
+.drive-overlay p{font-size:13px;margin:0;max-width:300px}
+.drive-overlay button{background:#173b2c;color:#fff;border:0;border-radius:100px;padding:12px 24px;min-height:44px;font-size:13px}
+.drive-spinner{width:28px;height:28px;border:2px solid #afc5b8;border-top-color:#204e3a;border-radius:50%;animation:drive-spin 1s linear infinite;margin-bottom:4px}
+@keyframes drive-spin{to{transform:rotate(360deg)}}
+.drive-footer{padding:18px 30px 22px;flex-shrink:0}
+.drive-toolbar{display:flex;justify-content:space-between;gap:16px;align-items:center}
+.drive-toolbar p{font-size:11px;line-height:1.6;max-width:420px;margin:0;color:#4c6255}.drive-toolbar p span{display:block}
+.drive-toolbar>div{display:flex;gap:6px;flex-wrap:wrap}
+.drive-toolbar button{background:transparent;color:#31513f;padding:10px 12px;border:0;border-radius:100px;font-size:11px;min-height:44px}
+.drive-toolbar button:hover{background:#e0e5dc}
+.drive-controls{display:flex;align-items:center;justify-content:space-between;gap:14px;margin:14px 0}
+.drive-steering,.drive-pedals{display:flex;gap:10px}
+.drive-pedal{min-width:80px;height:58px;border:0;border-radius:16px;background:#e1e5dc;color:#1a3325;font-size:13px;touch-action:none;user-select:none;-webkit-user-select:none;-webkit-touch-callout:none;font-weight:600}
+.drive-steering .drive-pedal{font-size:28px;min-width:76px}
+.drive-pedals .drive-pedal{padding:0 25px}.drive-pedals .drive-pedal:last-child{background:#53c3b1;color:#10352b}
+.drive-pedal.is-pressed{background:#143d2b!important;color:#f2f0ea!important;transform:translateY(2px)}
+.drive-dialog button:disabled{opacity:.4;cursor:default}
+.drive-note{display:flex;gap:14px;justify-content:space-between;align-items:center;color:#617366;font-size:10px}
+.drive-note a{color:#204a35;font-size:11px;text-decoration:underline;text-underline-offset:3px}
+.drive-dialog :focus-visible{outline:3px solid #277b63;outline-offset:3px}
+@media(max-width:760px){
+ .story-copy{width:auto}.story-copy-links{gap:20px}.story-copy-links .story-skip,.story-drive{font-size:10px}
+ .story-stage[data-chapter="4"] .story-title{font-size:9.7vw!important}
+ .story-chapters{gap:1px}.story-chapters button{padding:7px 8px;font-size:9px;gap:4px}.story-chapters button span{width:17px;height:17px;font-size:7px}
+ .story-visual.is-cabin{top:205px}
+ .drive-dialog{width:100vw;height:100dvh;border-radius:0}
+ .drive-header{padding:16px 18px}.drive-dialog .drive-header h2{font-size:20px!important;max-width:230px}.drive-eyebrow{font-size:8px}
+ .drive-close{font-size:10px;padding:5px;gap:8px}
+ .drive-readout{left:20px;top:18px}.drive-readout strong{font-size:42px}.drive-car-label{right:16px;top:20px;font-size:8px;max-width:100px;text-align:right}
+ .drive-footer{padding:12px 16px max(16px,env(safe-area-inset-bottom))}
+ .drive-toolbar{display:block}.drive-toolbar p{font-size:10px}.drive-toolbar>div{justify-content:space-between;margin-top:4px}
+ .drive-toolbar button{font-size:10px;padding:8px;min-height:36px}
+ .drive-controls{margin:7px 0 14px;gap:8px}.drive-steering,.drive-pedals{gap:6px}
+ .drive-pedal{height:56px;border-radius:12px;min-width:0;font-size:11px}.drive-steering .drive-pedal{min-width:54px;font-size:25px}.drive-pedals .drive-pedal{padding:0 14px}
+ .drive-note{align-items:flex-start;font-size:8px;gap:16px}.drive-note>span{max-width:150px}.drive-note a{font-size:9px;max-width:150px;text-align:right}
+}
+@media(max-width:370px){.story-chapters button{padding:7px 6px;font-size:9px}.story-chapters button span{display:none}.story-copy-links{gap:14px}.drive-steering .drive-pedal{min-width:44px}.drive-pedals .drive-pedal{padding:0 10px;font-size:10px}}
+@media(max-height:560px) and (min-width:761px){.drive-dialog{height:100dvh;width:100vw;border-radius:0}.drive-header{padding:10px 24px}.drive-footer{padding:8px 24px}.drive-toolbar p{display:none}.drive-controls{position:absolute;bottom:50px;left:24px;right:24px;pointer-events:none}.drive-controls button{pointer-events:auto}.drive-viewport{min-height:200px}}
+@media(prefers-reduced-motion:reduce){.drive-spinner{animation:none}.drive-pedal{transition:none}}

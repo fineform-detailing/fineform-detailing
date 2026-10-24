@@ -22,6 +22,7 @@ import {
   Select,
   TextArea,
 } from "../../components/ui/primitives";
+import { VehicleIcon } from "../../components/catalog/VehicleIcon";
 import { Addons } from "../../components/catalog/Addons";
 import { useApp } from "../../components/layout/AppProvider";
 import { trackingUrl, copyText } from "../../services/browser.mjs";
@@ -151,7 +152,7 @@ export function BookingView() {
                           onClick={() => vm.chooseVehicle(v)}
                         >
                           <span className="choice-icon" aria-hidden="true">
-                            {v === "car" ? "↔" : "↗"}
+                            <VehicleIcon vehicle={v} />
                           </span>
                           <h3>{v === "car" ? "Meu carro" : "Minha moto"}</h3>
                         </button>

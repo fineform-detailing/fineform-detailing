@@ -3543,3 +3543,17 @@ body:is([data-page="home"], :has(.ff-hero)) .closing-section {
     backdrop-filter: none;
   }
 }
+
+/* The assistant uses a light sidebar; keep its inherited text readable. */
+.booking-aside h1,
+.booking-aside h1 em {
+  color: #0b0d0c;
+}
+.booking-aside p,
+.booking-aside .back-link,
+.booking-aside .step-nav li {
+  color: #4e5848;
+}
+.booking-aside .step-nav li.active {
+  color: #0b0d0c;
+}

@@ -19,7 +19,7 @@ A identidade visual, o mascote, as fotografias, os contatos, os valores do catá
 
 `npm run check` executa testes de preços, ciclo, placas, sessão, origem, CSRF, pagamentos, exclusões atômicas, avaliações e Web Push. A integração React exerce envio com resposta perdida sem duplicar pedido, ativação paga, cadastro presencial de placa, consulta por links anteriores, solicitação de visita, bloqueio de Care pausado, notas baixas e retirada de avaliação, reautenticação, expiração e ativação/reversão de notificações. A validação do export confere rotas, ativos locais, scripts do Next.js e hashes CSP, além da restrição por país.
 
-A prévia visual hospedada foi bloqueada pelo ambiente durante esta migração, pois poderia exportar o projeto para um domínio externo de prévias. A validação local de componentes e da API não depende desse envio. Testes de DOM não substituem inspeção visual em um navegador real.
+A prévia visual hospedada foi bloqueada pelo ambiente durante esta migração, pois poderia exportar o projeto para um domínio externo de prévias. A validação local de componentes e da API não depende desse envio. Após a publicação, a conferência visual e de navegação foi realizada diretamente no próprio site, sem utilizar a prévia externa; ela identificou e corrigiu contraste herdado do cabeçalho e da lateral do assistente.
 
 ## Reversão
 

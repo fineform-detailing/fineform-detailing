@@ -1,5 +1,17 @@
 # Segurança da Fine Form 3.0
 
+## Restrição geográfica ao Brasil — 23/10/2026
+
+Toda requisição pública passa pelo Worker antes de qualquer página ou arquivo estático (`assets.run_worker_first: true`). O Worker permite apenas `request.cf.country === 'BR'`, metadado fornecido pela borda Cloudflare. Outros países, Tor e localização ausente/desconhecida recebem HTTP 403 com `Cache-Control: no-store` antes de acessar assets, D1 ou novas conexões WebSocket. A API retorna o código `country_restricted`. Não há exceção por User-Agent, cookie, cabeçalhos enviados pelo visitante ou alegação de país. O desenvolvimento continua disponível em localhost, 127.0.0.1 e [::1]. As tarefas internas agendadas não dependem da geolocalização HTTP.
+
+A restrição considera o IP de saída, não nacionalidade ou localização física garantida. Uma VPN com saída no Brasil pode acessar; uma VPN com saída no exterior será bloqueada. Robôs legítimos e prévias de links que consultam de fora do Brasil também serão bloqueados. O bloqueio não substitui autenticação, autorização, limites de tentativas e demais proteções existentes.
+
+As cidades dos datacenters (`colo`) indicam onde a Cloudflare atende a requisição e são diferentes do país do visitante (`country`). Uma requisição aparecer no painel não comprova invasão; as recusadas podem continuar aparecendo nas métricas. Referências: [metadados da requisição](https://developers.cloudflare.com/workers/runtime-apis/request/#incomingrequestcfproperties) e [Worker antes dos assets](https://developers.cloudflare.com/workers/static-assets/routing/worker-script/).
+
+Os testes de geografia exercitam páginas e assets reais no Miniflare, Brasil, países externos, localização desconhecida, cabeçalhos falsificados, escritas, HEAD, OPTIONS, HTTP e WebSocket. A revisão histórica abaixo mantém o contexto da entrega inicial.
+
+## Revisão inicial
+
 A revisão usa o System-2.0.zip enviado em 13/10/2026. O GitHub indicado não ficou acessível pela conexão disponível; o ZIP é a fonte efetivamente revisada. Nenhuma alteração foi aplicada à sua conta Cloudflare ou ao repositório remoto nesta entrega.
 
 ## Acesso ao painel

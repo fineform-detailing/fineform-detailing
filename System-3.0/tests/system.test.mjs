@@ -19,7 +19,7 @@ async function call(path,{method='GET',body,auth=false,cap,origin='http://localh
 const selection=(overrides={})=>({vehicle:'car',mode:'single',service:'premium',plate:fixturePlate(),model:'Honda Civic de teste',name:'Cliente de teste',phone:'11900000001',date:'',time:'',flexibleDate:true,treatments:[],extras:[],ack:true,submissionToken:token(),...overrides});
 before(async()=>{
  const bundle=await build({entryPoints:['worker/index.mjs'],bundle:true,format:'esm',write:false,target:'es2022'});
- mf=new Miniflare({modules:true,script:bundle.outputFiles[0].text,compatibilityDate:'2026-07-30',cf:false,bindings:{ADMIN_KEY:key},d1Databases:{DB:'fine-form-test'},durableObjects:{LIVE:{className:'LiveUpdates',useSQLite:true}},log:new Log(LogLevel.ERROR)});
+ mf=new Miniflare({modules:true,script:bundle.outputFiles[0].text,compatibilityDate:'2026-07-30',cf:{country:'BR'},bindings:{ADMIN_KEY:key},d1Databases:{DB:'fine-form-test'},durableObjects:{LIVE:{className:'LiveUpdates',useSQLite:true}},log:new Log(LogLevel.ERROR)});
  db=await mf.getD1Database('DB');await applyMigrations(db);
  const login=await call('/api/admin/session',{method:'POST',body:{key}});assert.equal(login.status,200);cookie=login.res.headers.get('Set-Cookie').split(';')[0];csrf=login.data.csrfToken;
 }, {timeout:30000});

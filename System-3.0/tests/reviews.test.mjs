@@ -28,6 +28,7 @@ async function fixture(t){
  async function call(path,{method='GET',body,token,headers={}}={}){
   await vehicleFixture(db,path,body);
   const req=new Request(origin+path,{method,headers:{Origin:origin,'CF-Connecting-IP':'192.0.2.'+(++ip%250),'User-Agent':'reviews-test',...(cookie?{Cookie:cookie,'X-FF-CSRF':csrf}:{}),...(body?{'Content-Type':'application/json'}:{}),...(token?{Authorization:'Bearer '+token}:{}),...headers},body:body?JSON.stringify(body):undefined});
+  Object.defineProperty(req,'cf',{value:{country:'BR'}});
   const response=await worker.fetch(req,env);return {status:response.status,data:await response.json(),response};
  }
  const login=await call('/api/admin/session',{method:'POST',body:{key,code:await totpCode(secret)}});assert.equal(login.status,200);cookie=login.response.headers.get('Set-Cookie').split(';')[0];csrf=login.data.csrfToken;

@@ -98,7 +98,8 @@ test('edições concorrentes não sobrescrevem cadastro nem duplicam auditoria',
 test('informações públicas são servidas sem JavaScript e escapam texto cadastrado',async()=>{
  await save({legalName:'Nome de teste <img src=x onerror=alert(1)>',publishIdentity:true});
  const html=await readFile('dist/informacoes/index.html','utf8');
- const res=await worker.fetch(new Request('https://fine-form.test/informacoes/'),{DB:db,ASSETS:{fetch:async()=>new Response(html,{headers:{'Content-Type':'text/html','ETag':'old-static'}})}});
+ const req=new Request('https://fine-form.test/informacoes/');Object.defineProperty(req,'cf',{value:{country:'BR'}});
+ const res=await worker.fetch(req,{DB:db,ASSETS:{fetch:async()=>new Response(html,{headers:{'Content-Type':'text/html','ETag':'old-static'}})}});
  assert.equal(res.status,200);assert.equal(res.headers.get('ETag'),null);assert.match(res.headers.get('Cache-Control'),/no-store/);
  const dom=new JSDOM(await res.text()),block=dom.window.document.querySelector('[data-public-business]');
  assert.equal(dom.window.document.querySelectorAll('[data-public-business]').length,1);

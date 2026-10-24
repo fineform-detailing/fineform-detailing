@@ -31,6 +31,7 @@ async function fixture(t,{legacy=false}={}){
  async function call(path,{method='GET',body,auth=true,headers={},ctx}={}){
   await vehicleFixture(db,path,body);
   const req=new Request(origin+path,{method,headers:{Origin:origin,'User-Agent':'fine-form-push-test','CF-Connecting-IP':'192.0.2.'+(ip++%250),...(body?{'Content-Type':'application/json'}:{}),...(auth?{Cookie:cookie,'X-FF-CSRF':csrf}:{}),...headers},body:body?JSON.stringify(body):undefined});
+  Object.defineProperty(req,'cf',{value:{country:'BR'}});
   const response=await worker.fetch(req,env,ctx),data=await response.json();return {status:response.status,data,response,req};
  }
  const login=await call('/api/admin/session',{method:'POST',auth:false,body:{key,code:await totpCode(secret)}});assert.equal(login.status,200);cookie=login.response.headers.get('Set-Cookie').split(';')[0];csrf=login.data.csrfToken;
@@ -196,7 +197,7 @@ test('Worker real no Miniflare envia Web Push criptografado com as APIs nativas 
   deliveries.push({endpoint:browser.subscription.endpoint,options:{body:options.body,headers:options.headers}});return {statusCode:201,data:''};
  });
  const script=(await build({entryPoints:['worker/index.mjs'],bundle:true,format:'esm',write:false})).outputFiles[0].text;
- const mf=new Miniflare({modules:true,script,compatibilityDate:'2026-07-30',cf:false,bindings:{ADMIN_KEY:key,ADMIN_TOTP_SECRET:secret,PUSH_VAPID:JSON.stringify(vapid)},d1Databases:{DB:'workerd-push'},fetchMock:mock,log:new Log(LogLevel.ERROR)});t.after(()=>mf.dispose());
+ const mf=new Miniflare({modules:true,script,compatibilityDate:'2026-07-30',cf:{country:'BR'},bindings:{ADMIN_KEY:key,ADMIN_TOTP_SECRET:secret,PUSH_VAPID:JSON.stringify(vapid)},d1Databases:{DB:'workerd-push'},fetchMock:mock,log:new Log(LogLevel.ERROR)});t.after(()=>mf.dispose());
  const db=await mf.getD1Database('DB');await applyMigrations(db);let cookie='',csrf='',ip=1;
  async function call(path,body,authenticated=true){
   const response=await mf.dispatchFetch(origin+path,{method:body?'POST':'GET',headers:{Origin:origin,'User-Agent':'workerd-push-test','CF-Connecting-IP':'192.0.2.'+ip++,...(body?{'Content-Type':'application/json'}:{}),...(authenticated?{Cookie:cookie,'X-FF-CSRF':csrf}:{})},body:body?JSON.stringify(body):undefined});return {response,data:await response.json()};

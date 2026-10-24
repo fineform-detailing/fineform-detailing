@@ -194,6 +194,12 @@ async function api(req,env,ctx){
 }
 export default {async fetch(req,env,ctx){
  const url=new URL(req.url),isApi=url.pathname.startsWith('/api/'),privatePage=/^\/(painel|assinatura|acompanhar|avaliar)(\/|$)/.test(url.pathname);
+ // Only Cloudflare's trusted country metadata grants public access. Loopback is for local development.
+ if(!isLocal(req)&&req.cf?.country!=='BR'){
+  const message='Acesso disponível apenas no Brasil.';
+  const blocked=isApi?response({error:message,code:'country_restricted'},403):new Response(req.method==='HEAD'?null:message,{status:403,headers:{'Content-Type':'text/plain; charset=utf-8'}});
+  return securityHeaders(req,blocked,{api:isApi,privatePage:true});
+ }
  if(url.protocol!=='https:'&&!isLocal(req)){if(!['GET','HEAD'].includes(req.method))return securityHeaders(req,response({error:'Use uma conexão HTTPS.'},403),{api:true});url.protocol='https:';return Response.redirect(url.href,308);}
  if(!isApi){
   let result=env.ASSETS?await env.ASSETS.fetch(req):new Response('Fine Form 3.0',{status:200});

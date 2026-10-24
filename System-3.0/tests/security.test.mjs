@@ -17,7 +17,7 @@ async function call(path,{method='GET',body,auth=true,headers={},raw,urlOrigin=o
 function keepSession(result){cookie=result.res.headers.get('Set-Cookie').split(';')[0];csrf=result.data.csrfToken;}
 before(async()=>{
  bundle=(await build({entryPoints:['worker/index.mjs'],bundle:true,format:'esm',write:false})).outputFiles[0].text;
- mf=new Miniflare({modules:true,script:bundle,compatibilityDate:'2026-07-30',cf:false,bindings:{ADMIN_KEY:key,ADMIN_TOTP_SECRET:secret},d1Databases:{DB:'security-test'},durableObjects:{LIVE:{className:'LiveUpdates',useSQLite:true}},log:new Log(LogLevel.ERROR)});
+ mf=new Miniflare({modules:true,script:bundle,compatibilityDate:'2026-07-30',cf:{country:'BR'},bindings:{ADMIN_KEY:key,ADMIN_TOTP_SECRET:secret},d1Databases:{DB:'security-test'},durableObjects:{LIVE:{className:'LiveUpdates',useSQLite:true}},log:new Log(LogLevel.ERROR)});
  db=await mf.getD1Database('DB');await applyMigrations(db);
  const login=await call('/api/admin/session',{method:'POST',auth:false,body:{key,code:await totpCode(secret,Math.floor(Date.now()/30000)-1)}});assert.equal(login.status,200);keepSession(login);
 });

@@ -1,0 +1,45 @@
+/*
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: no-referrer
+  X-Frame-Options: DENY
+  Permissions-Policy: camera=(), microphone=(), geolocation=(), payment=(), usb=()
+  Strict-Transport-Security: max-age=31536000
+  Cross-Origin-Resource-Policy: same-origin
+  X-XSS-Protection: 0
+  Content-Security-Policy: default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self'; object-src 'none'; base-uri 'none'; form-action 'self'; frame-ancestors 'none'
+/acompanhar/*
+  X-Robots-Tag: noindex, nofollow
+  Cache-Control: no-store
+/assinatura/*
+  X-Robots-Tag: noindex, nofollow
+  Cache-Control: no-store
+/painel/*
+  X-Robots-Tag: noindex, nofollow
+  Cache-Control: no-store
+
+/assets/admin.mjs
+  Cache-Control: no-store
+/assets/system.mjs
+  Cache-Control: no-store
+
+/assets/admin-notifications.mjs
+  Cache-Control: no-store
+/painel/sw.js
+  Cache-Control: no-store
+
+/avaliar/*
+  X-Robots-Tag: noindex, nofollow
+  Cache-Control: no-store
+/acompanhar/sw.js
+  Cache-Control: no-store
+/assets/fonts/*.woff2
+  Cache-Control: public, max-age=31536000, immutable
+
+/assets/admin-business.mjs
+  Cache-Control: no-store
+/assets/business-profile.mjs
+  Cache-Control: no-store
+/api/business
+  Cache-Control: no-store
+/informacoes/*
+  Cache-Control: no-store

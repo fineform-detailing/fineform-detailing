@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {services,plans,extras,findService,compatibleExtras,availableTreatments,treatmentPrice,hasCoating,normalizeExtras,normalizeTreatments,includedFor,todaySP,timesFor,validDate,validatePreference,createSummary,quoteFor} from '../packages/domain/catalog.mjs';
+import {services,plans,extras,findService,compatibleExtras,availableTreatments,treatmentPrice,hasCoating,normalizeExtras,normalizeTreatments,includedFor,todaySP,timesFor,validDate,validatePreference,createSummary,quoteFor} from '../dist/assets/catalog.mjs';
 test('lavagens detalham cada área; Extra inclui teto e cintos com aviso somente de secagem dos bancos',()=>{
  for(const id of ['essential','premium','extra']){
   const service=findService(id),text=service.includes.join(' ').toLowerCase();

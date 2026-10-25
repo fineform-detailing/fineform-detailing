@@ -1,6 +1,6 @@
 {
   "name": "fine-form-3-0",
-  "version": "4.0.0",
+  "version": "3.0.0",
   "private": true,
   "type": "module",
   "engines": {
@@ -8,50 +8,30 @@
   },
   "scripts": {
     "build": "node scripts/build.mjs",
-    "test": "npm run test:backend && npm run test:ui",
-    "dev": "node scripts/dev.mjs",
+    "test": "node --test tests/*.test.mjs",
+    "dev": "wrangler dev",
     "db:local": "wrangler d1 migrations apply DB --local",
     "db:remote": "wrangler d1 migrations apply DB --remote",
     "configure": "node scripts/configure.mjs",
     "deploy": "node scripts/deploy.mjs",
     "backup": "wrangler d1 export DB --remote --output=backup.sql",
     "security:setup": "node scripts/security-setup.mjs",
-    "check": "npm run typecheck && npm test && npm run build && npm run test:export && wrangler deploy --dry-run --outdir .test-build && wrangler deploy -c services/web/wrangler.jsonc --dry-run --outdir .test-web-build",
+    "check": "npm test && npm run build && wrangler deploy --dry-run --outdir .test-build",
     "preview:configure": "node scripts/preview-configure.mjs",
     "preview": "node scripts/preview.mjs",
     "reuse": "node scripts/reuse-existing.mjs",
-    "notifications:setup": "node scripts/notifications-setup.mjs",
-    "typecheck": "tsc --noEmit -p apps/web/tsconfig.json",
-    "test:ui": "node scripts/test-react.mjs",
-    "test:backend": "node --test tests/*.test.mjs",
-    "dev:web": "next dev apps/web --port 3000",
-    "dev:api": "wrangler dev -c wrangler.jsonc -c services/web/wrangler.jsonc",
-    "test:export": "node --test tests/export/*.test.mjs"
+    "notifications:setup": "node scripts/notifications-setup.mjs"
   },
   "dependencies": {
     "@block65/webcrypto-web-push": "2.0.0",
-    "next": "^16.4.3",
-    "react": "^19.3.1",
-    "react-dom": "^19.3.1",
-    "three": "0.186.1"
+    "motion": "12.23.24",
+    "react": "19.2.0",
+    "react-dom": "19.2.0"
   },
   "devDependencies": {
-    "@cloudflare/workers-types": "^5.20261024.1",
-    "@tailwindcss/postcss": "^4.3.3",
-    "@testing-library/dom": "^10.4.2",
-    "@testing-library/react": "^16.3.3",
-    "@types/node": "^26.6.5",
-    "@types/react": "^19.3.0",
-    "@types/react-dom": "^19.3.0",
-    "@types/three": "0.186.0",
     "esbuild": "0.25.12",
     "jsdom": "30.1.2",
     "miniflare": "4.20260730.0",
-    "postcss": "^8.5.31",
-    "prettier": "^3.9.10",
-    "tailwindcss": "^4.3.3",
-    "tsx": "^4.23.15",
-    "typescript": "^7.0.2",
     "wrangler": "4.150.0"
   },
   "overrides": {

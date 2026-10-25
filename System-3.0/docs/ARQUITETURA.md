@@ -1,66 +1,65 @@
-# Arquitetura Fine Form 4.0
+# Arquitetura e capacidade
 
-## Serviços e limites
+O site usa arquivos estáticos para a apresentação e formulários. Somente `/api/*` executa o Worker. O D1 guarda pedidos, clientes, planos, ciclos, visitas e auditoria. Um Durable Object com backend SQLite distribui avisos de mudança por WebSocket; os dados continuam no D1.
 
-Há dois serviços com publicação independente: `fine-form-3-0` atende como gateway e API de negócio; `fine-form-web` entrega os arquivos produzidos pelo Next.js. Eles se comunicam pelo binding interno `WEB`, sem expor o serviço web à internet. O Durable Object `LiveUpdates` continua sendo o responsável pelas conexões de atualização, com o namespace anterior preservado.
+## Por que D1 nesta versão
 
-```mermaid
-flowchart TD
-  Browser["Navegador / React"] --> Gateway["Gateway e API"]
-  Gateway --> Web["Serviço web / Next.js"]
-  Gateway --> UseCases["Casos de uso"]
-  UseCases --> D1["D1 existente"]
-  UseCases --> Live["Atualizações e notificações"]
-  Live --> Browser
-```
+Os dados têm relações claras: cliente → veículo/plano → ciclo → visitas. SQL oferece índices, chaves estrangeiras e operações condicionais para reservar saldo com consistência. O binding `DB` acessa o banco dentro do Cloudflare, evitando uma URL com usuário/senha e infraestrutura de outro provedor. O MongoDB seria possível, mas acrescentaria uma conta, conectividade e configuração que esta versão não precisa.
 
-Os domínios de pedidos, Care e pagamentos continuam na mesma API transacional porque o aceite e a reserva de créditos precisam ser atômicos. Eles têm módulos separados, contratos e validações próprios. Não são apresentados como microsserviços independentes: separar artificialmente cada tabela exigiria transações distribuídas e alteraria as garantias de saldo e pagamento.
+## Limites gratuitos consultados em 13/10/2026
 
-## MVVM na interface
-
-| Camada | Código | Regra |
-| --- | --- | --- |
-| View | `*View.tsx`, componentes de formulário, listas e editores | Renderiza JSX e encaminha ações do usuário. |
-| ViewModel | `useBookingViewModel`, `useTrackingViewModel`, `useMembershipViewModel`, `useAdminSession`, `usePushViewModel` | Mantém estado, efeitos, validações e coordenação de serviços. |
-| Model | `models/entities.ts`, `booking.model.ts`, `packages/domain` | Define contratos e regras puras. |
-| Serviços | `services/api.ts`, `http.mjs`, `realtime.mjs`, `notifications.ts` | Encapsula endpoints, CSRF, timeout, cancelamento e WebSockets. |
-
-Hooks encerram assinaturas, temporizadores e requisições no descarte. Recursos assíncronos cancelam respostas antigas para evitar que um carregamento anterior sobrescreva o atual. Atualizações ao vivo não substituem os campos de uma edição administrativa aberta. Reautenticação retoma a operação original, sem duplicar a gravação.
-
-A animação do tentáculo é renderizada em React e possui um hook de ciclo de vida. A integração isolada de Web Animations controla a coreografia, foco, redução de movimento e cancelamento; ela não renderiza páginas ou formulários por strings HTML.
-
-## API em camadas
-
-`http/worker.mjs` cuida de requisição/resposta, origem, acesso por país, sessão, autorização e roteamento. `application/` implementa os casos de uso. `domain/` conserva invariantes e projeções. `infrastructure/` concentra persistência D1, sessão, criptografia, Web Push e atualização em tempo real. O catálogo compartilhado não depende de React, navegador ou Cloudflare.
-
-A aplicação mantém os endpoints e os formatos já consumidos pelos links de clientes. As validações do servidor são decisivas. Campos de versão detectam conflitos de edição; tokens de envio e identificadores de operação dão idempotência. API e interface podem ser verificadas separadamente.
-
-## Modelagem
-
-```mermaid
-erDiagram
-  CUSTOMER ||--o{ SUBSCRIPTION : possui
-  CUSTOMER ||--o{ QUOTE : identifica
-  SUBSCRIPTION ||--o{ CYCLE : renova
-  CYCLE ||--o{ VISIT : registra
-  CYCLE ||--o| PAYMENT_RECEIPT : comprova
-  QUOTE ||--o{ QUOTE_EVENT : acompanha
-  QUOTE ||--o| REVIEW : recebe
-  SUBSCRIPTION o|--o{ QUOTE : solicita
-```
-
-| Agregado | Invariantes principais |
+| Recurso | Workers Free |
 | --- | --- |
-| Pedido | O cliente solicita; Mateus aceita. Transições válidas e versão conferida. |
-| Assinatura | Um único veículo com placa conferida pessoalmente. |
-| Ciclo | Intervalo sem sobreposição; fim exclusivo; pagamento manual; saldo não acumula. |
-| Visita | Reserva ao aceitar; uso ao concluir; cancelamento libera saldo com registro. |
-| Pagamento | Recibo preservado e valor do ciclo pago imutável. |
-| Avaliação | Um atendimento entregue, uma avaliação, consentimento explícito e revogável. |
-| Local | Endereço privado liberado por pedido; alteração do cadastro não reescreve locais já enviados. |
+| Worker dinâmico | 100.000 requisições por dia |
+| CPU Worker | 10 ms por invocação; espera de rede não é CPU |
+| Assets servidos diretamente | Requisições gratuitas e ilimitadas |
+| D1 | 5 milhões de linhas lidas/dia; 100.000 escritas/dia; 5 GB no total |
+| Durable Objects SQLite | 100.000 requisições/dia; 13.000 GB-s/dia de duração |
 
-## Compilação e publicação
+As cotas são por conta/produto e podem ser compartilhadas com outros projetos. D1 mede linhas examinadas/escritas, não apenas número de chamadas. O Free interrompe operações quando os limites correspondentes acabam; usar um plano pago muda essa política. A configuração não contrata um plano pago.
 
-O Next.js App Router produz todas as rotas React em `apps/web/out`; o empacotamento copia o export para `dist`. A API recebe um manifesto de hashes CSP correspondente exatamente à compilação. CSS combina utilitários Tailwind e estilos da marca. Imagens e fontes continuam locais.
+Referências oficiais:
 
-A exportação estática foi escolhida para preservar os endpoints, os links, o D1, o Durable Object e o endereço público existentes. O conteúdo operacional é carregado pela API. Não há requisito de Server Actions, SSR com dados privados ou troca de provedor. Informações públicas do fornecedor também têm uma alternativa sem JavaScript no gateway.
+- [Workers: preços](https://developers.cloudflare.com/workers/platform/pricing/)
+- [D1: preços](https://developers.cloudflare.com/d1/platform/pricing/)
+- [Durable Objects: preços](https://developers.cloudflare.com/durable-objects/platform/pricing/)
+- [Hibernação de WebSocket](https://developers.cloudflare.com/durable-objects/best-practices/websockets/)
+- [Wrangler: comandos D1](https://developers.cloudflare.com/workers/wrangler/commands/d1/)
+
+## Seu volume inicial
+
+Seis atendimentos por dia, de segunda a sábado, representam **36 por semana**. Em quatro semanas são **144 atendimentos**; seis atendimentos por dia × 24 dias de atendimento já daria 144, sem multiplicar semanas de novo. Se todos utilizassem duas visitas por mês, 144 visitas correspondem a aproximadamente **72 assinaturas**. O Care Frequente usa quatro visitas por ciclo; clientes avulsos e domingos mudam essa conta. Ela mede capacidade de agenda, não número garantido de novos clientes ou faturamento.
+
+Esse movimento sugere boa folga para a primeira versão, mas uma visita pode gerar várias chamadas de API e leituras. Como estimativa conservadora de conexão degradada: um painel consultando a cada 30 segundos por 8 horas faz 960 consultas; seis clientes com a página aberta por 30 minutos fazem 360. Somam cerca de 1.320 chamadas de consulta naquele dia, antes das ações e conexões. Com WebSocket funcionando, essas consultas periódicas não acontecem: o cliente lê novamente quando um registro muda.
+
+Essa é uma estimativa, não um teste de tráfego nem garantia de consumo. O painel Cloudflare mostra as métricas reais de requisições, CPU, D1 e Durable Objects. A cada crescimento relevante, confira também linhas lidas, pois histórico e busca podem examinar mais registros.
+
+## Medidas para manter o sistema leve
+
+- Assets são servidos antes do Worker; `run_worker_first` se limita à API.
+- WebSocket usa `acceptWebSocket` com hibernação e resposta automática de ping. Não mantém um loop de servidor trabalhando continuamente.
+- Avisos carregam somente `{"type":"changed"}`. A API autorizada fornece o estado atualizado.
+- Conexões fecham quando a página fica oculta; reconectam ao voltar. Se falham, há consulta a cada 30 segundos e tentativas com espera crescente.
+- Listas de pedidos e assinaturas têm 30 registros por página. A lista de assinaturas faz consultas em lote, sem uma consulta por cliente.
+- Consultas frequentes têm índices de status, data, ciclo e assinatura. Ciclos anteriores exibidos se limitam aos últimos 12.
+- Não há uploads de fotos, vídeos, e-mail automático, cron ou cobrança de cartão. Fotos podem ser enviadas na conversa do WhatsApp.
+- Registros de rate limit expiram e são limpos em lotes pequenos. Há limite de oito envios por IP a cada dez minutos e oito tentativas de acesso por quinze minutos.
+
+## Integridade dos dados
+
+- Valores são recalculados no servidor usando o mesmo catálogo do site. Pedidos guardam a seleção e o orçamento da época.
+- Dinheiro persistido fica em centavos; o orçamento do catálogo usa reais.
+- Reenvio com o mesmo token e conteúdo retorna o mesmo pedido. Conteúdo diferente usando esse token é rejeitado.
+- Versões impedem que uma edição antiga sobrescreva outra já salva.
+- Reservas usam `INSERT ... SELECT` condicionado ao saldo e ciclo pago. Uma reserva concorrente não consegue ultrapassar a cota.
+- Mudança de status, histórico e visita vinculada usam batch transacional D1.
+- Renovação cria um ciclo novo. Pré-pagamento não substitui o ciclo atual.
+- Nenhuma operação financeira verifica o banco bancário: confirmação de pagamento é uma ação manual do proprietário.
+
+## Acesso
+
+O operador entra com chave e autenticador TOTP armazenados como secrets do Worker. A sessão opaca é registrada por hash no D1; o cookie é HttpOnly, SameSite Strict e Secure em HTTPS. A validade máxima é de duas horas, com inatividade de vinte minutos. Operações sensíveis após dez minutos exigem nova autenticação. Recibos financeiros e auditoria são preservados contra edição/exclusão normal; consulte SEGURANCA.md. O cliente recebe um token aleatório de 256 bits no fragmento do link; seu hash é persistido no D1. O fragmento não é enviado como URL ao servidor: a página usa o token no cabeçalho de autorização.
+
+Uma sessão protegida ou um link válido gera um ticket assinado de WebSocket com 60 segundos para abrir a conexão. Dados pessoais não são enviados nos avisos do socket. Cabeçalhos evitam cache da API, referenciadores e indexação das áreas privadas; as mutações verificam a origem. Não há rastreamento de publicidade.
+
+Não é um sistema de múltiplos funcionários/níveis de permissão. A chave dá acesso administrativo completo. A versão 3.0 mantém a operação pensada para operação por Mateus, com clientes sem cadastro.

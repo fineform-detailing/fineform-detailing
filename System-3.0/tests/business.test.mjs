@@ -4,8 +4,8 @@ import {build} from 'esbuild';
 import {Miniflare,Log,LogLevel} from 'miniflare';
 import {readFile,readdir} from 'node:fs/promises';
 import {applyMigrations} from './helpers/database.mjs';
-import {safeMapUrl,locationMessage} from '../packages/domain/business-profile.mjs';
-import worker from '../services/api/src/http/worker.mjs';
+import {safeMapUrl,locationMessage} from '../dist/assets/business-profile.mjs';
+import worker from '../worker/index.mjs';
 import {JSDOM} from 'jsdom';
 
 let mf,db,cookie,csrf,ip=1,legacy;
@@ -25,7 +25,7 @@ async function save(overrides={}){
  return call('/api/admin/business',{method:'PUT',auth:true,body:{...profile(),version:current.version,...overrides}});
 }
 before(async()=>{
- const bundle=await build({entryPoints:['services/api/src/http/worker.mjs'],bundle:true,format:'esm',write:false});
+ const bundle=await build({entryPoints:['worker/index.mjs'],bundle:true,format:'esm',write:false});
  mf=new Miniflare({modules:true,script:bundle.outputFiles[0].text,compatibilityDate:'2026-07-30',cf:false,bindings:{ADMIN_KEY:key},d1Databases:{DB:'business-test'},log:new Log(LogLevel.ERROR),durableObjects:{LIVE:{className:'LiveUpdates',useSQLite:true}}});
  db=await mf.getD1Database('DB');
  await applyMigrations(db,{files:(await readdir('migrations')).filter(n=>n.endsWith('.sql')&&!n.startsWith('0007'))});
@@ -97,11 +97,11 @@ test('edições concorrentes não sobrescrevem cadastro nem duplicam auditoria',
 
 test('informações públicas são servidas sem JavaScript e escapam texto cadastrado',async()=>{
  await save({legalName:'Nome de teste <img src=x onerror=alert(1)>',publishIdentity:true});
- const html='<html><body><section data-public-business></section><noscript><section data-business-fallback=""><p>A combinar.</p></section></noscript></body></html>';
+ const html=await readFile('dist/informacoes/index.html','utf8');
  const req=new Request('https://fine-form.test/informacoes/');Object.defineProperty(req,'cf',{value:{country:'BR'}});
  const res=await worker.fetch(req,{DB:db,ASSETS:{fetch:async()=>new Response(html,{headers:{'Content-Type':'text/html','ETag':'old-static'}})}});
  assert.equal(res.status,200);assert.equal(res.headers.get('ETag'),null);assert.match(res.headers.get('Cache-Control'),/no-store/);
- const dom=new JSDOM(await res.text()),block=dom.window.document.querySelector('[data-business-fallback]');
+ const dom=new JSDOM(await res.text()),block=dom.window.document.querySelector('[data-public-business]');
  assert.equal(dom.window.document.querySelectorAll('[data-public-business]').length,1);
  assert.match(block.textContent,/Nome de teste <img/);assert.equal(block.querySelector('img'),null);assert.ok(!block.textContent.includes('Local privado'));assert.ok(!block.textContent.includes('Endereço cadastral'));
  dom.window.close();await save();

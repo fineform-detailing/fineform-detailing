@@ -3,16 +3,16 @@ import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
 import { build } from 'esbuild';
 import { JSDOM } from 'jsdom';
-import { INTRO, introMode, pendingMatches, transitionDestination } from '../apps/web/src/services/motion/config.mjs';
-import { createIntroController } from '../apps/web/src/services/motion/controller.mjs';
-import { installIntroNavigation } from '../apps/web/src/services/motion/navigation.mjs';
-import { tentacleGeometry, fitTentacle } from '../apps/web/src/services/motion/tentacle-layout.mjs';
+import { INTRO, introMode, pendingMatches, transitionDestination } from '../src/intro/config.mjs';
+import { createIntroController } from '../src/intro/controller.mjs';
+import { installIntroNavigation } from '../src/intro/navigation.mjs';
+import { tentacleGeometry, fitTentacle } from '../src/intro/tentacle-layout.mjs';
 
 const origin = 'https://fine-form.test';
 const fast = { minimumLoading: 0, readinessDeadline: 8, reachDuration: 0, gripDuration: 0, pullDuration: 0, coverDuration: 0, activeDeadline: 150 };
 const pause = ms => new Promise(resolve => setTimeout(resolve, ms));
 const [template, drawing] = await Promise.all([
-  readFile('tests/fixtures/intro-shell.html', 'utf8'), readFile('apps/web/public/assets/tentacle.svg', 'utf8'),
+  readFile('src/intro/shell.html', 'utf8'), readFile('src/intro/tentacle.svg', 'utf8'),
 ]);
 const shell = template.replace('{{TENTACLE_SVG}}', drawing);
 
@@ -173,4 +173,33 @@ test('saída pelo histórico durante a transição cancela uma navegação que a
     assert.deepEqual(destinations, []);
     assert.equal(f.window.sessionStorage.getItem(INTRO.pendingKey), null);
   } finally { remove(); f.close(); }
+});
+
+test('bootstrap sem módulo principal libera a página sozinho e não depende de script inline', async () => {
+  const source = await build({ entryPoints: ['src/intro/boot.mjs'], bundle: true, format: 'iife', write: false });
+  const f = fixture();
+  try {
+    f.window.performance.getEntriesByType = () => [{ type: 'navigate' }];
+    const originalTimeout = f.window.setTimeout.bind(f.window);
+    f.window.setTimeout = (fn, ms, ...args) => originalTimeout(fn, ms === INTRO.bootDeadline ? 12 : ms, ...args);
+    f.window.eval(source.outputFiles[0].text);
+    assert.equal(f.document.documentElement.dataset.ffIntro, 'loading');
+    await pause(25);
+    assert.equal(f.document.documentElement.hasAttribute('data-ff-intro'), false);
+    assert.equal(f.document.querySelector('main').hasAttribute('inert'), false);
+  } finally { f.close(); }
+});
+
+test('páginas públicas recebem uma única abertura e áreas privadas permanecem fora da coreografia', async () => {
+  for (const file of ['dist/index.html', 'dist/atendimento/index.html', 'dist/links/index.html']) {
+    const html = await readFile(file, 'utf8'), dom = new JSDOM(html);
+    try {
+      assert.equal(dom.window.document.querySelectorAll('#ff-intro').length, 1);
+      assert.equal(dom.window.document.querySelectorAll('script[src="/assets/intro-boot.js"]').length, 1);
+      assert.equal(dom.window.document.getElementById('ff-intro').hidden, true);
+      assert.ok(dom.window.document.querySelector('.intro-arm-tip'));
+      assert.ok(dom.window.document.getElementById('conteudo'));
+    } finally { dom.window.close(); }
+  }
+  for (const page of ['painel', 'acompanhar', 'assinatura', 'avaliar']) assert.ok(!(await readFile('dist/' + page + '/index.html', 'utf8')).includes('intro-boot.js'));
 });

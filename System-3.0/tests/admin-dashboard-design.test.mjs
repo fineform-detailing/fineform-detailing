@@ -23,16 +23,19 @@ test('painel preserva operações sensíveis e apresenta indicadores sem valores
 });
 
 
-test('tema v19 fica restrito ao painel, adaptado para desktop e celular',async()=>{
+test('tema v20 fica restrito ao painel, adaptado para desktop e celular',async()=>{
  const html=await readFile(new URL('../dist/painel/index.html',import.meta.url),'utf8');
- const css=await readFile(new URL('../dist/assets/admin-v19.css',import.meta.url),'utf8');
- assert.match(html,/assets\/admin-v19\.css/);
+ const css=await readFile(new URL('../dist/assets/admin-v20.css',import.meta.url),'utf8');
+ assert.match(html,/assets\/admin-v20\.css/);
  assert.match(html,/data-page="admin"/);
  assert.match(css,/body\[data-page="admin"\]/);
  assert.match(css,/@media\(max-width:700px\)/);
  assert.match(css,/prefers-reduced-motion/);
  assert.match(css,/position:fixed;left:12px;right:12px/);
- assert.match(css,/--ff-lime:#c7fb4b/);
+ assert.match(css,/--ff-cyan:#53c3b1/);
+ assert.doesNotMatch(css,/#(?:c7fb4b|b8f52d|a4d740|99df41)/i);
+ const storefront=await readFile(new URL('../dist/assets/studio.css',import.meta.url),'utf8');
+ assert.match(storefront,/--orange:#53c3b1/);
  assert.equal((css.match(/\{/g)||[]).length,(css.match(/\}/g)||[]).length);
  assert.doesNotMatch(css,/https?:\/\//);
 });

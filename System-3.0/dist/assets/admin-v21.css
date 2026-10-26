@@ -1,0 +1,248 @@
+/* Fine Form — paleta oficial da referência enviada (26/10/2026).
+   Camada exclusiva do painel /painel: não altera site público ou lógica administrativa.
+   Amostras da imagem: turquesa #58c1b2, off-white #f1eee9,
+   cinza #9ea09d, preto #0c0e0d. Contraste e estados funcionais preservados. */
+body[data-page="admin"] {
+  --orange:#58c1b2;
+  --paper:#f1eee9;
+  --ink:#0c0e0d;
+  --muted:#9ea09d;
+  --surface:#fff;
+  --line:#dfdfda;
+  --ff-cyan:#58c1b2;
+  --ff-cyan-hover:#6acbbc;
+  --ff-deep:#0c0e0d;
+  --ff-ink:#0c0e0d;
+  --ff-muted:#747975;
+  --ff-border:#d9dcd8;
+  --ff-paper:#f1eee9;
+  --panel-ink:#0c0e0d;
+  --panel-accent:#58c1b2;
+  --panel-line:#d9dcd8;
+  --panel-muted:#747975;
+  background:#f1eee9;
+  color:#0c0e0d;
+  color-scheme:light;
+}
+body[data-page="admin"] .admin-shell {
+  max-width:1720px;
+  gap:18px;
+}
+body[data-page="admin"] .admin-sidebar {
+  background:#0c0e0d;
+  border-color:#292d2b;
+  box-shadow:0 18px 44px #0c0e0d16;
+}
+body[data-page="admin"] .admin-sidebar .admin-brand img {
+  background:#f1eee9;
+  border:1px solid #ffffff30;
+}
+body[data-page="admin"] .admin-sidebar .admin-brand span {
+  color:#fff;
+}
+body[data-page="admin"] .admin-side-caption { color:#9ea09d; }
+body[data-page="admin"] .admin-nav button {
+  color:#d0d3d1;
+  border:1px solid transparent;
+}
+body[data-page="admin"] .admin-nav button:hover:not([aria-current="page"]),
+body[data-page="admin"] .admin-nav button:focus-visible:not([aria-current="page"]) {
+  background:#292d2b;
+  color:#fff;
+}
+body[data-page="admin"] .admin-nav button[aria-current="page"] {
+  color:#0c0e0d;
+  background:#58c1b2;
+  border-color:#58c1b2;
+  box-shadow:0 5px 18px #58c1b226;
+}
+body[data-page="admin"] .admin-main {
+  background:#f1eee9;
+  border-color:#fff;
+  box-shadow:0 15px 50px #0c0e0d09;
+}
+body[data-page="admin"] .admin-top h1,
+body[data-page="admin"] .admin-dashboard-panel-head h2 { color:#0c0e0d; }
+body[data-page="admin"] .admin-eyebrow { color:#6c726e; }
+body[data-page="admin"] .admin-top .live-state { color:#545c57; }
+body[data-page="admin"] .admin-top .live-state::before {
+  background:#58c1b2;
+  box-shadow:0 0 0 4px #58c1b229;
+}
+body[data-page="admin"] .button.orange,
+body[data-page="admin"] .admin-welcome .button,
+body[data-page="admin"] .admin-date-card .button.outline {
+  background:#58c1b2;
+  color:#0c0e0d;
+  border-color:#58c1b2;
+  box-shadow:none;
+}
+body[data-page="admin"] .button.orange:hover,
+body[data-page="admin"] .admin-welcome .button:hover,
+body[data-page="admin"] .admin-date-card .button.outline:hover {
+  background:#79d2c5;
+  border-color:#79d2c5;
+}
+body[data-page="admin"] .button.outline {
+  background:#fff;
+  color:#0c0e0d;
+  border-color:#d9dcd8;
+}
+body[data-page="admin"] .button.outline:hover { background:#f1eee9;border-color:#9ea09d; }
+body[data-page="admin"] .admin-welcome {
+  background:radial-gradient(circle at 83% 28%,#58c1b21e,transparent 37%),#0c0e0d;
+  border-color:#0c0e0d;
+  box-shadow:0 8px 28px #0c0e0d15;
+}
+body[data-page="admin"] .admin-welcome h2 { color:#fff; }
+body[data-page="admin"] .admin-welcome h2 em,
+body[data-page="admin"] .admin-welcome-kicker { color:#58c1b2; }
+body[data-page="admin"] .admin-welcome p:not(.admin-welcome-kicker) { color:#d6d9d7; }
+body[data-page="admin"] .admin-welcome-art::before {
+  background:radial-gradient(circle at 44% 40%,#58c1b23b,transparent 72%);
+  border-color:#58c1b255;
+}
+body[data-page="admin"] .admin-welcome-art::after {
+  background:#58c1b212;
+  border-color:#58c1b244;
+}
+body[data-page="admin"] .admin-metric {
+  border-color:#e3e4df;
+  background:#fff;
+  box-shadow:0 8px 28px #0c0e0d0b;
+}
+body[data-page="admin"] .admin-metric:first-child {
+  background:#58c1b2;
+  color:#0c0e0d;
+  border-color:#58c1b2;
+}
+body[data-page="admin"] .admin-metric:nth-child(2) {
+  background:#0c0e0d;
+  color:#fff;
+  border-color:#0c0e0d;
+}
+body[data-page="admin"] .admin-metric:nth-child(3) {
+  background:#fff;
+  color:#0c0e0d;
+  border-color:#d9dcd8;
+}
+body[data-page="admin"] .admin-metric span,
+body[data-page="admin"] .admin-metric strong { color:#0c0e0d; }
+body[data-page="admin"] .admin-metric p { color:#454b47; }
+body[data-page="admin"] .admin-metric:nth-child(2) :is(span,strong) { color:#fff; }
+body[data-page="admin"] .admin-metric:nth-child(2) p { color:#c9cdca; }
+body[data-page="admin"] .admin-metric-decoration,
+body[data-page="admin"] .admin-metric:first-child .admin-metric-decoration {
+  background:linear-gradient(90deg,#0c0e0d 0 49%,#ffffff78 49% 100%);
+}
+body[data-page="admin"] .admin-metric:nth-child(2) .admin-metric-decoration {
+  background:linear-gradient(90deg,#58c1b2 0 35%,#616966 35% 100%);
+}
+body[data-page="admin"] .admin-metric:nth-child(3) .admin-metric-decoration {
+  background:linear-gradient(90deg,#9ea09d 0 65%,#ecece8 65% 100%);
+}
+body[data-page="admin"] .admin-dashboard-panel,
+body[data-page="admin"] .system-card {
+  background:#fff;
+  border-color:#e3e4df;
+  box-shadow:0 8px 26px #0c0e0d09;
+}
+body[data-page="admin"] .admin-dashboard-panel-head p { color:#747975; }
+body[data-page="admin"] .admin-dashboard-panel-head button {
+  background:#f1eee9;
+  border-color:#dfdfda;
+  color:#0c0e0d;
+}
+body[data-page="admin"] .admin-quick-actions button {
+  background:#f1eee9;
+  color:#0c0e0d;
+  border-color:#e4e1dd;
+}
+body[data-page="admin"] .admin-quick-actions button::before {
+  background:#58c1b2;
+  color:#0c0e0d;
+}
+body[data-page="admin"] .admin-quick-actions button:hover {
+  background:#fff;
+  border-color:#58c1b2;
+}
+body[data-page="admin"] .admin-date-card {
+  background:radial-gradient(circle at 100% 10%,#58c1b21c,transparent 50%),#0c0e0d;
+  color:#fff;
+  border-color:#0c0e0d;
+}
+body[data-page="admin"] .admin-date-card .admin-dashboard-panel-head h2 { color:#fff; }
+body[data-page="admin"] .admin-date-card .admin-dashboard-panel-head p,
+body[data-page="admin"] .admin-date-text { color:#d1d4d2; }
+body[data-page="admin"] .admin-date-day { color:#58c1b2; }
+body[data-page="admin"] .admin-dashboard-aside>.admin-dashboard-panel:not(.admin-date-card) {
+  background:#f1eee9;
+  border-color:#d8d9d5;
+}
+body[data-page="admin"] .admin-side-stat { border-top-color:#c9cac7; }
+body[data-page="admin"] .admin-side-stat p { color:#505752; }
+body[data-page="admin"] .admin-side-stat strong { color:#0c0e0d; }
+body[data-page="admin"] .admin-side-link {
+  background:#0c0e0d;
+  color:#fff;
+}
+body[data-page="admin"] .admin-side-link:hover {
+  background:#292d2b;
+  color:#fff;
+}
+body[data-page="admin"] .admin-table-wrap { border-color:#e2e3de; }
+body[data-page="admin"] .admin-table th { background:#f1eee9;color:#4d534f; }
+body[data-page="admin"] .admin-table tr:hover td { background:#f8f6f2; }
+body[data-page="admin"] .admin-toolbar { background:#fff;border-color:#e2e3de; }
+body[data-page="admin"] .system-input,
+body[data-page="admin"] .system-field input,
+body[data-page="admin"] .system-field select,
+body[data-page="admin"] .system-field textarea {
+  background:#fff;
+  color:#0c0e0d;
+  border-color:#d9dcd8;
+}
+body[data-page="admin"] .admin-note-banner {
+  background:#f1eee9;
+  color:#0c0e0d;
+  border-color:#9ea09d;
+}
+body[data-page="admin"] .admin-access {
+  background:#fff;
+  border-color:#e2e3de;
+  box-shadow:0 20px 60px #0c0e0d14;
+}
+body[data-page="admin"] .admin-access .admin-brand { color:#0c0e0d; }
+body[data-page="admin"] :is(button,a,input,select,textarea,summary):focus-visible {
+  outline:3px solid #58c1b2;
+  outline-offset:3px;
+}
+@media(max-width:700px) {
+  body[data-page="admin"] .admin-sidebar {
+    background:#0c0e0d;
+    border-color:#0c0e0d;
+  }
+  body[data-page="admin"] .admin-nav {
+    background:#0c0e0df5;
+    border-color:#454a47;
+    scrollbar-color:#58c1b2 #303431;
+  }
+  body[data-page="admin"] .admin-nav button[aria-current="page"] {
+    background:#58c1b2;
+    color:#0c0e0d;
+  }
+  body[data-page="admin"] .admin-main {
+    background:#f1eee9;
+  }
+  body[data-page="admin"] .admin-welcome {
+    background:#0c0e0d;
+  }
+  body[data-page="admin"] .admin-notification {
+    box-shadow:0 9px 28px #0c0e0d24;
+  }
+}
+@media(prefers-reduced-motion:reduce) {
+  body[data-page="admin"] .admin-quick-actions button:hover {
+    transform:none;
+  }
+}

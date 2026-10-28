@@ -2,12 +2,13 @@ import {test} from 'node:test';
 import assert from 'node:assert/strict';
 import {readFile} from 'node:fs/promises';
 
-test('painel editorial carrega CSS isolado sem alterar o site público',async()=>{
+test('painel carrega um único tema isolado sem alterar o site público',async()=>{
  const html=await readFile(new URL('../dist/painel/index.html',import.meta.url),'utf8');
- const css=await readFile(new URL('../dist/assets/admin-v18.css',import.meta.url),'utf8');
- assert.match(html,/assets\/admin-v18\.css/);
+ const css=await readFile(new URL('../dist/assets/admin-v23.css',import.meta.url),'utf8');
+ assert.match(html,/assets\/admin-v23\.css/);
+ assert.doesNotMatch(html,/assets\/admin-v(?:18|20|21|22)\.css/);
  assert.match(css,/body\[data-page="admin"\]/);
- assert.match(css,/@media \(max-width:700px\)/);
+ assert.match(css,/@media\(max-width:900px\)/);
  assert.match(css,/prefers-reduced-motion/);
 });
 test('painel preserva operações sensíveis e apresenta indicadores sem valores fictícios',async()=>{
@@ -23,16 +24,16 @@ test('painel preserva operações sensíveis e apresenta indicadores sem valores
 });
 
 
-test('tema v20 fica restrito ao painel, adaptado para desktop e celular',async()=>{
+test('tema atual usa a paleta Fine Form em celular e desktop',async()=>{
  const html=await readFile(new URL('../dist/painel/index.html',import.meta.url),'utf8');
- const css=await readFile(new URL('../dist/assets/admin-v20.css',import.meta.url),'utf8');
- assert.match(html,/assets\/admin-v20\.css/);
+ const css=await readFile(new URL('../dist/assets/admin-v23.css',import.meta.url),'utf8');
+ assert.match(html,/assets\/admin-v23\.css/);
  assert.match(html,/data-page="admin"/);
  assert.match(css,/body\[data-page="admin"\]/);
- assert.match(css,/@media\(max-width:700px\)/);
+ assert.match(css,/@media\(max-width:900px\)/);
  assert.match(css,/prefers-reduced-motion/);
- assert.match(css,/position:fixed;left:12px;right:12px/);
- assert.match(css,/--ff-cyan:#53c3b1/);
+ assert.match(css,/admin-mobile-nav/);
+ assert.match(css,/--ff-cyan:#58c1b2/);
  assert.doesNotMatch(css,/#(?:c7fb4b|b8f52d|a4d740|99df41)/i);
  const storefront=await readFile(new URL('../dist/assets/studio.css',import.meta.url),'utf8');
  assert.match(storefront,/--orange:#53c3b1/);

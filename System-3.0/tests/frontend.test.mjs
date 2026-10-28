@@ -37,7 +37,14 @@ function submit(w,id){w.document.getElementById(id).dispatchEvent(new w.Event('s
 let quoteId,quoteToken,subId,portalToken;
 test('painel filtra pela etapa do gráfico, busca no topo e abre as áreas do menu compacto',async()=>{
  const w=await open('painel','admin');await until(()=>w.document.getElementById('access-form'));
- input(w,'key',key);submit(w,'access-form');await until(()=>w.document.querySelector('.ff-chart'));
+ input(w,'key',key);submit(w,'access-form');await until(()=>w.document.querySelector('.ff-overview-hero'));
+ const firstDate=w.document.querySelector('[data-agenda-date]').dataset.agendaDate;
+ w.document.querySelector('[data-week="1"]').click();assert.notEqual(w.document.querySelector('[data-agenda-date]').dataset.agendaDate,firstDate);
+ w.document.querySelector('[data-week="-1"]').click();assert.equal(w.document.querySelector('[data-agenda-date]').dataset.agendaDate,firstDate);
+ w.document.querySelector('[data-agenda-date]').click();await until(()=>w.document.getElementById('agenda-form'));
+ assert.equal(w.document.querySelector('#agenda-form [name="date"]').value,firstDate);
+ w.document.querySelector('.admin-nav [data-tab="dashboard"]').click();await until(()=>w.document.querySelector('.ff-statistics-link'));
+ w.document.querySelector('.ff-statistics-link').click();await until(()=>w.document.querySelector('.ff-chart'));
  w.document.querySelector('.ff-chart-stages [data-status="completed"]').click();
  await until(()=>w.document.getElementById('filter-form'));
  assert.equal(w.document.querySelector('#filter-form [name="status"]').value,'completed');
@@ -67,7 +74,7 @@ test('cliente envia pedido pelo assistente e recebe total e acompanhamento',asyn
 test('painel autentica, aceita pedido e ativa assinatura com pagamento confirmado',async()=>{
  const w=await open('painel','admin');await until(()=>w.document.getElementById('access-form'));input(w,'key',key);submit(w,'access-form');
  await until(()=>w.document.querySelector('[data-quote="'+quoteId+'"]'));
- assert.deepEqual([...w.document.querySelectorAll('.admin-metric>span')].map(el=>el.textContent),['Pedidos recebidos','Agenda de hoje','Care ativo','Concluídos']);
+ assert.deepEqual([...w.document.querySelectorAll('.admin-metric>span')].map(el=>el.textContent),['Aguardando resposta','Agenda de hoje']);
  assert.doesNotMatch(w.document.getElementById('admin-view').textContent,/Pagamentos Care registrados no mês|O valor acima registra|histórico financeiro/);
  w.document.querySelector('[data-quote="'+quoteId+'"]').click();await until(()=>w.document.getElementById('quote-edit'));
  input(w,'status','accepted');input(w,'message','Care aprovado.');const editing=w.document.getElementById('quote-edit');submit(w,'quote-edit');await until(()=>w.document.getElementById('quote-edit')!==editing&&w.document.querySelector('#quote-edit [name="status"]')?.value==='accepted');const vehicle=w.document.getElementById('register-vehicle');vehicle.elements.plate.value='DOM1A23';vehicle.elements.confirm.checked=true;submit(w,'register-vehicle');await until(()=>w.document.getElementById('activate-plan'));

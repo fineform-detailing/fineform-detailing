@@ -60,3 +60,14 @@ test('navegação respeita Voltar e diálogo recupera campos manuais sem guardar
  d.getElementById('manual-button').click();assert.equal(d.getElementById('manual-title').value,'Rascunho da música');
  assert.equal(w.localStorage.length,0);assert.equal(w.sessionStorage.length,0);
 });
+
+test('confirmação manual conclui a análise pendente sem oferecer envio do resultado antigo',async()=>{
+ const {w,sent}=await open();await analyze(w);const d=w.document;
+ d.getElementById('manual-button').click();d.getElementById('manual-tonic').value='7';
+ d.querySelector('#manual-form button[type="submit"]').click();
+ await until(()=>sent.length===1&&!d.getElementById('dialog').hasAttribute('open'));
+ assert.equal(sent[0].tonic,7);assert.equal(d.getElementById('analysis-result').hidden,true);
+ assert.equal(d.getElementById('capture-button').classList.contains('primary'),true);
+ assert.equal(d.querySelectorAll('.task-flow .done').length,3);
+ d.querySelector('.nav-item[data-view="history"]').click();assert.equal(d.getElementById('pending-analysis').hidden,true);
+});

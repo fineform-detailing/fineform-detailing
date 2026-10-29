@@ -40,7 +40,7 @@ const instruments={bateria:{label:'Bateria',icon:'drums'},teclado:{label:'Teclad
 const defaults=Object.keys(instruments).map((instrument,slot)=>({id:'',slot,instrument,name:'',state:'empty'}));
 let auth=null,isAdmin=false,adminCsrf='',csrf='',vapidPublicKey=null,room={room:null,members:defaults,events:[],acknowledgements:[]},dashboard={rooms:[],audit:[]},hasLoaded=false,refreshing=false,roomRevision=0,currentView='capture',toastTimer,pollTimer,swReady=null,result=null,selectedCandidate=0,pendingEvent=null,sharing=false,lastEventId=null;
 const inviteCache=new Map();
-let sharedResult=false;
+let sharedResult=false,lastRoomRender='';
 const analysisDraft={title:'',singer:'',expanded:false};
 const manualDraft={tonic:'0',mode:'major',title:'',singer:''};
 const initialView=new URLSearchParams(location.search).get('tela');
@@ -48,10 +48,10 @@ const viewNames=['capture','history','band','guide','admin'];
 function updateTaskFlow(){
  const phase=sharedResult?3:sharing?2:result?.candidates.length?1:0;
  document.querySelectorAll('[data-flow-step]').forEach((el,i)=>{el.classList.toggle('done',i<phase);el.classList.toggle('current',i===phase);if(i===phase)el.setAttribute('aria-current','step');else el.removeAttribute('aria-current');});
- $('#task-status').textContent=sharedResult?'Tom compartilhado. Acompanhe as confirmações da banda.':sharing?'Etapa 3 de 3 · enviando o tom para a banda.':result?.candidates.length?'Etapa 2 de 3 · confira o tom antes de compartilhar.':capturing?'Etapa 1 de 3 · ouvindo até 10 segundos de melodia.':'Etapa 1 de 3 · ative o microfone ou indique o tom.';
+ $('#task-status').textContent=sharedResult?'Tom compartilhado. Acompanhe as confirmações da banda.':sharing?'Enviando o tom para a banda…':result?.candidates.length?'Confira a sugestão antes de compartilhar.':capturing?'Ouvindo sua melodia…':'Ative o microfone para começar.';
  const pending=!!auth&&!!result?.candidates.length&&!sharedResult;
  $('#pending-analysis').hidden=!pending||currentView==='capture';
- if(!capturing&&!starting&&!finalizing){$('#capture-button').classList.toggle('primary',!result?.candidates.length);$('#capture-button').classList.toggle('secondary',!!result?.candidates.length);if(result?.candidates.length)$('#capture-button').innerHTML=icon('mic')+'<span>Analisar outro trecho</span>'+icon('arrow-right');}
+ if(!capturing&&!starting&&!finalizing){const pending=!!result?.candidates.length&&!sharedResult;$('#capture-button').classList.toggle('primary',!pending);$('#capture-button').classList.toggle('secondary',pending);if(result?.candidates.length)$('#capture-button').innerHTML=icon('mic')+'<span>Analisar outro trecho</span>'+icon('arrow-right');}
 }
 function captureDraft(){analysisDraft.title=$('#result-title')?.value||'';analysisDraft.singer=$('#result-singer')?.value||'';analysisDraft.expanded=$('#result-details')?.open||false;}
 
@@ -72,7 +72,7 @@ function initials(name){return name.trim().split(/\s+/).slice(0,2).map(s=>s[0]).
 function displayName(){return auth?(auth.name||instruments[auth.instrument].label):isAdmin?'Baterista':'Seu acesso';}
 function renderAuth(){
   document.body.classList.toggle('admin-mode',isAdmin);$('#admin-nav').hidden=!isAdmin;$('#login-button').hidden=!!auth;$('#login-button').innerHTML=isAdmin?'Meu painel '+icon('settings'):'Abrir convite '+icon('arrow-right');
-  $('#top-avatar').hidden=!auth;$('#top-avatar').textContent=initials(displayName());$('#profile-name').textContent=displayName();$('#profile-role').textContent=auth?auth.slot===0?'Criador desta sala':instruments[auth.instrument].label:isAdmin?'Painel de administração':'Abra o convite da sala';$('#avatar').textContent=initials(displayName());
+  $('#profile-button').hidden=!auth;$('#avatar').hidden=!!auth;$('#top-avatar').hidden=!auth;$('#top-avatar').textContent=initials(displayName());$('#profile-name').textContent=displayName();$('#profile-role').textContent=auth?auth.slot===0?'Criador desta sala':instruments[auth.instrument].label:isAdmin?'Painel de administração':'Abra o convite da sala';$('#avatar').textContent=initials(displayName());
   $('#access-banner').hidden=!!auth;$('#band-login').hidden=!!auth;$('#sidebar-room-name').textContent=room.room?.name||'Sala da banda';setConnection(navigator.onLine);renderRoom();updateTaskFlow();
 }
 function showView(view,{historyMode='replace',focus=false}={}){
@@ -87,15 +87,17 @@ function showView(view,{historyMode='replace',focus=false}={}){
 }
 function timeAgo(timestamp){const seconds=Math.max(0,Math.floor(Date.now()/1000)-timestamp);if(seconds<60)return 'Agora';if(seconds<3600)return `Há ${Math.floor(seconds/60)} min`;if(seconds<86400)return `Há ${Math.floor(seconds/3600)} h`;return new Date(timestamp*1000).toLocaleDateString('pt-BR',{day:'2-digit',month:'short'});}
 function dateLabel(timestamp){return new Date(timestamp*1000).toLocaleString('pt-BR',{day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'});}
-function empty(title='Sua próxima música começa aqui.',description='Os tons que a banda compartilhar vão aparecer neste espaço.'){return `<div class="empty-state"><span>${icon('music')}</span><div><strong>${escape(title)}</strong><p>${escape(description)}</p></div></div>`;}
-function eventRow(e){return `<article class="event-row"><div class="event-key">${keyLabel(e.tonic,e.mode)}</div><div class="event-text"><strong>${escape(e.title)}</strong><span>${escape(e.singer?e.singer+' · ':'')}${escape(keyName(e.tonic,e.mode))} · ${e.source==='manual'?'Confirmado por '+escape(e.author):'Estimado pelo trecho'}</span></div><div class="event-meta"><small>${timeAgo(e.created_at)}</small><span>${e.read_count}/3 músicos confirmaram</span></div>${auth&&auth.slot>0?`<button class="text-button ack-event" data-ack="${e.id}" title="Confirmar recebimento">${icon('check')} Recebido</button>`:''}</article>`;}
+function empty(title='Ainda não há tons.',description='Os tons compartilhados aparecem aqui.'){return `<div class="empty-state"><span>${icon('music')}</span><div><strong>${escape(title)}</strong><p>${escape(description)}</p></div></div>`;}
+function eventRow(e){return `<article class="event-row"><div class="event-key">${keyLabel(e.tonic,e.mode)}</div><div class="event-text"><strong>${escape(e.title)}</strong><span>${escape(e.singer?e.singer+' · ':'')}${escape(keyName(e.tonic,e.mode))} · ${e.source==='manual'?'Confirmado por '+escape(e.author):'Estimado pelo trecho'}</span></div><div class="event-meta"><small data-relative-time="${Number(e.created_at)}">${timeAgo(e.created_at)}</small><span>${e.read_count}/3 músicos confirmaram</span></div>${auth&&auth.slot>0?`<button class="text-button ack-event" data-ack="${e.id}" title="Confirmar recebimento">${icon('check')} Recebido</button>`:''}</article>`;}
 function renderRoom(){
-  $('#history-count').textContent=room.events.length;$('#sidebar-room-name').textContent=room.room?.name||'Sala da banda';
+  const signature=JSON.stringify([room,auth?.id,isAdmin]);if(signature===lastRoomRender){$$('[data-relative-time]').forEach(el=>{const label=timeAgo(Number(el.dataset.relativeTime));if(el.textContent!==label)el.textContent=label;});return;}lastRoomRender=signature;
+  $('#recent-section').hidden=!room.events.length;
+  $('#history-count').textContent=room.events.length;$('#history-count').hidden=!room.events.length;$('#sidebar-room-name').textContent=room.room?.name||'Sala da banda';
   $('#erase-history').hidden=!(isAdmin&&auth&&room.room&&auth.room_id===room.room.id);$('#erase-history').disabled=!room.events.length;
   $('#recipient-row').innerHTML=room.members.filter(m=>m.slot>0).map(m=>`<span class="recipient ${m.state==='active'?'ready':''}" title="${escape(m.name||instruments[m.instrument].label)}">${icon(instruments[m.instrument].icon)} ${instruments[m.instrument].label}</span>`).join('');
   const latest=room.events[0];
-  if(latest){$('#current-tone').classList.add('has-tone');$('#current-tone').innerHTML=`<div class="big-key">${keyLabel(latest.tonic,latest.mode)}</div><p>${escape(keyName(latest.tonic,latest.mode))}</p><span>${escape(latest.title)}${latest.singer?' · '+escape(latest.singer):''}<br>${timeAgo(latest.created_at)} · ${latest.source==='manual'?'Confirmado':'Estimado'}</span>`;const seen=room.acknowledgements.some(a=>a.event_id===latest.id&&a.member_id===auth?.id);$('#current-ack').hidden=!auth;$('#current-ack').innerHTML=`${auth?.slot>0?`<button class="button secondary small" data-ack="${latest.id}" ${seen?'disabled':''}>${icon('check')}${seen?'Você confirmou':'Recebido'}</button>`:''}<p>${latest.read_count}/3 músicos confirmaram${latest.push_accepted?' · '+latest.push_accepted+' avisos aceitos':''}</p>`;
-  }else{$('#current-tone').classList.remove('has-tone');$('#current-tone').innerHTML='<div class="big-key">—</div><p>Aguardando o primeiro tom</p><span>Quando um tom for compartilhado,<br>ele aparece aqui para todo mundo.</span>';$('#current-ack').hidden=true;}
+  if(latest){$('#current-tone').classList.add('has-tone');$('#current-tone').innerHTML=`<div class="big-key">${keyLabel(latest.tonic,latest.mode)}</div><p>${escape(keyName(latest.tonic,latest.mode))}</p><span>${escape(latest.title)}${latest.singer?' · '+escape(latest.singer):''}<br><time data-relative-time="${Number(latest.created_at)}">${timeAgo(latest.created_at)}</time> · ${latest.source==='manual'?'Confirmado':'Estimado'}</span>`;const seen=room.acknowledgements.some(a=>a.event_id===latest.id&&a.member_id===auth?.id);$('#current-ack').hidden=!auth;$('#current-ack').innerHTML=`${auth?.slot>0?`<button class="button secondary small" data-ack="${latest.id}" ${seen?'disabled':''}>${icon('check')}${seen?'Você confirmou':'Recebido'}</button>`:''}<p>${latest.read_count}/3 músicos confirmaram${latest.push_accepted?' · '+latest.push_accepted+' avisos aceitos':''}</p>`;
+  }else{$('#current-tone').classList.remove('has-tone');$('#current-tone').innerHTML='<div class="big-key">—</div><p>Nenhum tom compartilhado</p><span>O próximo tom da banda aparece aqui.</span>';$('#current-ack').hidden=true;}
   $('#recent-events').innerHTML=room.events.length?room.events.slice(0,3).map(eventRow).join(''):empty();
   $('#members-grid').innerHTML=room.members.map(m=>`<article class="card member-card"><div class="member-icon">${icon(instruments[m.instrument].icon)}</div><h2>${instruments[m.instrument].label}</h2><p class="member-name">${escape(m.name||(m.slot===0?'Cria e organiza a sala':'Entra pelo convite, sem cadastro'))}</p>${m.slot===0?'<span class="owner-badge">CRIADOR DA SALA</span>':''}<div class="member-status"><span>${m.state==='active'?'● Aparelho conectado':'Aguardando entrada'}</span><span>${m.push_count?'Avisos ativados':'Avisos não ativados neste lugar'}</span></div>${isAdmin&&room.room&&m.slot>0&&m.state==='active'?`<button class="button secondary danger" data-remove="${m.id}">${icon('x')} Remover acesso</button>`:''}</article>`).join('');
   if(currentView==='history')renderHistory();
@@ -186,7 +188,7 @@ function captureUI(active){
   $('#capture-button').classList.toggle('primary',active||!result?.candidates.length);$('#capture-button').classList.toggle('secondary',!active&&!!result?.candidates.length);
   $('#capture-button').innerHTML=active?`${icon('stop')}<span>Concluir análise</span>${icon('arrow-right')}`:`${icon('mic')}<span>Ativar microfone</span>${icon('arrow-right')}`;
   $('#capture-status').innerHTML=active?'<i></i> Ouvindo a melodia':'<i></i> Pronto para ouvir';$('#capture-status').classList.toggle('recording',active);
-  $('#microphone-hint').textContent=active?`Cante ou toque uma melodia solo. A análise termina em ${CAPTURE_SECONDS} segundos.`:'Aproxime o celular da voz ou do instrumento que faz a melodia.';
+  $('#microphone-hint').textContent=active?`Cante ou toque uma melodia solo. A análise termina em ${CAPTURE_SECONDS} segundos.`:'Cante de 8 a 10 segundos perto do celular.';
 }
 function captureProgress(seconds){
   elapsed=Math.min(CAPTURE_SECONDS,Math.max(0,seconds));
@@ -196,7 +198,7 @@ function captureProgress(seconds){
 }
 function captureFailure(error){
   capturing=starting=finalizing=false;captureSession=null;captureUI(false);$('#capture-button').disabled=false;
-  $('#live-frequency').textContent='O primeiro passo é dar o play na sua voz.';updateTaskFlow();
+  $('#live-frequency').textContent='Voz ou instrumento solo';updateTaskFlow();
   if(error.name==='AbortError')return;
   toast({NotAllowedError:'Microfone bloqueado. Libere o acesso nas permissões do navegador.',NotFoundError:'Não encontramos um microfone neste aparelho.',NotReadableError:'O microfone está ocupado por outro aplicativo.',SecurityError:'Abra o site por HTTPS para usar o microfone.'}[error.name]||error.message||'Não foi possível iniciar a captação. Tente novamente.');
 }
@@ -279,7 +281,7 @@ document.addEventListener('click',async e=>{
   const manage=e.target.closest('[data-room-manage]');if(manage){manageRoom(manage.dataset.roomManage);return;}
   const removal=e.target.closest('[data-remove]');if(removal){const id=removal.dataset.remove;confirmAction('Remover este acesso?','Este músico será desconectado e perderá os avisos. Os convites anteriores serão bloqueados. Gere um novo convite para liberar a entrada de um substituto.',async()=>{await api('/api/admin/rooms/remove',{method:'POST',body:{roomId:room.room.id,memberId:id}});inviteCache.delete(room.room.id);await refresh();toast('Acesso removido e convite anterior bloqueado. Gere um novo convite para o substituto.');});}
 });
-$('#login-button').onclick=login;$('#banner-login').onclick=login;$('#band-login').onclick=login;$('#profile-button').onclick=profile;$('#top-avatar').onclick=profile;
+$('#login-button').onclick=login;$('#band-login').onclick=login;$('#profile-button').onclick=profile;
 $('#notifications-button').onclick=notificationSettings;$('#enable-push-card').onclick=notificationSettings;$('#manual-button').onclick=manual;
 $('#capture-button').onclick=()=>{if(capturing){stopCapture();return;}if(result?.candidates.length&&!sharedResult){confirmAction('Analisar outro trecho?','A sugestão atual ainda não foi compartilhada. Ela será substituída pela próxima análise.',async()=>{await startCapture();});return;}startCapture();};
 $('#resume-analysis').onclick=()=>{showView('capture',{historyMode:'push'});$('#analysis-result').scrollIntoView({behavior:'auto',block:'center'});$('#share-result')?.focus({preventScroll:true});};

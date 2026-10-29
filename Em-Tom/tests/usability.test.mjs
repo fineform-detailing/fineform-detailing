@@ -71,3 +71,21 @@ test('confirmação manual conclui a análise pendente sem oferecer envio do res
  assert.equal(d.querySelectorAll('.task-flow .done').length,3);
  d.querySelector('.nav-item[data-view="history"]').click();assert.equal(d.getElementById('pending-analysis').hidden,true);
 });
+
+
+test('tela simples mantém só o necessário e sincronização idêntica conserva botões e foco',async()=>{
+ const {w,sent}=await open();const d=w.document;
+ assert.equal(d.querySelector('.sidebar'),null);
+ assert.equal(d.querySelector('.steps'),null);
+ assert.equal(d.getElementById('recent-section').hidden,true);
+ assert.equal(d.getElementById('history-count').hidden,true);
+ await analyze(w);d.getElementById('share-result').click();
+ await until(()=>sent.length===1&&d.getElementById('share-result').textContent.includes('Tom compartilhado'));
+ assert.equal(d.getElementById('recent-section').hidden,false);
+ assert.equal(d.getElementById('capture-button').classList.contains('primary'),true);
+ const tone=d.getElementById('current-tone').firstElementChild;
+ const receipt=d.querySelector('#current-ack button');receipt.focus();
+ w.dispatchEvent(new w.Event('online'));await pause();await pause();
+ assert.equal(d.getElementById('current-tone').firstElementChild,tone);
+ assert.equal(d.activeElement,receipt);
+});

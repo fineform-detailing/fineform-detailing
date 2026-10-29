@@ -1,0 +1,56 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "em-tom-banda",
+  "main": "worker/index.mjs",
+  "compatibility_date": "2026-10-27",
+  "compatibility_flags": [
+    "nodejs_compat"
+  ],
+  "workers_dev": true,
+  "build": {
+    "command": "node scripts/prepare-assets.mjs"
+  },
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "em-tom-banda",
+      "database_id": "66f21774-4376-44a9-88a3-7631ed1846bc",
+      "migrations_dir": "migrations"
+    }
+  ],
+  "vars": {
+    "APP_NAME": "Em Tom",
+    "ENVIRONMENT": "production",
+    "VAPID_SUBJECT": "https://em-tom-banda.fineformcare.workers.dev"
+  },
+  "observability": {
+    "enabled": true,
+    "head_sampling_rate": 1,
+    "redact_query_string": true
+  },
+  "triggers": {
+    "crons": [
+      "* * * * *"
+    ]
+  },
+  "account_id": "aec28ee9f801e3222a0f9e733d397596",
+  "keep_vars": true,
+  "ratelimits": [
+    {
+      "name": "API_RATE_LIMITER",
+      "namespace_id": "72641001",
+      "simple": {
+        "limit": 160,
+        "period": 60
+      }
+    },
+    {
+      "name": "ENTRY_RATE_LIMITER",
+      "namespace_id": "72641002",
+      "simple": {
+        "limit": 20,
+        "period": 60
+      }
+    }
+  ]
+}

@@ -1,0 +1,9 @@
+node_modules/
+dist/
+build/
+.wrangler/
+.dev.vars*
+.env*
+.sites-runtime/
+artifacts/
+*.log

@@ -348,3 +348,29 @@ test('painel cadastra local, libera para um pedido e prepara WhatsApp; retirada 
  assert.equal((await request('/api/business')).data.location,null);
  closeWindow(admin);closeWindow(client);
 });
+
+test('assistente retoma etapa autorizada, permite editar e anuncia progresso real',async()=>{
+ const w=await open('atendimento','booking','http://localhost/atendimento/',w=>w.localStorage.setItem('ff-care-draft-v1',JSON.stringify({vehicle:'car',model:'Civic',service:'essential',draftStep:3,ack:true,expiresAt:Date.now()+86400000})));
+ assert.match(w.document.getElementById('step-count').textContent,/04/);
+ assert.equal(w.document.querySelector('[role="progressbar"]').getAttribute('aria-valuenow'),'3');
+ assert.match(w.document.getElementById('draft-status').textContent,/retomado na etapa 4/);
+ w.document.querySelector('[data-go-step="0"]').click();
+ assert.equal(w.document.querySelector('[name="model"]').value,'Civic');
+ assert.equal(w.document.querySelector('[role="progressbar"]').getAttribute('aria-valuenow'),'0');
+ assert.equal(w.document.querySelector('[data-go-step="4"]').disabled,true);
+ submit(w,'care-form');submit(w,'care-form');submit(w,'care-form');submit(w,'care-form');
+ assert.equal(w.document.querySelector('[name="ack"]').checked,false);
+ w.document.querySelector('[data-review-step="1"]').click();
+ assert.equal(w.document.querySelector('[data-action="service"][data-value="essential"]').getAttribute('aria-pressed'),'true');
+ assert.equal(JSON.parse(w.localStorage.getItem('ff-care-draft-v1')).draftStep,1);
+ closeWindow(w);
+});
+test('rascunho incompleto não pula veículo e erro fica associado ao campo',async()=>{
+ const w=await open('atendimento','booking','http://localhost/atendimento/',w=>w.localStorage.setItem('ff-care-draft-v1',JSON.stringify({draftStep:4,model:'',expiresAt:Date.now()+86400000})));
+ assert.equal(w.document.querySelector('[role="progressbar"]').getAttribute('aria-valuenow'),'0');
+ submit(w,'care-form');const model=w.document.querySelector('[name="model"]');
+ assert.equal(model.getAttribute('aria-invalid'),'true');assert.equal(model.getAttribute('aria-describedby'),'form-error');assert.equal(w.document.activeElement,model);
+ input(w,'model','Civic');assert.equal(model.hasAttribute('aria-invalid'),false);submit(w,'care-form');
+ assert.equal(w.document.querySelector('.booking-treatments').tagName,'DETAILS');
+ assert.equal(w.document.querySelector('.booking-treatments').open,false);closeWindow(w);
+});

@@ -161,3 +161,69 @@ body[data-page=home] .closing-section{max-width:840px;width:100%;margin:0 auto;p
 @media(max-width:700px){.closing-copy{padding:30px 22px 36px}body[data-page=home] .closing-section{padding-bottom:48px}}
 
 @media(hover:none),(pointer:coarse){.site-header{backdrop-filter:none;background:#fffffff7}.nav-links{backdrop-filter:none}}
+
+/* Usability: reachable controls, one next action and readable groups. */
+body[data-design=kinetic] :is(button,a,input,select,textarea,summary):focus-visible{outline:3px solid #287f72;outline-offset:4px}
+body[data-design=kinetic] :is(.text-link,.quiet-button,.goal-button,.mode-tabs button,.dialog-close,.footer-socials a,.footer-utilities button,.footer-bottom a){min-height:44px}
+body[data-design=kinetic] :is(.dialog-close,.footer-socials a){min-width:44px}
+body[data-design=kinetic] :is(.field input,.field select,.field textarea){font-size:16px;min-height:48px}
+body[data-design=kinetic] .field [aria-invalid=true]{border:2px solid #a32929}
+body[data-design=kinetic] .form-error{color:#a32929;font-size:14px}
+.wizard-status{font-size:14px;line-height:1.6;margin:14px 0 22px;color:#41534b;min-height:24px}
+.draft-status{background:#edf8f5;border-left:3px solid #53c3b1;border-radius:8px;padding:12px 16px;font-size:13px;margin:0 0 22px}
+.step-nav li{padding:0;display:block}
+.step-nav li>button{display:flex;gap:12px;align-items:center;text-align:left;width:100%;min-height:48px;padding:8px 10px;border:0;border-radius:10px;background:transparent;color:#586250;font:inherit;cursor:pointer}
+.step-nav li>button b{font-weight:600;font-size:12px}
+.step-nav li>button span{font-size:13px}
+.step-nav li>button:disabled{opacity:1;cursor:default}
+.step-nav li.active>button{background:#dff3ee;color:#0b0d0c}
+.step-nav li.done>button{color:#236b60;text-decoration:underline;text-underline-offset:4px}
+.step-nav li.done>button:hover{background:#e8eeea}
+.booking-panel .booking-treatments>summary,.booking-panel .result-tools>summary{display:flex;align-items:center;justify-content:space-between;gap:18px;min-height:48px;padding:15px 0;font-size:14px;line-height:1.6;font-weight:600;cursor:pointer;color:#0b0d0c}
+.booking-panel .booking-treatments>summary span{font-size:22px}
+.booking-panel .booking-treatments[open]>summary span{rotate:45deg}
+.booking-panel .review-list dt{display:flex;align-items:center;justify-content:space-between;gap:16px;font-size:11px}
+.review-edit{display:inline-flex;align-items:center;min-height:44px;padding:8px 12px;border:0;border-radius:8px;background:#f0f5f1;color:#235c51;font-size:13px;text-decoration:underline;text-underline-offset:3px;letter-spacing:0}
+.result-tools{margin-top:24px;border-top:1px solid #c9cfc7}
+.result-tools .result-actions{margin-bottom:20px}
+body[data-design=kinetic] .wizard-actions #next-step{font-size:14px;min-height:50px}
+body[data-design=kinetic] .save-draft{font-size:13px;line-height:1.6;min-height:48px}
+body[data-design=kinetic] .save-draft input{width:20px;height:20px;flex-shrink:0}
+body[data-design=kinetic] .privacy-note{font-size:12px}
+@media(max-width:1100px){
+ body[data-design=kinetic] .site-header .nav-toggle{display:grid;place-items:center;width:48px;height:48px;flex-shrink:0;color:#0b0d0c;background:#fff;border:1px solid #d8ded8}
+ body[data-design=kinetic] .site-header .nav-links{display:none;position:absolute;top:calc(100% + 10px);left:0;right:0;transform:none;background:#fff;color:#0b0d0c;backdrop-filter:none;border:1px solid #d8ded8;border-radius:18px;padding:10px;gap:4px;flex-direction:column;align-items:stretch;box-shadow:0 12px 32px #0b0d0c16;max-height:calc(100dvh - 120px);overflow-y:auto}
+ body[data-design=kinetic] .site-header .nav-links.open{display:flex}
+ body[data-design=kinetic] .site-header .nav-links a{display:flex;align-items:center;min-height:48px;padding:12px 16px;border-radius:10px;color:#0b0d0c;font-size:15px}
+ body[data-design=kinetic] .site-header .nav-links a:is(:hover,[aria-current=page]){background:#e5f5f0;color:#0b0d0c}
+}
+@media(max-width:760px){
+ .step-nav{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:4px}
+ .step-nav li>button{flex-direction:column;gap:3px;padding:8px 2px;min-height:64px;justify-content:start;text-align:center}
+ .step-nav li>button span{font-size:10px;line-height:1.4;white-space:normal}
+ body[data-page=booking] .booking-aside{padding-top:24px;padding-bottom:20px}
+ body[data-page=booking] .booking-aside h1{font-size:26px!important}
+ body[data-page=booking] .booking-panel{padding:26px 20px 38px}
+ .booking-panel .choice-card p,.booking-panel .extra-choice small{font-size:13px;line-height:1.7}
+ .booking-panel .mode-tabs{display:grid;grid-template-columns:1fr;gap:8px}
+ .booking-panel .mode-tabs button{font-size:14px;min-height:48px;padding:12px 16px;text-align:left}
+ .booking-panel .goal-button{font-size:13px}
+ .booking-panel .check-line{font-size:13px;line-height:1.7;gap:12px}
+ .booking-panel .check-line input{min-width:20px;min-height:20px}
+ .wizard-actions{gap:12px;flex-wrap:wrap}
+ .wizard-actions #next-step{flex:1;justify-content:center;min-width:170px}
+ .wizard-actions #previous-step{min-width:100px}
+}
+@media(max-width:359px){body[data-design=kinetic] .site-header{gap:4px;padding:8px}.site-header .brand-title{font-size:19px}.site-header .header-cta{padding:10px;font-size:10px}.site-header .header-actions{gap:4px}}
+body[data-page=booking] .booking-aside{color:#0b0d0c;--line:#d8ded8}
+body[data-page=booking] .booking-aside :is(h1,h1 em){color:#0b0d0c}
+body[data-page=booking] .booking-aside p{color:#586250;font-size:13px}
+body[data-page=booking] .booking-aside .back-link{display:inline-flex;align-items:center;min-height:44px;color:#41534b;font-size:12px}
+body[data-page=booking] .wizard-top,body[data-page=booking] .wizard-top .quiet-button{font-size:12px;color:#41534b}
+body[data-page=booking] .field>span{font-size:14px}
+body[data-page=booking] .field small{font-size:12px;color:#586250}
+@media(max-width:760px){
+ body[data-page=booking] .booking-aside h1,body[data-page=booking] .booking-aside>p:not(.eyebrow){display:none}
+ body[data-page=booking] .booking-aside{padding:14px 20px 18px}
+ body[data-page=booking] .step-nav{margin-top:10px}
+}

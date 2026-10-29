@@ -28,7 +28,7 @@ function sanitize(raw){
  next.treatments=normalizeTreatments(next);next.extras=normalizeExtras(next);
  return next;
 }
-try{const saved=readDraft(localStorage);if(saved){state=sanitize(saved);remember=true;}}catch{}
+try{const saved=readDraft(localStorage);if(saved){state=sanitize(saved);remember=true;step=Number.isInteger(saved.draftStep)?Math.max(0,Math.min(4,saved.draftStep)):0;}}catch{}
 const params=new URLSearchParams(location.search);
 if(params.get('vehicle')==='moto')state.vehicle='moto';
 if(params.get('vehicle')==='car')state.vehicle='car';
@@ -40,8 +40,11 @@ if(params.get('mode')==='guidance')state.mode='guidance';
 const areaGoal={pintura:'Pintura',interior:'Interior',rodas:'Rodas',exterior:'Acabamentos'}[params.get('area')];
 if(areaGoal){state.goals=[areaGoal];state.mode='guidance';}
 state=sanitize(state);
+if(state.model.trim().length<2||incomingService||incomingPlan||params.has('vehicle')||params.has('mode')||areaGoal)step=0;
+if(step===4&&validatePreference(state))step=3;
+const resumedStep=step;
 $('#remember-draft').checked=remember;
-function persist(){if(!remember)return;try{localStorage.setItem(key,JSON.stringify({...state,ack:false,rememberLink:false,expiresAt:Date.now()+DRAFT_TTL}));}catch{remember=false;$('#remember-draft').checked=false;window.ff?.toast('Não foi possível guardar o rascunho. Você pode continuar normalmente.');}}
+function persist(){if(!remember)return;try{localStorage.setItem(key,JSON.stringify({...state,draftStep:step,ack:false,rememberLink:false,expiresAt:Date.now()+DRAFT_TTL}));}catch{remember=false;$('#remember-draft').checked=false;window.ff?.toast('Não foi possível guardar o rascunho. Você pode continuar normalmente.');}}
 function tidy(){state.treatments=normalizeTreatments(state);state.extras=normalizeExtras(state);persist();}
 function icon(type){return type==='car'?'<svg viewBox="0 0 100 50" aria-hidden="true"><path d="M9 32 13 22 26 18 37 9 64 9 80 20 91 24 93 36H8Z M28 18H76 M39 10 34 18 M61 10 67 18 M12 25H23 M83 27H91"/><circle cx="27" cy="36" r="8"/><circle cx="76" cy="36" r="8"/><circle cx="27" cy="36" r="3"/><circle cx="76" cy="36" r="3"/></svg>':'<svg viewBox="0 0 100 50" aria-hidden="true"><circle cx="23" cy="35" r="11"/><circle cx="79" cy="35" r="11"/><path d="m23 35 16-22h13l13 8-20 14H23l26-1-10-18 M52 13 61 8 72 8 79 35 M70 8 69 3H60 M28 12h19 M36 18 49 22 64 20"/></svg>';}
 function heading(title,lead){return '<h2 class="wizard-title" tabindex="-1">'+title+'</h2><p class="wizard-lead">'+lead+'</p>';}
@@ -66,7 +69,7 @@ function stepCare(){
   const vehicleServices=services.filter(s=>s.vehicle===state.vehicle);
   html+='<div class="choice-stack" role="group" aria-label="Cuidado principal">'+vehicleServices.filter(s=>s.class!=='Classe C').map(serviceChoice).join('')+'</div>';
   const treatments=vehicleServices.filter(s=>s.class==='Classe C');
-  if(treatments.length)html+='<section class="booking-treatments"><h3>Higienização, polimentos e vitrificação</h3><div class="choice-stack" role="group" aria-label="Tratamento principal">'+treatments.map(serviceChoice).join('')+'</div></section>';
+  if(treatments.length)html+='<details class="booking-treatments" '+(treatments.some(s=>s.id===state.service)?'open':'')+'><summary>Higienização, polimentos e vitrificação <span aria-hidden="true">+</span></summary><div class="choice-stack" role="group" aria-label="Tratamento principal">'+treatments.map(serviceChoice).join('')+'</div></details>';
  }
  if(state.mode==='plan')html+='<div class="choice-stack" role="group" aria-label="Plano mensal">'+plans.filter(p=>p.vehicle===state.vehicle).map(p=>choice({value:p.id,title:p.name,description:p.description,selected:state.plan===p.id,action:'plan',extra:'<small>'+money(p.price)+'/mês'+'</small>'})).join('')+'</div><div class="note-box">Interesse em uma assinatura para um veículo. A placa será conferida e cadastrada pessoalmente antes da ativação do Care.</div>';
  if(state.mode==='guidance')html+='<div class="note-box">Tudo bem não conhecer o nome do serviço. Selecione suas prioridades e conte, no final, o que você gostaria de melhorar.</div>';
@@ -80,7 +83,7 @@ function stepDetails(){
  html+='<div>'+compatibleExtras(state.vehicle).map(e=>{const replaced=e.id==='exteriorPlastic'&&state.extras.includes('plasticCoating');const inc=included.includes(e.id);return '<label class="extra-choice '+(inc?'included':'')+'"><input type="checkbox" name="extra" value="'+e.id+'" '+(!replaced&&(inc||state.extras.includes(e.id))?'checked ':'')+(inc||replaced?'disabled ':'')+'><span><b>'+e.label+'</b><small>'+e.description+'</small>'+(replaced?'<span class="included-badge">SUBSTITUÍDO PELA VITRIFICAÇÃO</span>':inc?'<span class="included-badge">JÁ INCLUÍDO · QUANDO COMPATÍVEL</span>':'<span class="option-price">'+money(extraPriceFor(e,state))+(extraPriceFor(e,state)!==extraPrice(e,state.vehicle)?' · complemento no Extra':'')+'</span>')+'</span></label>';}).join('')+'</div>';
  if(state.vehicle==='car'){
   const available=availableTreatments(state);
-  if(available.length)html+='<fieldset class="fieldset-clean" style="margin-top:30px"><legend class="field-label legend">Tratamentos para combinar <small>(opcional)</small></legend>'+available.map(s=>{const price=treatmentPrice(s.id,state);return '<label class="extra-choice"><input type="checkbox" name="treatment" value="'+s.id+'" '+(state.treatments.includes(s.id)?'checked':'')+'><span><b>'+s.label+'</b><small>'+s.description+'</small><span class="option-price">'+money(price)+(price!==s.price?' · acréscimo, com preparação já contemplada':' · atendimento avulso')+'</span></span></label>';}).join('')+'</fieldset><p class="privacy-note">Os níveis de polimento são alternativas. A vitrificação já inclui realce; no Extra, a higienização e o polimento Premium já estão contemplados. O total abaixo já desconta a lavagem de preparação repetida.</p>';
+  if(available.length)html+='<details class="booking-treatments" '+(state.treatments.length?'open':'')+'><summary>Combinar tratamentos de pintura <span aria-hidden="true">+</span></summary><fieldset class="fieldset-clean" style="margin-top:30px"><legend class="field-label legend">Tratamentos para combinar <small>(opcional)</small></legend>'+available.map(s=>{const price=treatmentPrice(s.id,state);return '<label class="extra-choice"><input type="checkbox" name="treatment" value="'+s.id+'" '+(state.treatments.includes(s.id)?'checked':'')+'><span><b>'+s.label+'</b><small>'+s.description+'</small><span class="option-price">'+money(price)+(price!==s.price?' · acréscimo, com preparação já contemplada':' · atendimento avulso')+'</span></span></label>';}).join('')+'</fieldset><p class="privacy-note">Os níveis de polimento são alternativas. A vitrificação já inclui realce; no Extra, a higienização e o polimento Premium já estão contemplados. O total abaixo já desconta a lavagem de preparação repetida.</p></details>';
   if(hasCoating(state))html+='<div class="note-box">A finalização será com revestimento cerâmico, em substituição à cera. Produto, cura e entrega serão combinados com Mateus.</div>';
  }
  const s=findService(baseFor(state));if(s?.notice)html+='<div class="note-box">'+s.notice+'</div>';
@@ -96,7 +99,7 @@ function stepPreference(){
 function interest(){return state.mode==='plan'?findPlan(state.plan)?.name||'Care mensal':state.mode==='guidance'?'Orientação com Mateus':findService(state.service)?.label||'A combinar';}
 function stepContact(){
  let html=heading('Agora, vamos<br>conversar.','Revise suas escolhas e envie uma solicitação de orçamento. Você recebe um link para acompanhar a análise de Mateus.');
- html+='<dl class="review-list"><div><dt>VEÍCULO</dt><dd>'+esc(state.model)+' · '+(state.vehicle==='car'?'Carro':'Moto')+'</dd></div><div><dt>INTERESSE</dt><dd>'+esc(interest())+'</dd></div><div><dt>PREFERÊNCIA</dt><dd>'+(state.date?esc(state.date.split('-').reverse().join('/')):'Data a combinar')+' · '+(state.time?esc(state.time):'Horário a combinar')+'</dd></div><div><dt>CUIDADOS ADICIONAIS</dt><dd>'+esc([...normalizeExtras(state).map(id=>extras.find(x=>x.id===id).label),...normalizeTreatments(state).map(id=>findService(id).label)].join(', ')||'Vamos definir pela conversa')+'</dd></div></dl>';
+ html+='<dl class="review-list"><div><dt>VEÍCULO<button type="button" class="review-edit" data-review-step="0" aria-label="Editar veículo">Editar</button></dt><dd>'+esc(state.model)+' · '+(state.vehicle==='car'?'Carro':'Moto')+'</dd></div><div><dt>INTERESSE<button type="button" class="review-edit" data-review-step="1" aria-label="Editar cuidado">Editar</button></dt><dd>'+esc(interest())+'</dd></div><div><dt>PREFERÊNCIA<button type="button" class="review-edit" data-review-step="3" aria-label="Editar data e horário">Editar</button></dt><dd>'+(state.date?esc(state.date.split('-').reverse().join('/')):'Data a combinar')+' · '+(state.time?esc(state.time):'Horário a combinar')+'</dd></div><div><dt>CUIDADOS ADICIONAIS<button type="button" class="review-edit" data-review-step="2" aria-label="Editar adicionais">Editar</button></dt><dd>'+esc([...normalizeExtras(state).map(id=>extras.find(x=>x.id===id).label),...normalizeTreatments(state).map(id=>findService(id).label)].join(', ')||'Vamos definir pela conversa')+'</dd></div></dl>';
  html+='<label class="field"><span>Como podemos chamar você? *</span><input name="name" autocomplete="given-name" maxlength="80" value="'+esc(state.name)+'" placeholder="Seu nome" required></label><label class="field"><span>Seu WhatsApp com DDD *</span><input name="phone" type="tel" inputmode="tel" autocomplete="tel" maxlength="20" value="'+esc(state.phone)+'" placeholder="(11) 99999-9999" required><small>Usado por Mateus para combinar o atendimento.</small></label><label class="field"><span>Quer contar mais alguma coisa?</span><textarea name="notes" maxlength="600" placeholder="Ex.: manchas no banco, marcas na pintura, uma viagem chegando…">'+esc(state.notes)+'</textarea><small>Até 600 caracteres. Não envie documentos, dados sensíveis ou dados de terceiros. Fotos podem ser combinadas diretamente na conversa.</small></label><label class="check-line"><input type="checkbox" name="ack" '+(state.ack?'checked':'')+' required><span>Entendo que envio uma solicitação de orçamento, sujeita à aceitação de Mateus, sem reserva ou cobrança automática. Li as informações de privacidade e atendimento abaixo.</span></label>';
  html+='<p class="privacy-inline">Nome, telefone, veículo e escolhas serão usados pela Fine Form para responder ao pedido e organizar o atendimento. Isso não autoriza publicidade. <a href="../privacidade/">Privacidade</a> · <a href="../termos/">Termos</a> · <a href="../cancelamento-e-reembolso/">Cancelamento e reembolso</a>.</p><label class="check-line"><input type="checkbox" name="rememberLink" '+(state.rememberLink?'checked':'')+'><span>Guardar o link privado deste pedido neste aparelho por até 90 dias (opcional). Evite em aparelhos compartilhados.</span></label>';
  html+='<p class="request-disclosure">'+REQUEST_NOTICE+' O local será combinado antes da confirmação do atendimento.</p>';
@@ -104,14 +107,24 @@ function stepContact(){
  return html;
 }
 const renderers=[stepVehicle,stepCare,stepDetails,stepPreference,stepContact];
+const stepLabels=['Seu veículo','O cuidado','Os detalhes','Sua preferência','Vamos conversar'];
+function updateProgress(sent=false){
+ const done=sent?5:step,track=$('#wizard-progress').parentElement;
+ track.setAttribute('role','progressbar');track.setAttribute('aria-label','Conclusão do pedido');track.setAttribute('aria-valuemin','0');track.setAttribute('aria-valuemax','5');track.setAttribute('aria-valuenow',String(done));track.setAttribute('aria-valuetext',sent?'Pedido enviado':done+' de 5 etapas concluídas');
+ $('#wizard-progress').style.width=(done*20)+'%';
+ $('#wizard-status').textContent=sent?'Pedido enviado. Acompanhe a resposta pelo seu link.':['5 etapas curtas. Comece pelo veículo.','Veículo informado. Escolha o cuidado.','Faltam 3 etapas. Os adicionais são opcionais.','Faltam 2 etapas. A data pode ficar a combinar.','Última etapa: revise e envie seu pedido.'][step];
+ [...document.querySelectorAll('#step-nav li')].forEach((li,i)=>{li.classList.toggle('active',!sent&&i===step);li.classList.toggle('done',sent||i<step);li.innerHTML='<button type="button" data-go-step="'+i+'" '+(sent||i>=step?'disabled':'')+'><b>'+String(i+1).padStart(2,'0')+'</b><span>'+stepLabels[i]+'</span></button>';if(!sent&&i===step)li.setAttribute('aria-current','step');else li.removeAttribute('aria-current');});
+}
+$('#step-nav').addEventListener('click',event=>{const button=event.target.closest('[data-go-step]');if(sending||!button||button.disabled)return;const target=Number(button.dataset.goStep);if(target<step){step=target;render(true);}});
 function render(focus=false){
- content.innerHTML=renderers[step]()+ (step>=1?quoteBlock():'');$('#step-count').textContent='ETAPA 0'+(step+1)+' / 05';$('#wizard-progress').style.width=((step+1)*20)+'%';
- [...document.querySelectorAll('#step-nav li')].forEach((li,i)=>{li.classList.toggle('active',i===step);li.classList.toggle('done',i<step);if(i===step)li.setAttribute('aria-current','step');else li.removeAttribute('aria-current');});
- $('#previous-step').hidden=step===0;$('#next-step').innerHTML=step===4?'Enviar solicitação de orçamento <span>↗</span>':'Continuar <span>→</span>';
+ content.innerHTML=renderers[step]()+ (step>=1?quoteBlock():'');$('#step-count').textContent='ETAPA 0'+(step+1)+' / 05';
+ updateProgress();persist();
+ $('#previous-step').hidden=step===0;$('#next-step').innerHTML=step===4?'Enviar solicitação de orçamento <span>↗</span>':(step===2?'Continuar para data <span>→</span>':step===3?'Revisar pedido <span>→</span>':'Continuar <span>→</span>');
  $('#form-error').textContent='';
  if(focus){content.querySelector('h2').focus({preventScroll:true});if(innerWidth<760)document.querySelector('.booking-panel').scrollIntoView({behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth',block:'start'});}
 }
 content.addEventListener('click',event=>{
+ const edit=event.target.closest('[data-review-step]');if(edit&&!sending){step=Number(edit.dataset.reviewStep);render(true);return;}
  const button=event.target.closest('[data-action]');if(sending||!button)return;
  const action=button.dataset.action,value=button.dataset.value;
  if(action==='vehicle'){
@@ -124,7 +137,7 @@ content.addEventListener('click',event=>{
  tidy();render();const next=[...content.querySelectorAll('[data-action]')].find(x=>x.dataset.action===action&&x.dataset.value===value);next?.focus({preventScroll:true});
 });
 content.addEventListener('input',event=>{
- const e=event.target;if(['model','name','phone','notes'].includes(e.name)){state[e.name]=e.value;persist();}
+ const e=event.target;if(['model','name','phone','notes'].includes(e.name)){state[e.name]=e.value;if(e.hasAttribute('aria-invalid')){e.removeAttribute('aria-invalid');e.removeAttribute('aria-describedby');$('#form-error').textContent='';}persist();}
 });
 content.addEventListener('change',event=>{
  const e=event.target;
@@ -139,7 +152,7 @@ content.addEventListener('change',event=>{
  else if(e.name==='ack'){state.ack=e.checked;}
  else if(e.name==='rememberLink'){state.rememberLink=e.checked;}
 });
-function error(message,field){$('#form-error').textContent=message;if(field)content.querySelector('[name="'+field+'"]')?.focus();}
+function error(message,field){$('#form-error').textContent=message;const input=field?content.querySelector('[name="'+field+'"]'):null;if(input){input.setAttribute('aria-invalid','true');input.setAttribute('aria-describedby','form-error');input.focus();}}
 form.addEventListener('submit',async event=>{
  event.preventDefault();if(sending)return;
  if(step===0&&state.model.trim().length<2)return error('Conte a marca e o modelo do veículo para continuar.','model');
@@ -172,8 +185,9 @@ async function copy(text){
 }
 function download(text){const blob=new Blob([text],{type:'text/markdown;charset=utf-8'});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download='fine-form-meu-cuidado.md';document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);window.ff?.toast('Download solicitado. Seu pedido permanece no painel de Mateus.');}
 function showResult(quote,token){
+ updateProgress(true);try{localStorage.removeItem(key);}catch{}remember=false;$('#remember-draft').checked=false;document.querySelector('.save-draft').hidden=true;$('#draft-status').hidden=true;
  const link=trackingUrl(quote.id,token),summary=createSummary(quote.selection)+'\n\n*Pedido '+quote.reference+'*\nAcompanhar: '+link;form.hidden=true;const result=$('#summary-result');result.hidden=false;
- result.innerHTML='<div class="result-mark" aria-hidden="true">↗</div><h2 class="wizard-title" tabindex="-1">Sua solicitação<br>foi recebida.</h2><p class="wizard-lead">Seu orçamento foi registrado no painel de Mateus. A solicitação aguarda análise e aceitação manual. Guarde o link para acompanhar a resposta.</p>'+'<section class="system-card receipt"><strong>'+esc(quote.reference)+'</strong><a class="tracking-link" href="'+esc(link)+'">'+esc(link)+'</a><div class="system-actions"><a class="button orange" href="'+esc(link)+'">Acompanhar pedido ↗</a><button class="button outline" id="copy-tracking" type="button">Copiar link</button></div><p class="system-muted">Este link é privado. Receber a solicitação não confirma o atendimento. Serviço, data e horário dependem da confirmação de Mateus.</p></section><div id="booking-customer-notice"></div>'+quoteBlock(quote.selection)+'<pre class="summary-pre"></pre><div class="result-actions"><button class="button orange primary-send" type="button" id="send-whatsapp">'+esc(preferredContact(window.FINE_FORM_CONFIG||{}).label)+' <span>↗</span></button><button class="button outline" type="button" id="send-email">Enviar por e-mail <span>↗</span></button><button class="button outline" type="button" id="copy-summary">Copiar resumo <span>⧉</span></button><button class="button outline" type="button" id="download-summary">Baixar .md <span>↓</span></button><button class="text-link" type="button" id="share-summary">Compartilhar ↗</button><button class="text-link" type="button" id="edit-summary">Preparar outro pedido</button></div><p class="result-message">Sua solicitação está no painel. O site não faz cobranças nem reserva horários automaticamente. Você pode abrir o WhatsApp para conversar ou compartilhar o resumo.</p>';
+ result.innerHTML='<div class="result-mark" aria-hidden="true">↗</div><h2 class="wizard-title" tabindex="-1">Sua solicitação<br>foi recebida.</h2><p class="wizard-lead">Seu orçamento foi registrado no painel de Mateus. A solicitação aguarda análise e aceitação manual. Guarde o link para acompanhar a resposta.</p>'+'<section class="system-card receipt"><strong>'+esc(quote.reference)+'</strong><a class="tracking-link" href="'+esc(link)+'">'+esc(link)+'</a><div class="system-actions"><a class="button orange" href="'+esc(link)+'">Acompanhar pedido ↗</a><button class="button outline" id="copy-tracking" type="button">Copiar link</button></div><p class="system-muted">Este link é privado. Receber a solicitação não confirma o atendimento. Serviço, data e horário dependem da confirmação de Mateus.</p></section><div id="booking-customer-notice"></div>'+quoteBlock(quote.selection)+'<details class="result-tools"><summary>Resumo e outras opções</summary><pre class="summary-pre"></pre><div class="result-actions"><button class="button outline primary-send" type="button" id="send-whatsapp">'+esc(preferredContact(window.FINE_FORM_CONFIG||{}).label)+' <span>↗</span></button><button class="button outline" type="button" id="send-email">Enviar por e-mail <span>↗</span></button><button class="button outline" type="button" id="copy-summary">Copiar resumo <span>⧉</span></button><button class="button outline" type="button" id="download-summary">Baixar .md <span>↓</span></button><button class="text-link" type="button" id="share-summary">Compartilhar ↗</button><button class="text-link" type="button" id="edit-summary">Preparar outro pedido</button></div></details><p class="result-message">Sua solicitação está no painel. O site não faz cobranças nem reserva horários automaticamente. Você pode abrir o WhatsApp para conversar ou compartilhar o resumo.</p>';
  mountCustomerNotice(document.getElementById('booking-customer-notice'),quote,token).catch(()=>{});
  $('.summary-pre').textContent=summary;
  $('#copy-tracking').addEventListener('click',()=>copyText(link).then(()=>window.ff?.toast('Link copiado.')).catch(e=>window.ff?.toast(e.message)));
@@ -181,7 +195,7 @@ function showResult(quote,token){
  $('#send-email').addEventListener('click',()=>window.ff?.emailContact(summary));
  $('#copy-summary').addEventListener('click',()=>copy(summary));
  $('#download-summary').addEventListener('click',()=>download(summary));
- $('#edit-summary').addEventListener('click',()=>{result.hidden=true;form.hidden=false;state.ack=false;step=0;try{sessionStorage.removeItem('ff-pending-submission');}catch{}render(true);});
+ $('#edit-summary').addEventListener('click',()=>{result.hidden=true;form.hidden=false;document.querySelector('.save-draft').hidden=false;state=defaults();step=0;try{sessionStorage.removeItem('ff-pending-submission');}catch{}render(true);});
  $('#share-summary').addEventListener('click',async()=>{
   if(!navigator.share){download(summary);return;}
   try{await navigator.share({title:'Meu cuidado — Fine Form',text:summary});}
@@ -191,3 +205,4 @@ function showResult(quote,token){
 }
 window.addEventListener('ff:saved-data-cleared',()=>{remember=false;$('#remember-draft').checked=false;});
 render();
+if(remember){$('#draft-status').hidden=false;$('#draft-status').textContent=resumedStep?'Rascunho retomado na etapa '+(resumedStep+1)+'. Suas escolhas estão aqui.':'Seu rascunho foi retomado. Você pode continuar de onde parou.';}

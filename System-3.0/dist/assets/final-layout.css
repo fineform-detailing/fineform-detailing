@@ -24,3 +24,9 @@ html:has(body.fn-site){scroll-behavior:auto;scroll-padding-top:18px}
 .fn-site em{font-family:inherit;font-weight:inherit;letter-spacing:inherit}
 .fn-site .header-cta-mobile{display:none}.fn-site .header-cta-wide{display:inline;color:#fff!important}.fn-site .header-cta>span:last-child{color:#53c3b1!important}
 @media(max-width:700px){.fn-site .header-cta-wide{display:none!important}.fn-site .header-cta-mobile{display:inline!important;color:#fff!important}}
+/* Keep descriptive text comfortably readable on phones. */
+.fn-site .care-choice-body p{font-size:12px!important;line-height:1.7}
+.fn-site .wizard-lead{font-size:13px!important}.fn-site .field>span{font-size:12px}
+.fn-site .quote-box dt{font-size:12px}.fn-site .quote-box>p{font-size:11px!important}
+.fn-site .fn-plan-desc{font-size:12px}.fn-site .fn-service-copy p{font-size:12px}
+@media(max-width:700px){.fn-site .fn-hero-heading>p{font-size:13px}.fn-site .care-visual-choice{min-height:155px}.fn-site .care-choice-image{min-height:153px}.fn-site .care-choice-body h3{font-size:16px}.fn-site .fn-plan-desc{font-size:11px}.fn-site .fn-service-copy p{font-size:11px;min-height:38px}.fn-site .fn-plan-price{color:#0f0f0f!important}.fn-site .mode-tabs button{font-size:10px}}

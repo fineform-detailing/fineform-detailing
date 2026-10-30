@@ -8,14 +8,14 @@ export async function buildIntro() {
     bundle: true, minify: true, format: 'iife', target: ['es2020'], legalComments: 'none',
   });
   await build({
-    external: ['/assets/*'],
     entryPoints: ['src/intro/index.mjs'], outfile: 'dist/assets/intro-loader.mjs',
     bundle: true, minify: true, format: 'esm', target: ['es2020'], legalComments: 'none',
   });
 
   const drawing = await readFile('src/intro/tentacle.svg', 'utf8');
-  const shell = (await readFile('src/intro/shell.html', 'utf8')).replace('{{TENTACLE_SVG}}', drawing);
-  const head = '<!-- ff:intro:head:start --><link rel="preload" href="/assets/fonts/intro-unbounded-900-v1.woff" as="font" type="font/woff" crossorigin><link rel="stylesheet" href="/assets/intro-loader.css"><script src="/assets/intro-boot.js"></script><script type="module" src="/assets/intro-loader.mjs"></script><!-- ff:intro:head:end -->';
+  const wordmark = await readFile('src/intro/wordmark.svg', 'utf8');
+  const shell = (await readFile('src/intro/shell.html', 'utf8')).replace('{{TENTACLE_SVG}}', drawing).replace('{{WORDMARK_SVG}}', wordmark);
+  const head = '<!-- ff:intro:head:start --><link rel="stylesheet" href="/assets/intro-loader.css"><script src="/assets/intro-boot.js"></script><script type="module" src="/assets/intro-loader.mjs"></script><!-- ff:intro:head:end -->';
   const body = '<!-- ff:intro:body:start -->' + shell + '<!-- ff:intro:body:end -->';
 
   for (const file of ['dist/index.html', 'dist/atendimento/index.html', 'dist/links/index.html']) {

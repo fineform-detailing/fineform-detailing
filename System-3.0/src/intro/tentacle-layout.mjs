@@ -40,8 +40,8 @@ export function fitTentacle(svg, dimensions) {
   const cups = geometry.cups.map(cup => {
     const group = element('g', { transform: `translate(${cup.x} ${cup.y}) rotate(${cup.angle})` });
     group.append(
-      element('ellipse', { rx: cup.rx, ry: cup.ry, fill: '#b4caa2', stroke: '#07110b', 'stroke-width': 3 }),
-      element('ellipse', { cy: 1, rx: cup.rx * .44, ry: cup.ry * .46, fill: '#204b33', stroke: 'none' }),
+      element('ellipse', { rx: cup.rx, ry: cup.ry, fill: '#bde8e1', stroke: '#0b0d0c', 'stroke-width': 3 }),
+      element('ellipse', { cy: 1, rx: cup.rx * .44, ry: cup.ry * .46, fill: '#388a7d', stroke: 'none' }),
     );
     return group;
   });

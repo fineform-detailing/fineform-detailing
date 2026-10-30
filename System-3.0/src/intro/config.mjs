@@ -3,15 +3,15 @@ export const INTRO = Object.freeze({
   seenKey: 'ff-intro-seen-v1',
   pendingKey: 'ff-intro-navigation-v1',
   motionKey: 'ff-motion-paused',
-  publicPaths: ['/'],
+  publicPaths: ['/', '/atendimento/', '/links/'],
   navigationExpiry: 15_000,
-  bootDeadline: 2_000,
-  activeDeadline: 2_000,
-  minimumLoading: 250,
-  readinessDeadline: 450,
-  reachDuration: 260,
-  gripDuration: 80,
-  pullDuration: 320,
+  bootDeadline: 5_000,
+  activeDeadline: 5_000,
+  minimumLoading: 2_650,
+  readinessDeadline: 800,
+  reachDuration: 510,
+  gripDuration: 110,
+  pullDuration: 650,
   coverDuration: 220,
 });
 
@@ -48,6 +48,7 @@ export function pendingMatches(value, location, timestamp = Date.now()) {
 /** Deep links and browser history remain immediate; only marketing pages opt in. */
 export function introMode({ location, reduced, paused, seen, pending, navigationType, saveData }) {
   if (!isPublicPath(location.pathname) || location.hash || reduced || paused || saveData || navigationType === 'back_forward') return null;
+  if (pendingMatches(pending, location)) return 'arrival';
   return seen ? null : 'first';
 }
 

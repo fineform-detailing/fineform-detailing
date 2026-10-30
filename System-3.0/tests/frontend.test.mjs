@@ -371,11 +371,6 @@ test('rascunho incompleto não pula veículo e erro fica associado ao campo',asy
  submit(w,'care-form');const model=w.document.querySelector('[name="model"]');
  assert.equal(model.getAttribute('aria-invalid'),'true');assert.equal(model.getAttribute('aria-describedby'),'form-error');assert.equal(w.document.activeElement,model);
  input(w,'model','Civic');assert.equal(model.hasAttribute('aria-invalid'),false);submit(w,'care-form');
- assert.equal(w.document.querySelectorAll('.care-choice-group').length,3);
- assert.equal(w.document.querySelector('#wizard-content details'),null);
- const map=w.document.querySelector('#visual-care-aside .ffv-vehicle');
- w.document.querySelector('[data-action=service][data-value=fullClean]').click();
- assert.equal(w.document.querySelector('#visual-care-aside .ffv-vehicle'),map);assert.equal(map.dataset.scene,'interior');
- assert.match(map.querySelector('[data-view-amount]').textContent,/450/);
- map.querySelector('[data-vehicle-focus=rodas]').click();assert.equal(map.dataset.scene,'rodas');assert.match(map.querySelector('[data-view-amount]').textContent,/450/);closeWindow(w);
+ assert.equal(w.document.querySelector('.booking-treatments').tagName,'DETAILS');
+ assert.equal(w.document.querySelector('.booking-treatments').open,false);closeWindow(w);
 });

@@ -227,17 +227,3 @@ body[data-page=booking] .field small{font-size:12px;color:#586250}
  body[data-page=booking] .booking-aside{padding:14px 20px 18px}
  body[data-page=booking] .step-nav{margin-top:10px}
 }
-
-/* Fine Form Care is the leading offer on the home page. */
-.hero-care-label{display:flex;align-items:center;gap:0;width:fit-content;padding:9px 13px;border:1px solid #b7ded6;border-radius:50px;background:#eff9f6;color:#286c60;font-size:10px;line-height:1.5;font-weight:600;letter-spacing:.07em;margin:0 0 22px}
-.hero-care-label .assurance-dot{flex-shrink:0}
-.hero-plan-start{display:flex;align-items:baseline;flex-wrap:wrap;gap:7px;color:#586250;font-size:13px;line-height:1.6;margin:22px 0 0}
-.hero-plan-start strong{color:var(--ink);font-size:28px;font-weight:600;letter-spacing:-.04em}
-.hero-plan-start>span{font-size:13px}
-body[data-page=home] .hero-content h1{font-size:clamp(48px,5.6vw,78px)}
-body[data-page=home] .hero-actions{margin-top:24px}
-body[data-page=home] .hero-assurance{font-size:12px;line-height:1.7}
-body[data-page=home] .care-section{border-top:1px solid var(--line);padding-top:54px}
-.care-showcase>.care-controls{margin:0 0 24px}
-@media(max-width:850px){.hero-care-label{font-size:9px;padding:8px 11px}body[data-page=home] .hero-content h1{font-size:clamp(40px,5.6vw,60px)}}
-@media(max-width:600px){.hero-care-label{margin:0 auto 20px;font-size:9px}.hero-plan-start{justify-content:center;margin-top:18px}.hero-plan-start strong{font-size:26px}body[data-page=home] .hero-content h1{font-size:clamp(46px,12vw,66px)}body[data-page=home] .hero-lead{margin-top:20px}body[data-page=home] .hero-actions{flex-direction:column;gap:8px;margin-top:22px}.hero-actions .button{min-height:50px}body[data-page=home] .hero-assurance{margin-top:16px;font-size:11px}.care-showcase>.care-controls{margin-bottom:24px}body[data-page=home] .care-section{padding-top:44px}}

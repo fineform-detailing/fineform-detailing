@@ -7,7 +7,7 @@ const easePull = 'cubic-bezier(.7,0,.2,1)';
 
 /** Only the first photo and the main font matter; lazy content never holds the intro. */
 export async function criticalContentReady(document, signal) {
-  const image = document.querySelector('.fn-hero img, .ff-hero img, .links-photo img');
+  const image = document.querySelector('.ff-hero img, .links-photo img');
   let imageReady = Promise.resolve();
   if (image && !image.complete) {
     imageReady = typeof image.decode === 'function'
@@ -87,7 +87,7 @@ export function createIntroController(window, options = {}) {
     current = { mode, scope, inert, focusBefore, promise, resolve };
     current.watchdog = window.setTimeout(() => finish('timeout'), config.activeDeadline);
     shell.hidden = false;
-    elements.status.textContent = 'Carregando Fine Form';
+    elements.status.textContent = 'Preparando cada detalhe';
     phase(mode === 'departure' ? 'covering' : 'loading');
     try {
       fitTentacle(elements.arm.querySelector('svg'), {
@@ -113,8 +113,8 @@ export function createIntroController(window, options = {}) {
     elements.status.textContent = 'Um toque Fine Form.';
     await Promise.all([
       scope.animate(elements.center, [
-        { opacity: 1 },
-        { opacity: 0 },
+        { opacity: 1, transform: 'translate3d(0,0,0)' },
+        { opacity: 0, transform: 'translate3d(-20px,-12px,0)' },
       ], { duration: 270, easing: easeOut }),
       scope.animate(elements.arm, [
         { transform: 'translate3d(112%,22%,0) rotate(9deg)', offset: 0 },
@@ -145,8 +145,10 @@ export function createIntroController(window, options = {}) {
 
     phase('revealing');
     await scope.animate(elements.sheet, [
-      { transform: 'translate3d(0,0,0)' },
-      { transform: 'translate3d(104%,0,0)' },
+      { transform: 'translate3d(0,0,0) rotate(0)', offset: 0 },
+      { transform: 'translate3d(-.7%,.4%,0) rotate(-.35deg)', offset: .12 },
+      { transform: 'translate3d(7%,-.6%,0) rotate(.4deg)', offset: .3 },
+      { transform: 'translate3d(116%,-5%,0) rotate(4deg)', offset: 1 },
     ], { duration: config.pullDuration, easing: easePull });
     if (current === run) finish();
   }

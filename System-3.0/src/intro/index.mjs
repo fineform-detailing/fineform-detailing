@@ -1,6 +1,5 @@
 import './intro.css';
 import { createIntroController } from './controller.mjs';
-import { installIntroNavigation } from './navigation.mjs';
 
 function initialize() {
   const motion = window.matchMedia('(prefers-reduced-motion: reduce)');
@@ -29,7 +28,7 @@ function initialize() {
     window.addEventListener('ff:motion', () => { replay.hidden = !allowed(); });
   }
 
-  installIntroNavigation(window, controller, allowed);
+  // All links use normal navigation. The loader exists only on the entrance.
 
   const stopIfNeeded = () => {
     if (document.hidden) controller.cancel('hidden');

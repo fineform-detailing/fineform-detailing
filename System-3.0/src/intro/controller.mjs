@@ -113,8 +113,8 @@ export function createIntroController(window, options = {}) {
     elements.status.textContent = 'Um toque Fine Form.';
     await Promise.all([
       scope.animate(elements.center, [
-        { opacity: 1, transform: 'translate3d(0,0,0)' },
-        { opacity: 0, transform: 'translate3d(-20px,-12px,0)' },
+        { opacity: 1 },
+        { opacity: 0 },
       ], { duration: 270, easing: easeOut }),
       scope.animate(elements.arm, [
         { transform: 'translate3d(112%,22%,0) rotate(9deg)', offset: 0 },
@@ -145,10 +145,8 @@ export function createIntroController(window, options = {}) {
 
     phase('revealing');
     await scope.animate(elements.sheet, [
-      { transform: 'translate3d(0,0,0) rotate(0)', offset: 0 },
-      { transform: 'translate3d(-.7%,.4%,0) rotate(-.35deg)', offset: .12 },
-      { transform: 'translate3d(7%,-.6%,0) rotate(.4deg)', offset: .3 },
-      { transform: 'translate3d(116%,-5%,0) rotate(4deg)', offset: 1 },
+      { transform: 'translate3d(0,0,0)' },
+      { transform: 'translate3d(104%,0,0)' },
     ], { duration: config.pullDuration, easing: easePull });
     if (current === run) finish();
   }

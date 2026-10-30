@@ -44,7 +44,8 @@ test('abertura respeita sessão, movimento reduzido, histórico, links profundos
     assert.equal(introMode({ ...base, ...override }), null, JSON.stringify(override));
   }
   const pending = JSON.stringify({ destination: '/atendimento/?service=premium', createdAt: Date.now() });
-  assert.equal(introMode({ ...base, seen: '1', pending, location: new URL(origin + '/atendimento/?service=premium') }), 'arrival');
+  assert.equal(introMode({ ...base, seen: '1', pending, location: new URL(origin + '/atendimento/?service=premium') }), null);
+  for(const path of ['/atendimento/','/links/'])assert.equal(introMode({...base,location:new URL(origin+path)}),null);
 });
 
 test('passagem entre páginas só aceita a rota pública exata e um prazo curto', () => {
@@ -76,7 +77,7 @@ test('gestos modificados, downloads, contatos externos e links privados preserva
   try {
     const anchor = f.document.getElementById('next');
     const event = fields => ({ button: 0, target: anchor.querySelector('span'), defaultPrevented: false, ...fields });
-    assert.equal(transitionDestination(event(), f.window.location).href, origin + '/atendimento/?service=premium');
+    assert.equal(transitionDestination(event(), f.window.location), null);
     for (const fields of [{ ctrlKey: true }, { metaKey: true }, { shiftKey: true }, { altKey: true }, { button: 1 }, { defaultPrevented: true }, { target: f.document.getElementById('private') }]) assert.equal(transitionDestination(event(fields), f.window.location), null);
     for (const href of ['#cuidados', '/#care', 'https://example.com/', 'mailto:fineformcare@gmail.com', '/assinatura/', '/avaliar/']) { anchor.href = href; assert.equal(transitionDestination(event(), f.window.location), null); }
     anchor.href = '/atendimento/';anchor.target = '_blank';assert.equal(transitionDestination(event(), f.window.location), null);
@@ -151,18 +152,22 @@ test('restaura foco e inércia anterior mesmo quando o armazenamento do navegado
   } finally { f.close(); }
 });
 
-test('navegação pública usa uma única passagem e conserva rota e parâmetros sem reescrever a página', async () => {
-  const f = fixture(), destinations = [];
-  const remove = installIntroNavigation(f.window, f.controller, () => true, url => destinations.push(url));
+test('navegação interna não é interceptada, não abre loader e preserva o clique nativo', () => {
+  const f=fixture(),destinations=[];
+  const remove=installIntroNavigation(f.window,f.controller,()=>true,url=>destinations.push(url));
   try {
-    f.document.getElementById('next').click();
-    await pause(15);
-    assert.deepEqual(destinations, [origin + '/atendimento/?service=premium']);
-    const pending = JSON.parse(f.window.sessionStorage.getItem(INTRO.pendingKey));
-    assert.equal(pending.destination, '/atendimento/?service=premium');
-    f.controller.cancel('pagehide');
-    assert.equal(f.document.querySelector('main').hasAttribute('inert'), false);
-  } finally { remove(); f.close(); }
+    const link=f.document.getElementById('next');
+    const event=new f.window.MouseEvent('click',{bubbles:true,cancelable:true,button:0});
+    // Observe the native decision without letting jsdom attempt real navigation.
+    let nativeAllowed=false;
+    f.document.addEventListener('click',e=>{nativeAllowed=!e.defaultPrevented;e.preventDefault();},{once:true});
+    link.dispatchEvent(event);
+    assert.equal(nativeAllowed,true);
+    assert.deepEqual(destinations,[]);
+    assert.equal(f.window.sessionStorage.getItem(INTRO.pendingKey),null);
+    assert.equal(f.controller.active,false);
+    assert.equal(f.document.getElementById('ff-intro').hidden,true);
+  }finally{remove();f.close();}
 });
 
 test('saída pelo histórico durante a transição cancela uma navegação que ainda não começou', async () => {
@@ -190,8 +195,8 @@ test('bootstrap sem módulo principal libera a página sozinho e não depende de
   } finally { f.close(); }
 });
 
-test('páginas públicas recebem uma única abertura e áreas privadas permanecem fora da coreografia', async () => {
-  for (const file of ['dist/index.html', 'dist/atendimento/index.html', 'dist/links/index.html']) {
+test('somente a entrada recebe a abertura; orçamento, links e áreas privadas não carregam loader', async () => {
+  for (const file of ['dist/index.html']) {
     const html = await readFile(file, 'utf8'), dom = new JSDOM(html);
     try {
       assert.equal(dom.window.document.querySelectorAll('#ff-intro').length, 1);
@@ -201,5 +206,5 @@ test('páginas públicas recebem uma única abertura e áreas privadas permanece
       assert.ok(dom.window.document.getElementById('conteudo'));
     } finally { dom.window.close(); }
   }
-  for (const page of ['painel', 'acompanhar', 'assinatura', 'avaliar']) assert.ok(!(await readFile('dist/' + page + '/index.html', 'utf8')).includes('intro-boot.js'));
+  for (const page of ['atendimento','links','painel', 'acompanhar', 'assinatura', 'avaliar']) assert.ok(!(await readFile('dist/' + page + '/index.html', 'utf8')).includes('intro-boot.js'));
 });

@@ -1,7 +1,7 @@
 import { readFile, writeFile } from 'node:fs/promises';
 import { build } from 'esbuild';
 
-/** One authored shell and drawing generate identical intros on the public pages. */
+/** Only home receives the entry interaction; other pages navigate immediately. */
 export async function buildIntro() {
   await build({
     entryPoints: ['src/intro/boot.mjs'], outfile: 'dist/assets/intro-boot.js',
@@ -21,8 +21,10 @@ export async function buildIntro() {
     let html = await readFile(file, 'utf8');
     html = html.replace(/<!-- ff:intro:head:start -->[\s\S]*?<!-- ff:intro:head:end -->/g, '');
     html = html.replace(/<!-- ff:intro:body:start -->[\s\S]*?<!-- ff:intro:body:end -->/g, '');
-    html = html.replace('</head>', head + '</head>');
-    html = html.replace(/<body\b[^>]*>/, opening => opening + body);
+    if (file === 'dist/index.html') {
+      html = html.replace('</head>', head + '</head>');
+      html = html.replace(/<body\b[^>]*>/, opening => opening + body);
+    }
     await writeFile(file, html);
   }
 }

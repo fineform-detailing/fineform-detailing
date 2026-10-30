@@ -3,13 +3,12 @@ import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
 import { build } from 'esbuild';
 import { JSDOM } from 'jsdom';
-import { INTRO, introMode, pendingMatches, transitionDestination } from '../src/intro/config.mjs';
+import { INTRO, introMode } from '../src/intro/config.mjs';
 import { createIntroController } from '../src/intro/controller.mjs';
-import { installIntroNavigation } from '../src/intro/navigation.mjs';
 import { tentacleGeometry, fitTentacle } from '../src/intro/tentacle-layout.mjs';
 
 const origin = 'https://fine-form.test';
-const fast = { minimumLoading: 0, readinessDeadline: 8, reachDuration: 0, gripDuration: 0, pullDuration: 0, coverDuration: 0, activeDeadline: 150 };
+const fast = { readinessDeadline: 8, reachDuration: 0, gripDuration: 0, pullDuration: 0, activeDeadline: 150 };
 const pause = ms => new Promise(resolve => setTimeout(resolve, ms));
 const [template, drawing] = await Promise.all([
   readFile('src/intro/shell.html', 'utf8'), readFile('src/intro/tentacle.svg', 'utf8'),
@@ -37,22 +36,25 @@ function fixture({ hanging = false, url = origin + '/', timing = fast, ready = (
   return { window, document: window.document, controller, animations, close() { controller.destroy(); window.close(); } };
 }
 
-test('abertura respeita sessão, movimento reduzido, histórico, links profundos e páginas privadas', () => {
-  const base = { location: new URL(origin + '/'), reduced: false, paused: false, seen: null, pending: null, navigationType: 'navigate', saveData: false };
+test('abertura é exclusiva da home, uma vez por sessão, sem bloquear outras abas', () => {
+  const base = { location: new URL(origin + '/'), reduced: false, paused: false, seen: null, navigationType: 'navigate', saveData: false };
   assert.equal(introMode(base), 'first');
-  for (const override of [{ reduced: true }, { paused: true }, { seen: '1' }, { saveData: true }, { navigationType: 'back_forward' }, { location: new URL(origin + '/#cuidados') }, ...['/painel/', '/acompanhar/', '/assinatura/', '/avaliar/', '/api/quotes'].map(path => ({ location: new URL(origin + path) }))]) {
+  assert.equal(introMode({ ...base, location: new URL(origin + '/index.html') }), 'first');
+  for (const override of [{ reduced: true }, { paused: true }, { seen: '1' }, { saveData: true }, { navigationType: 'back_forward' }, { location: new URL(origin + '/#cuidados') }, ...['/atendimento/', '/links/', '/painel/', '/acompanhar/', '/assinatura/', '/avaliar/', '/api/quotes'].map(path => ({ location: new URL(origin + path) }))]) {
     assert.equal(introMode({ ...base, ...override }), null, JSON.stringify(override));
   }
-  const pending = JSON.stringify({ destination: '/atendimento/?service=premium', createdAt: Date.now() });
-  assert.equal(introMode({ ...base, seen: '1', pending, location: new URL(origin + '/atendimento/?service=premium') }), 'arrival');
 });
 
-test('passagem entre páginas só aceita a rota pública exata e um prazo curto', () => {
-  const location = new URL(origin + '/atendimento/?service=premium'), now = Date.now();
-  const pending = fields => JSON.stringify({ destination: '/atendimento/?service=premium', createdAt: now, ...fields });
-  assert.equal(pendingMatches(pending(), location, now), true);
-  for (const value of ['invalid', 'x'.repeat(2049), pending({ destination: '/atendimento/?service=essential' }), pending({ destination: '/painel/' }), pending({ createdAt: now + 1 }), pending({ createdAt: now - INTRO.navigationExpiry })]) assert.equal(pendingMatches(value, location, now), false);
-});
+function pointer(f, type, x, extra = {}) {
+  const event = new f.window.Event(type, { bubbles: true, cancelable: true });
+  Object.assign(event, { pointerId: 1, clientX: x, button: 0, isPrimary: true, ...extra });
+  f.document.querySelector('[data-intro-handle]').dispatchEvent(event);
+}
+function track(f) {
+  Object.defineProperty(f.document.querySelector('[data-intro-slider]'), 'clientWidth', { value: 340 });
+  Object.defineProperty(f.document.querySelector('[data-intro-handle]'), 'offsetWidth', { value: 240 });
+}
+function enter(f) { f.document.querySelector('[data-intro-handle]').click(); }
 
 test('a curva mantém a proporção no celular e desktop; apenas o comprimento do braço muda', () => {
   for (const dimensions of [{ width: 484, height: 312, left: -46.8, viewportWidth: 390 }, { width: 1786, height: 333, left: -172.8, viewportWidth: 1440 }, { width: 3968, height: 400, left: -384, viewportWidth: 3200 }]) {
@@ -71,16 +73,79 @@ test('a curva mantém a proporção no celular e desktop; apenas o comprimento d
   }
 });
 
-test('gestos modificados, downloads, contatos externos e links privados preservam a navegação normal', () => {
-  const f = fixture();
+test('a abertura aguarda o gesto, sem avançar sozinha depois do antigo prazo', async () => {
+  const f = fixture({ timing: { ...fast, activeDeadline: 10 } });
   try {
-    const anchor = f.document.getElementById('next');
-    const event = fields => ({ button: 0, target: anchor.querySelector('span'), defaultPrevented: false, ...fields });
-    assert.equal(transitionDestination(event(), f.window.location).href, origin + '/atendimento/?service=premium');
-    for (const fields of [{ ctrlKey: true }, { metaKey: true }, { shiftKey: true }, { altKey: true }, { button: 1 }, { defaultPrevented: true }, { target: f.document.getElementById('private') }]) assert.equal(transitionDestination(event(fields), f.window.location), null);
-    for (const href of ['#cuidados', '/#care', 'https://example.com/', 'mailto:fineformcare@gmail.com', '/assinatura/', '/avaliar/']) { anchor.href = href; assert.equal(transitionDestination(event(), f.window.location), null); }
-    anchor.href = '/atendimento/';anchor.target = '_blank';assert.equal(transitionDestination(event(), f.window.location), null);
-    anchor.target = '';anchor.setAttribute('download', 'file');assert.equal(transitionDestination(event(), f.window.location), null);
+    f.controller.open();
+    await pause(35);
+    assert.equal(f.controller.active, true);
+    assert.equal(f.document.documentElement.dataset.ffIntro, 'ready');
+    assert.equal(f.animations.length, 0);
+  } finally { f.close(); }
+});
+
+test('arraste parcial acompanha o dedo, volta ao soltar e não entra pelo clique sintético', async () => {
+  const f = fixture();track(f);
+  try {
+    f.controller.open();
+    pointer(f, 'pointerdown', 100);
+    pointer(f, 'pointermove', 144);
+    await pause(22);
+    assert.equal(f.document.querySelector('[data-intro-handle]').style.transform, 'translate3d(44px,0,0)');
+    assert.equal(f.document.querySelector('[data-intro-fill]').style.transform, 'scaleX(0.5)');
+    pointer(f, 'pointerup', 144);
+    f.document.querySelector('[data-intro-handle]').dispatchEvent(new f.window.MouseEvent('click', { detail: 1, bubbles: true }));
+    assert.equal(f.document.documentElement.dataset.ffIntro, 'ready');
+    assert.equal(f.document.querySelector('[data-intro-handle]').style.transform, 'translate3d(0px,0,0)');
+    assert.equal(f.animations.length, 0);
+  } finally { f.close(); }
+});
+
+test('arraste completo dispara uma só transição, mesmo com movimentos e clique extras', async () => {
+  const f = fixture();track(f);
+  try {
+    let completed = 0;f.document.addEventListener('ff:intro-complete', () => completed++);
+    const promise = f.controller.open();
+    pointer(f, 'pointerdown', 100);
+    pointer(f, 'pointermove', 180);
+    pointer(f, 'pointerup', 188);
+    enter(f);
+    assert.equal((await promise).reason, 'complete');
+    assert.equal(completed, 1);
+    assert.equal(f.animations.filter(a => a.phase === 'revealing').length, 1);
+    assert.equal(f.document.querySelector('[data-intro-handle]').style.transform, '');
+  } finally { f.close(); }
+});
+
+test('cancelamento, perda de captura e mudança de orientação desfazem o gesto sem prender a tela', async () => {
+  for (const event of ['pointercancel', 'lostpointercapture', 'resize']) {
+    const f = fixture();track(f);
+    try {
+      f.controller.open();pointer(f, 'pointerdown', 100);pointer(f, 'pointermove', 120);
+      if (event === 'resize') f.window.dispatchEvent(new f.window.Event('resize'));
+      else pointer(f, event, 120);
+      await pause(20);
+      assert.equal(f.document.documentElement.dataset.ffIntro, 'ready');
+      assert.equal(f.document.querySelector('[data-intro-fill]').style.transform, 'scaleX(0)');
+      pointer(f, 'pointermove', 188);
+      assert.equal(f.animations.length, 0);
+    } finally { f.close(); }
+  }
+});
+
+test('segundo dedo e botão direito não sequestram o gesto principal', async () => {
+  const f = fixture();track(f);
+  try {
+    f.controller.open();
+    pointer(f, 'pointerdown', 100, { button: 2 });
+    assert.equal(f.document.documentElement.dataset.ffIntro, 'ready');
+    pointer(f, 'pointerdown', 100);
+    pointer(f, 'pointerdown', 200, { pointerId: 2, isPrimary: false });
+    pointer(f, 'pointermove', 288, { pointerId: 2, isPrimary: false });
+    pointer(f, 'pointerup', 288, { pointerId: 2, isPrimary: false });
+    assert.equal(f.animations.length, 0);
+    pointer(f, 'pointercancel', 100);
+    assert.equal(f.document.documentElement.dataset.ffIntro, 'ready');
   } finally { f.close(); }
 });
 
@@ -88,9 +153,10 @@ test('tentáculo alcança, agarra e puxa a folha; a conclusão devolve o conteú
   const f = fixture();
   try {
     const promise = f.controller.open();
-    assert.equal(f.document.documentElement.dataset.ffIntro, 'loading');
+    assert.equal(f.document.documentElement.dataset.ffIntro, 'ready');
     assert.equal(f.document.querySelector('main').hasAttribute('inert'), true);
     assert.equal(f.document.getElementById('ff-intro').hidden, false);
+    enter(f);
     const result = await promise;
     assert.equal(result.reason, 'complete');
     assert.ok(f.animations.some(a => a.phase === 'reaching' && a.element.classList.contains('intro-arm-tip')));
@@ -107,7 +173,7 @@ test('tentáculo alcança, agarra e puxa a folha; a conclusão devolve o conteú
 test('imagem ou fonte lenta não impede a revelação e uma falha de recurso não vira espera infinita', async () => {
   for (const ready of [() => new Promise(() => {}), () => Promise.reject(Error('image failed'))]) {
     const f = fixture({ ready });
-    try { assert.equal((await f.controller.open()).reason, 'complete'); }
+    try { const opening = f.controller.open();enter(f);assert.equal((await opening).reason, 'complete'); }
     finally { f.close(); }
   }
 });
@@ -115,20 +181,25 @@ test('imagem ou fonte lenta não impede a revelação e uma falha de recurso nã
 test('uma animação travada é encerrada pelo prazo máximo sem deixar a página inerte', async () => {
   const f = fixture({ hanging: true, timing: { ...fast, activeDeadline: 25 } });
   try {
-    assert.equal((await f.controller.open()).reason, 'timeout');
+    const opening = f.controller.open();enter(f);
+    assert.equal((await opening).reason, 'timeout');
     assert.equal(f.controller.active, false);
     assert.equal(f.document.querySelector('main').hasAttribute('inert'), false);
     assert.ok(f.animations.every(a => a.cancelled));
   } finally { f.close(); }
 });
 
-test('pular e Escape resolvem a abertura uma só vez, e Tab permanece no controle de pular', async () => {
+test('entrada direta e Escape resolvem uma vez; Tab circula entre os dois controles', async () => {
   const f = fixture({ ready: () => new Promise(() => {}), timing: { ...fast, readinessDeadline: 100 } });
   try {
     const first = f.controller.open();
     assert.equal(f.controller.open(), first);
     f.document.dispatchEvent(new f.window.KeyboardEvent('keydown', { key: 'Tab', cancelable: true }));
+    assert.equal(f.document.activeElement, f.document.querySelector('[data-intro-handle]'));
+    f.document.dispatchEvent(new f.window.KeyboardEvent('keydown', { key: 'Tab', cancelable: true }));
     assert.equal(f.document.activeElement, f.document.querySelector('[data-intro-skip]'));
+    f.document.dispatchEvent(new f.window.KeyboardEvent('keydown', { key: 'Tab', shiftKey: true, cancelable: true }));
+    assert.equal(f.document.activeElement, f.document.querySelector('[data-intro-handle]'));
     f.document.querySelector('[data-intro-skip]').click();
     assert.equal((await first).reason, 'skipped');
     const second = f.controller.open('replay');
@@ -144,35 +215,23 @@ test('restaura foco e inércia anterior mesmo quando o armazenamento do navegado
     const focus = f.document.getElementById('original');focus.focus();
     const header = f.document.querySelector('header');header.setAttribute('inert', '');
     Object.defineProperty(f.window, 'sessionStorage', { get() { throw Error('disabled'); } });
-    await f.controller.open();
+    const opening = f.controller.open();enter(f);await opening;
     assert.equal(f.document.activeElement, focus);
     assert.equal(header.hasAttribute('inert'), true);
     assert.equal(f.document.querySelector('main').hasAttribute('inert'), false);
   } finally { f.close(); }
 });
 
-test('navegação pública usa uma única passagem e conserva rota e parâmetros sem reescrever a página', async () => {
-  const f = fixture(), destinations = [];
-  const remove = installIntroNavigation(f.window, f.controller, () => true, url => destinations.push(url));
+test('histórico interrompe uma puxada em curso e devolve a página sem eventos tardios', async () => {
+  const f = fixture({ hanging: true });
   try {
-    f.document.getElementById('next').click();
-    await pause(15);
-    assert.deepEqual(destinations, [origin + '/atendimento/?service=premium']);
-    const pending = JSON.parse(f.window.sessionStorage.getItem(INTRO.pendingKey));
-    assert.equal(pending.destination, '/atendimento/?service=premium');
-    f.controller.cancel('pagehide');
+    const opening = f.controller.open();enter(f);f.controller.cancel('pagehide');
+    assert.equal((await opening).reason, 'pagehide');
+    await pause(10);
+    assert.equal(f.controller.active, false);
     assert.equal(f.document.querySelector('main').hasAttribute('inert'), false);
-  } finally { remove(); f.close(); }
-});
-
-test('saída pelo histórico durante a transição cancela uma navegação que ainda não começou', async () => {
-  const f = fixture({ hanging: true }), destinations = [];
-  const remove = installIntroNavigation(f.window, f.controller, () => true, url => destinations.push(url));
-  try {
-    f.document.getElementById('next').click();f.controller.cancel('pagehide');await pause(5);
-    assert.deepEqual(destinations, []);
-    assert.equal(f.window.sessionStorage.getItem(INTRO.pendingKey), null);
-  } finally { remove(); f.close(); }
+    assert.ok(f.animations.every(a => a.cancelled));
+  } finally { f.close(); }
 });
 
 test('bootstrap sem módulo principal libera a página sozinho e não depende de script inline', async () => {
@@ -183,15 +242,15 @@ test('bootstrap sem módulo principal libera a página sozinho e não depende de
     const originalTimeout = f.window.setTimeout.bind(f.window);
     f.window.setTimeout = (fn, ms, ...args) => originalTimeout(fn, ms === INTRO.bootDeadline ? 12 : ms, ...args);
     f.window.eval(source.outputFiles[0].text);
-    assert.equal(f.document.documentElement.dataset.ffIntro, 'loading');
+    assert.equal(f.document.documentElement.dataset.ffIntro, 'ready');
     await pause(25);
     assert.equal(f.document.documentElement.hasAttribute('data-ff-intro'), false);
     assert.equal(f.document.querySelector('main').hasAttribute('inert'), false);
   } finally { f.close(); }
 });
 
-test('páginas públicas recebem uma única abertura e áreas privadas permanecem fora da coreografia', async () => {
-  for (const file of ['dist/index.html', 'dist/atendimento/index.html', 'dist/links/index.html']) {
+test('somente a home recebe a abertura; as demais páginas não carregam o loader', async () => {
+  for (const file of ['dist/index.html']) {
     const html = await readFile(file, 'utf8'), dom = new JSDOM(html);
     try {
       assert.equal(dom.window.document.querySelectorAll('#ff-intro').length, 1);
@@ -201,5 +260,5 @@ test('páginas públicas recebem uma única abertura e áreas privadas permanece
       assert.ok(dom.window.document.getElementById('conteudo'));
     } finally { dom.window.close(); }
   }
-  for (const page of ['painel', 'acompanhar', 'assinatura', 'avaliar']) assert.ok(!(await readFile('dist/' + page + '/index.html', 'utf8')).includes('intro-boot.js'));
+  for (const page of ['atendimento', 'links', 'painel', 'acompanhar', 'assinatura', 'avaliar']) assert.ok(!(await readFile('dist/' + page + '/index.html', 'utf8')).includes('intro-boot.js'));
 });

@@ -1,6 +1,5 @@
 import './intro.css';
 import { createIntroController } from './controller.mjs';
-import { installIntroNavigation } from './navigation.mjs';
 
 function initialize() {
   const motion = window.matchMedia('(prefers-reduced-motion: reduce)');
@@ -10,7 +9,7 @@ function initialize() {
   window.ffIntro = { skip: controller.skip, replay: () => allowed() ? controller.open('replay') : Promise.resolve() };
   window.clearTimeout(window.ffIntroBoot?.deadline);
 
-  // Only the opening and explicit public-page links use the curtain.
+  // Only the home entrance and explicit replay use the curtain.
   if (document.documentElement.hasAttribute('data-ff-intro') && allowed() && !document.hidden) {
     controller.open(window.ffIntroBoot?.mode ?? 'first');
   } else {
@@ -29,7 +28,6 @@ function initialize() {
     window.addEventListener('ff:motion', () => { replay.hidden = !allowed(); });
   }
 
-  installIntroNavigation(window, controller, allowed);
 
   const stopIfNeeded = () => {
     if (document.hidden) controller.cancel('hidden');

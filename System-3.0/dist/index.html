@@ -10,17 +10,15 @@
   <div class="intro-sheet" data-intro-sheet>
     <div class="intro-topline" aria-hidden="true"><span>FINE FORM / CAR CARE</span><span>UM VEÍCULO POR VEZ.</span></div>
     <div class="intro-center" data-intro-center>
-      <div class="intro-orbit" aria-hidden="true">
-        <svg viewBox="0 0 120 120" focusable="false">
-          <circle class="intro-orbit-track" cx="60" cy="60" r="48"/>
-          <g class="intro-orbit-turn"><path d="M60 12A48 48 0 0 1 108 60"/><circle cx="108" cy="60" r="8"/><circle cx="12" cy="60" r="5"/></g>
-        </svg>
-        <img src="/assets/logo-original.png" alt="" width="44" height="44">
-      </div>
+      <img class="intro-logo" src="/assets/logo-original.png" alt="" width="48" height="48">
       <p class="intro-wordmark">FINE FORM<span class="intro-wordmark-dot" aria-hidden="true"></span></p>
       <p class="intro-tagline">Seu veículo, em boa forma.</p>
-      <div class="intro-loader-track" aria-hidden="true"><span></span></div>
-      <p class="intro-status" data-intro-status role="status" aria-live="polite"><span data-intro-label>Preparando cada detalhe</span><span class="intro-loading-dots" aria-hidden="true"><i></i><i></i><i></i></span></p>
+      <div class="intro-slider" data-intro-slider>
+        <span class="intro-slider-fill" data-intro-fill aria-hidden="true"></span>
+        <span class="intro-slider-arrow" aria-hidden="true">→</span>
+        <button class="intro-slider-handle" type="button" data-intro-handle aria-label="Entrar na Fine Form" aria-describedby="intro-instruction"><span>Começar</span><span class="intro-handle-grip" aria-hidden="true"><i></i><i></i></span></button>
+      </div>
+      <p class="intro-status" id="intro-instruction" role="status" aria-live="polite" data-intro-label>Arraste para a direita</p>
     </div>
     <div class="intro-fold" aria-hidden="true"></div>
     <div class="intro-tentacle" data-intro-tentacle><svg xmlns="http://www.w3.org/2000/svg" class="intro-tentacle-art" viewBox="0 0 900 420" preserveAspectRatio="none" aria-hidden="true" focusable="false">
@@ -85,7 +83,7 @@
 </div>
     <div class="intro-grip-spark" aria-hidden="true"><span></span><span></span><span></span></div>
     <p class="intro-footnote">ATENÇÃO EM CADA ETAPA.</p>
-    <button class="intro-skip" type="button" data-intro-skip>Pular abertura <span aria-hidden="true">↗</span></button>
+    <button class="intro-skip" type="button" data-intro-skip>Entrar direto <span aria-hidden="true">↗</span></button>
   </div>
 </div>
 <!-- ff:intro:body:end -->

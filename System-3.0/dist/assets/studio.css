@@ -227,3 +227,50 @@ body[data-page=booking] .field small{font-size:12px;color:#586250}
  body[data-page=booking] .booking-aside{padding:14px 20px 18px}
  body[data-page=booking] .step-nav{margin-top:10px}
 }
+
+/* Fine Form floating footer: white shell, turquoise action, native destinations. */
+body.has-ff-dock{padding-bottom:calc(106px + env(safe-area-inset-bottom,0px))}
+html:has(.ff-dock){scroll-padding-bottom:calc(110px + env(safe-area-inset-bottom,0px))}
+.ff-dock{
+ position:fixed;z-index:70;left:50%;bottom:calc(16px + env(safe-area-inset-bottom,0px));
+ transform:translateX(-50%);width:min(420px,calc(100% - 32px));height:80px;
+ display:grid;grid-template-columns:repeat(5,minmax(0,1fr));align-items:center;
+ padding:7px 10px;border:1px solid #e3e9e5;border-radius:999px;background:#fff;
+ color:#0b0d0c;box-shadow:0 12px 34px #0b30231a,0 2px 7px #0b30230b;
+ isolation:isolate;transition:opacity .18s,visibility .18s;
+}
+.ff-dock-indicator{
+ position:absolute;z-index:-1;left:10px;top:9px;width:calc((100% - 20px)/5);height:60px;
+ border-radius:28px;background:#e8f7f3;transition:transform .28s cubic-bezier(.22,1,.36,1);
+}
+.ff-dock-indicator[hidden]{display:none}
+.ff-dock .ff-dock-link{
+ display:flex;min-width:0;height:64px;align-items:center;justify-content:center;flex-direction:column;
+ gap:4px;padding:4px 0;border:0;border-radius:28px;color:#626d66;background:none;text-decoration:none;
+ font:600 10px/1.2 'FF Sans',Arial,sans-serif;letter-spacing:0;-webkit-tap-highlight-color:transparent;
+ transition:color .18s,transform .18s;
+}
+.ff-dock-icon{display:grid;place-items:center;width:28px;height:27px}
+.ff-dock-icon svg{display:block;width:23px;height:23px}
+.ff-dock .ff-dock-link[aria-current]{color:#125c4e}
+.ff-dock .ff-dock-primary{gap:2px;color:#14382f;transform:translateY(-3px)}
+.ff-dock-primary .ff-dock-icon{
+ width:52px;height:52px;flex-shrink:0;border:4px solid #e1f5ee;border-radius:50%;background:#53c3b1;
+ box-shadow:0 0 0 1px #8bd5c6,0 4px 10px #15765e20;transition:transform .18s,background .18s;
+}
+.ff-dock-primary .ff-dock-icon svg{width:26px;height:26px;stroke-width:2}
+.ff-dock-primary[aria-current] .ff-dock-icon{background:#b7eadc;box-shadow:0 0 0 2px #218470}
+.ff-dock .ff-dock-link:focus-visible{outline:2px solid #176d5a;outline-offset:3px}
+.ff-dock .ff-dock-link:active .ff-dock-icon{transform:scale(.92)}
+.has-ff-dock .toast{bottom:calc(112px + env(safe-area-inset-bottom,0px))}
+html[data-ff-intro] .ff-dock,body:has(dialog[open]) .ff-dock,.ff-dock.ff-dock-keyboard{
+ opacity:0;visibility:hidden;pointer-events:none;
+}
+@media(hover:hover){
+ .ff-dock .ff-dock-link:hover{color:#125c4e}
+ .ff-dock-primary:hover .ff-dock-icon{background:#70d1bf;transform:translateY(-2px)}
+}
+@media(max-width:359px){.ff-dock{width:calc(100% - 24px);padding-right:8px;padding-left:8px}.ff-dock .ff-dock-link{font-size:9px}.ff-dock-indicator{left:8px;width:calc((100% - 16px)/5)}}
+@media(prefers-reduced-motion:reduce){.ff-dock,.ff-dock-indicator,.ff-dock .ff-dock-link,.ff-dock-primary .ff-dock-icon{transition:none}}
+body.motion-paused .ff-dock,body.motion-paused .ff-dock-indicator,body.motion-paused .ff-dock .ff-dock-link,body.motion-paused .ff-dock-primary .ff-dock-icon{transition:none}
+@media print{.ff-dock{display:none}body.has-ff-dock{padding-bottom:0}}

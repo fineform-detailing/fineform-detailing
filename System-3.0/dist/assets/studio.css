@@ -292,7 +292,7 @@ body[data-page=home] .velocity-band{display:none!important}
 body[data-page=home] h1,
 body[data-page=home] h2,
 body[data-page=home] .care-copy h3{
-  font-family:"Arial Rounded MT Bold","Arial Black","FF Display",system-ui,sans-serif;
+  font-family:"Arial Rounded MT Bold","Arial Black",system-ui,"FF Display",sans-serif;
   font-weight:900;letter-spacing:-.065em;line-height:1.04;text-transform:uppercase;
 }
 body[data-page=home] .ff-section h2,

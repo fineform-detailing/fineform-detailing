@@ -6,12 +6,12 @@ export const INTRO = Object.freeze({
   publicPaths: ['/', '/atendimento/', '/links/'],
   navigationExpiry: 15_000,
   bootDeadline: 5_000,
-  activeDeadline: 5_000,
-  minimumLoading: 2_650,
+  activeDeadline: 3_000,
+  minimumLoading: 500,
   readinessDeadline: 800,
-  reachDuration: 510,
+  reachDuration: 260,
   gripDuration: 110,
-  pullDuration: 650,
+  pullDuration: 360,
   coverDuration: 220,
 });
 

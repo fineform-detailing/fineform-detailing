@@ -1,3 +1,5 @@
+import {mountVehicleMap,vehicleMapMarkup,updateVehicleMap,areaForCare} from './vehicle-map.mjs';
+import {careImageMarkup,visualFor} from './care-visuals.mjs';
 import {mountCustomerNotice} from './customer-notifications.mjs';
 import {api,submissionToken,trackingUrl,saveBookmark,copyText,clearPendingSubmission} from './system.mjs';
 import {preferredContact} from './contacts.mjs';
@@ -11,7 +13,7 @@ const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&
 const goals=['Manutenção','Interior','Pintura','Rodas','Acabamentos','Quero orientação'];
 const key='ff-care-draft-v1';
 const defaults=()=>({vehicle:'car',model:'',mode:'single',service:'essential',plan:'',goals:[],extras:[],treatments:[],date:'',time:'',flexibleDate:true,name:'',phone:'',notes:'',ack:false,rememberLink:false});
-let state=defaults(),step=0,remember=false,sending=false;
+let state=defaults(),step=0,remember=false,sending=false,mapFocus=null;
 function sanitize(raw){
  const next=defaults();
  if(!raw||typeof raw!=='object')return next;
@@ -64,12 +66,12 @@ function stepVehicle(){return heading('Vamos começar<br>pelo seu veículo.','Ca
 function stepCare(){
  let html=heading('Qual cuidado<br>você procura?','Escolha por onde começar. Se estiver em dúvida, Mateus ajuda na conversa.');
  html+='<div class="mode-tabs" role="group" aria-label="Modalidade de atendimento">'+[['single','Um atendimento'],['plan','Care mensal'],['guidance','Quero orientação']].map(([v,l])=>'<button type="button" class="'+(state.mode===v?'active':'')+'" data-action="mode" data-value="'+v+'" aria-pressed="'+(state.mode===v)+'">'+l+'</button>').join('')+'</div>';
+ html+=vehicleMapMarkup(state,{focus:mapFocus,root:'../',compact:true});
  if(state.mode==='single'){
-  const serviceChoice=s=>choice({value:s.id,title:s.label,description:s.description,selected:state.service===s.id,extra:'<small>'+money(s.price)+'</small>'});
-  const vehicleServices=services.filter(s=>s.vehicle===state.vehicle);
-  html+='<div class="choice-stack" role="group" aria-label="Cuidado principal">'+vehicleServices.filter(s=>s.class!=='Classe C').map(serviceChoice).join('')+'</div>';
-  const treatments=vehicleServices.filter(s=>s.class==='Classe C');
-  if(treatments.length)html+='<details class="booking-treatments" '+(treatments.some(s=>s.id===state.service)?'open':'')+'><summary>Higienização, polimentos e vitrificação <span aria-hidden="true">+</span></summary><div class="choice-stack" role="group" aria-label="Tratamento principal">'+treatments.map(serviceChoice).join('')+'</div></details>';
+  const serviceChoice=s=>'<button type="button" class="choice-card care-visual-choice '+(state.service===s.id?'selected':'')+'" data-action="service" data-value="'+s.id+'" aria-pressed="'+(state.service===s.id)+'" aria-description="'+esc(s.description)+'"><span class="care-choice-image">'+careImageMarkup(s.id)+'<span class="care-choice-check" aria-hidden="true">✓</span></span><span class="care-choice-body"><h3>'+s.label+'</h3><p>'+visualFor(s.id).short+'</p><small>'+money(s.price)+'</small></span></button>';
+  const list=services.filter(s=>s.vehicle===state.vehicle);
+  const groups=[{id:'wash',label:'Lavagem e manutenção',items:list.filter(s=>s.class!=='Classe C')},{id:'interior',label:'Interior',items:list.filter(s=>s.id==='fullClean')},{id:'paint',label:'Pintura e proteção',items:list.filter(s=>s.class==='Classe C'&&s.id!=='fullClean')}];
+  html+=groups.filter(g=>g.items.length).map(g=>'<section class="care-choice-group" aria-labelledby="care-group-'+g.id+'"><h3 id="care-group-'+g.id+'">'+g.label+'</h3><div class="choice-stack care-choice-grid" role="group" aria-label="'+g.label+'">'+g.items.map(serviceChoice).join('')+'</div></section>').join('');
  }
  if(state.mode==='plan')html+='<div class="choice-stack" role="group" aria-label="Plano mensal">'+plans.filter(p=>p.vehicle===state.vehicle).map(p=>choice({value:p.id,title:p.name,description:p.description,selected:state.plan===p.id,action:'plan',extra:'<small>'+money(p.price)+'/mês'+'</small>'})).join('')+'</div><div class="note-box">Interesse em uma assinatura para um veículo. A placa será conferida e cadastrada pessoalmente antes da ativação do Care.</div>';
  if(state.mode==='guidance')html+='<div class="note-box">Tudo bem não conhecer o nome do serviço. Selecione suas prioridades e conte, no final, o que você gostaria de melhorar.</div>';
@@ -78,12 +80,12 @@ function stepCare(){
 }
 function stepDetails(){
  const included=includedFor(state);
- let html=heading('Vamos aos<br>detalhes.','Marque os cuidados de interesse. A avaliação orienta o que é adequado para o seu veículo.');
+ let html=heading('Vamos aos<br>detalhes.','Marque os cuidados de interesse. A avaliação orienta o que é adequado para o seu veículo.')+vehicleMapMarkup(state,{focus:mapFocus,root:'../',compact:true});
  if(state.mode==='plan')html+='<div class="note-box">Os adicionais abaixo consideram a visita Premium do plano. Nos serviços completos, o orçamento considera as etapas já incluídas.</div>';
  html+='<div>'+compatibleExtras(state.vehicle).map(e=>{const replaced=e.id==='exteriorPlastic'&&state.extras.includes('plasticCoating');const inc=included.includes(e.id);return '<label class="extra-choice '+(inc?'included':'')+'"><input type="checkbox" name="extra" value="'+e.id+'" '+(!replaced&&(inc||state.extras.includes(e.id))?'checked ':'')+(inc||replaced?'disabled ':'')+'><span><b>'+e.label+'</b><small>'+e.description+'</small>'+(replaced?'<span class="included-badge">SUBSTITUÍDO PELA VITRIFICAÇÃO</span>':inc?'<span class="included-badge">JÁ INCLUÍDO · QUANDO COMPATÍVEL</span>':'<span class="option-price">'+money(extraPriceFor(e,state))+(extraPriceFor(e,state)!==extraPrice(e,state.vehicle)?' · complemento no Extra':'')+'</span>')+'</span></label>';}).join('')+'</div>';
  if(state.vehicle==='car'){
   const available=availableTreatments(state);
-  if(available.length)html+='<details class="booking-treatments" '+(state.treatments.length?'open':'')+'><summary>Combinar tratamentos de pintura <span aria-hidden="true">+</span></summary><fieldset class="fieldset-clean" style="margin-top:30px"><legend class="field-label legend">Tratamentos para combinar <small>(opcional)</small></legend>'+available.map(s=>{const price=treatmentPrice(s.id,state);return '<label class="extra-choice"><input type="checkbox" name="treatment" value="'+s.id+'" '+(state.treatments.includes(s.id)?'checked':'')+'><span><b>'+s.label+'</b><small>'+s.description+'</small><span class="option-price">'+money(price)+(price!==s.price?' · acréscimo, com preparação já contemplada':' · atendimento avulso')+'</span></span></label>';}).join('')+'</fieldset><p class="privacy-note">Os níveis de polimento são alternativas. A vitrificação já inclui realce; no Extra, a higienização e o polimento Premium já estão contemplados. O total abaixo já desconta a lavagem de preparação repetida.</p></details>';
+  if(available.length)html+='<section class="optional-care-section" aria-label="Tratamentos para combinar"><fieldset class="fieldset-clean" style="margin-top:30px"><legend class="field-label legend">Tratamentos para combinar <small>(opcional)</small></legend>'+available.map(s=>{const price=treatmentPrice(s.id,state);return '<label class="extra-choice"><input type="checkbox" name="treatment" value="'+s.id+'" '+(state.treatments.includes(s.id)?'checked':'')+'><span><b>'+s.label+'</b><small>'+s.description+'</small><span class="option-price">'+money(price)+(price!==s.price?' · acréscimo, com preparação já contemplada':' · atendimento avulso')+'</span></span></label>';}).join('')+'</fieldset><p class="privacy-note">Os níveis de polimento são alternativas. A vitrificação já inclui realce; no Extra, a higienização e o polimento Premium já estão contemplados. O total abaixo já desconta a lavagem de preparação repetida.</p></section>';
   if(hasCoating(state))html+='<div class="note-box">A finalização será com revestimento cerâmico, em substituição à cera. Produto, cura e entrega serão combinados com Mateus.</div>';
  }
  const s=findService(baseFor(state));if(s?.notice)html+='<div class="note-box">'+s.notice+'</div>';
@@ -117,16 +119,24 @@ function updateProgress(sent=false){
 }
 $('#step-nav').addEventListener('click',event=>{const button=event.target.closest('[data-go-step]');if(sending||!button||button.disabled)return;const target=Number(button.dataset.goStep);if(target<step){step=target;render(true);}});
 function render(focus=false){
- content.innerHTML=renderers[step]()+ (step>=1?quoteBlock():'');$('#step-count').textContent='ETAPA 0'+(step+1)+' / 05';
+ const showMap=state.vehicle==='car'&&[1,2].includes(step),aside=$('#visual-care-aside');
+ if(aside){aside.hidden=!showMap;if(showMap)mountVehicleMap(aside,state,{focus:mapFocus,root:'../'});else aside.innerHTML='';}
+ document.querySelector('.booking-aside')?.classList.toggle('visual-care-on',showMap);
+ const previousMobile=content.querySelector('.visual-care-mobile');
+ content.innerHTML=renderers[step]()+ (step>=1?quoteBlock():'');
+ const currentMobile=content.querySelector('.visual-care-mobile');if(previousMobile&&currentMobile)currentMobile.replaceWith(previousMobile);
+ updateVehicleMap(content.querySelector('.visual-care-mobile'),state,{focus:mapFocus,root:'../'});
+ $('#step-count').textContent='ETAPA 0'+(step+1)+' / 05';
  updateProgress();persist();
  $('#previous-step').hidden=step===0;$('#next-step').innerHTML=step===4?'Enviar solicitação de orçamento <span>↗</span>':(step===2?'Continuar para data <span>→</span>':step===3?'Revisar pedido <span>→</span>':'Continuar <span>→</span>');
  $('#form-error').textContent='';
- if(focus){content.querySelector('h2').focus({preventScroll:true});if(innerWidth<760)document.querySelector('.booking-panel').scrollIntoView({behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth',block:'start'});}
+ if(focus){content.querySelector('h2').focus({preventScroll:true});document.querySelector('.booking-panel').scrollIntoView({behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth',block:'start'});}
 }
 content.addEventListener('click',event=>{
  const edit=event.target.closest('[data-review-step]');if(edit&&!sending){step=Number(edit.dataset.reviewStep);render(true);return;}
  const button=event.target.closest('[data-action]');if(sending||!button)return;
  const action=button.dataset.action,value=button.dataset.value;
+ if(action==='service')mapFocus=areaForCare(value);else if(['vehicle','mode','plan'].includes(action))mapFocus=null;
  if(action==='vehicle'){
   if(state.vehicle!==value){state.vehicle=value;state.service=value==='moto'?'motoPremium':'essential';state.plan=value==='moto'?'careMoto':'careEssential';state.extras=[];state.treatments=[];state.goals=state.goals.filter(g=>value==='car'||g!=='Interior');}
  }
@@ -142,8 +152,10 @@ content.addEventListener('input',event=>{
 content.addEventListener('change',event=>{
  const e=event.target;
  if(e.name==='extra'){
+  mapFocus=e.checked?areaForCare(e.value):null;
   state.extras=state.extras.filter(x=>x!==e.value);if(e.checked){if(e.value==='leather')state.extras=state.extras.filter(x=>x!=='fabric');if(e.value==='fabric')state.extras=state.extras.filter(x=>x!=='leather');state.extras.push(e.value);}tidy();render();content.querySelector('input[name="extra"][value="'+e.value+'"]')?.focus({preventScroll:true});
  }else if(e.name==='treatment'){
+  mapFocus=e.checked?areaForCare(e.value):null;
   state.treatments=state.treatments.filter(x=>x!==e.value);if(e.checked){if(polishIds.includes(e.value))state.treatments=state.treatments.filter(x=>!polishIds.includes(x));state.treatments.push(e.value);}tidy();render();content.querySelector('input[name="treatment"][value="'+e.value+'"]')?.focus({preventScroll:true});
  }else if(e.name==='date'){
   state.date=e.value;state.time='';persist();render();content.querySelector('[name="date"]')?.focus({preventScroll:true});

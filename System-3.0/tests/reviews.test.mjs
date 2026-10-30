@@ -191,9 +191,9 @@ test('formulário permite nota baixa, preserva comentário após falha e escapa 
   assert.equal(w.document.querySelector('.review-thanks img'),null);assert.match(w.document.querySelector('.review-thanks blockquote').textContent,/<img/);
  }finally{w.close();}
 });
-test('galeria nativa navega por botão, teclado e swipe, preserva foco e a pasta abre por toque',async()=>{
+test('componente de galeria navega por botão, teclado e swipe, preserva foco e a pasta abre por toque',async()=>{
  const out=await build({entryPoints:['src/studio-motion.mjs'],bundle:true,format:'iife',outfile:'/tmp/fineform-motion-test.js',write:false});
- const dom=new JSDOM(await readFile('dist/index.html','utf8'),{url:origin,runScripts:'outside-only'}),w=dom.window;
+ const dom=new JSDOM('<main><div id=react-gallery></div><div id=react-folder></div></main>',{url:origin,runScripts:'outside-only'}),w=dom.window;
  w.matchMedia=()=>({matches:false});
  try{
   w.eval(out.outputFiles.find(f=>f.path.endsWith('.js'))?.text||out.outputFiles[0].text);
@@ -208,7 +208,7 @@ test('galeria nativa navega por botão, teclado e swipe, preserva foco e a pasta
 });
 test('arrastar acompanha o dedo, pausar cancela os efeitos e o gesto vertical mantém a foto atual',async()=>{
  const out=await build({entryPoints:['src/studio-motion.mjs'],bundle:true,format:'iife',outfile:'/tmp/fineform-motion-test.js',write:false});
- const dom=new JSDOM(await readFile('dist/index.html','utf8'),{url:origin,runScripts:'outside-only',pretendToBeVisual:true}),w=dom.window;
+ const dom=new JSDOM('<main><div id=react-gallery></div><div id=react-folder></div></main>',{url:origin,runScripts:'outside-only',pretendToBeVisual:true}),w=dom.window;
  let enabled=true;const animations=[];w.ffMotion={enabled:()=>enabled};w.matchMedia=()=>({matches:false});
  w.Element.prototype.animate=function(){
   let reject;const animation={cancelled:false,finished:new Promise((_,r)=>reject=r),cancel(){this.cancelled=true;reject(Error('cancelled'));}};animations.push(animation);return animation;

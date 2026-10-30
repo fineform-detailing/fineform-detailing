@@ -7,7 +7,7 @@ const easePull = 'cubic-bezier(.7,0,.2,1)';
 
 /** Only the first photo and the main font matter; lazy content never holds the intro. */
 export async function criticalContentReady(document, signal) {
-  const image = document.querySelector('.ff-hero img, .links-photo img');
+  const image = document.querySelector('.fn-hero img, .ff-hero img, .links-photo img');
   let imageReady = Promise.resolve();
   if (image && !image.complete) {
     imageReady = typeof image.decode === 'function'
@@ -87,7 +87,7 @@ export function createIntroController(window, options = {}) {
     current = { mode, scope, inert, focusBefore, promise, resolve };
     current.watchdog = window.setTimeout(() => finish('timeout'), config.activeDeadline);
     shell.hidden = false;
-    elements.status.textContent = 'Preparando cada detalhe';
+    elements.status.textContent = 'Carregando Fine Form';
     phase(mode === 'departure' ? 'covering' : 'loading');
     try {
       fitTentacle(elements.arm.querySelector('svg'), {

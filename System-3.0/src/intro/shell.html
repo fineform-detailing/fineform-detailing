@@ -1,10 +1,14 @@
 <div class="ff-intro" id="ff-intro" role="dialog" aria-modal="true" aria-label="Abertura da Fine Form" hidden>
   <div class="intro-sheet" data-intro-sheet>
-    <div class="intro-topline" aria-hidden="true"><span>FINE FORM / CAR CARE</span><span>UM VEÍCULO POR VEZ.</span></div>
     <div class="intro-center" data-intro-center>
-      <img class="intro-logo" src="/assets/logo-original.png" alt="" width="48" height="48">
-      <p class="intro-wordmark">FINE FORM<span class="intro-wordmark-dot" aria-hidden="true"></span></p>
-      <p class="intro-tagline">Seu veículo, em boa forma.</p>
+      <svg class="intro-logo" viewBox="0 0 100 100" width="64" height="64" aria-hidden="true" focusable="false">
+        <defs>
+          <filter id="intro-logo-invert" color-interpolation-filters="sRGB"><feColorMatrix type="matrix" values="-1 0 0 0 1  0 -1 0 0 1  0 0 -1 0 1  0 0 0 1 0"/></filter>
+          <mask id="intro-logo-cutout" maskUnits="userSpaceOnUse" x="0" y="0" width="100" height="100" style="mask-type:luminance"><image href="/assets/logo-original.png" width="100" height="100" filter="url(#intro-logo-invert)"/></mask>
+        </defs>
+        <rect width="100" height="100" fill="currentColor" mask="url(#intro-logo-cutout)"/>
+      </svg>
+      <p class="intro-wordmark">Fine Form</p>
       <div class="intro-slider" data-intro-slider>
         <span class="intro-slider-fill" data-intro-fill aria-hidden="true"></span>
         <span class="intro-slider-arrow" aria-hidden="true">→</span>
@@ -15,7 +19,6 @@
     <div class="intro-fold" aria-hidden="true"></div>
     <div class="intro-tentacle" data-intro-tentacle>{{TENTACLE_SVG}}</div>
     <div class="intro-grip-spark" aria-hidden="true"><span></span><span></span><span></span></div>
-    <p class="intro-footnote">ATENÇÃO EM CADA ETAPA.</p>
     <button class="intro-skip" type="button" data-intro-skip>Entrar direto <span aria-hidden="true">↗</span></button>
   </div>
 </div>

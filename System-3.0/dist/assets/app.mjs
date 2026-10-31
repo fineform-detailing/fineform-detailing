@@ -15,7 +15,22 @@ const brand='<a class="brand" href="'+root+'" aria-label="Fine Form, página ini
 const header=$('[data-header]');
 if(header)header.innerHTML=brand+'<nav class="nav-links" id="main-nav" aria-label="Navegação principal"><a href="'+root+'#cuidados">Cuidados</a><a href="'+root+'#care">Planos</a><a href="'+root+'#sobre">Sobre</a><a href="'+root+'#avaliacoes">Avaliações</a><a href="'+root+'acompanhar/">Meus pedidos</a></nav><div class="header-actions"><a class="header-cta" href="'+root+'atendimento/">Pedir orçamento <span aria-hidden="true">↗</span></a><button type="button" class="nav-toggle" aria-expanded="false" aria-controls="main-nav" aria-label="Abrir menu">☰</button></div>';
 const footer=$('[data-footer]');
-if(footer){footer.className='site-footer';footer.innerHTML='<div class="footer-strip"><span class="footer-copyright">© '+new Date().getFullYear()+' FINE FORM</span><a class="footer-symbol" href="'+root+'" aria-label="Fine Form, página inicial"><img src="'+root+'assets/logo-original.png" alt="" width="44" height="44"></a><nav class="footer-socials" aria-label="Redes sociais e contatos da Fine Form">'+socialContacts(cfg).map(s=>'<a data-social="'+s.key+'" href="'+escape(s.url)+'" aria-label="'+s.label+'"'+(s.key!=='email'?' target="_blank" rel="noopener noreferrer"':'')+'>'+socialIcons[s.key]+'</a>').join('')+'</nav></div><div class="footer-bottom"><a href="'+root+'links/">Todos os links ↗</a><div class="footer-utilities">'+legalFooter+'</div></div>';}
+if(footer){footer.className='site-footer ff-editorial-footer';footer.innerHTML=
+  '<div class="ff-footer-layout">'+
+    '<div class="ff-footer-message"><span class="ff-footer-mark" aria-hidden="true"><img src="'+root+'assets/logo-original.png" alt="" width="38" height="38"></span>'+
+      '<h2>Seu veículo.<br><span>Em boa forma.</span></h2>'+
+      '<p>Detalhes que fazem diferença. Cuidados que continuam.</p>'+
+      '<a class="ff-footer-cta" href="'+root+'atendimento/">Vamos cuidar? <span aria-hidden="true">↗</span></a></div>'+
+    '<div class="ff-footer-columns">'+
+      '<nav class="ff-footer-links" aria-label="Navegação de rodapé"><a href="'+root+'#care">Fine Form Care</a><a href="'+root+'#cuidados">Serviços</a><a href="'+root+'#sobre">Sobre</a><a href="'+root+'#avaliacoes">Avaliações</a><a href="'+root+'acompanhar/">Meus pedidos</a></nav>'+
+      '<nav class="ff-footer-network" aria-label="Contatos e redes sociais">'+socialContacts(cfg).map(s=>'<a data-social="'+s.key+'" href="'+escape(s.url)+'"'+(s.key!=='email'?' target="_blank" rel="noopener noreferrer"':'')+'>'+s.label+' <span aria-hidden="true">↗</span></a>').join('')+'</nav>'+
+    '</div>'+
+  '</div>'+
+  '<div class="ff-footer-wordmark" aria-label="Fine Form Estética Automotiva">FINE <span>FORM</span><small>ESTÉTICA AUTOMOTIVA</small></div>'+
+  '<div class="ff-footer-meta"><span>© '+new Date().getFullYear()+' Fine Form. Todos os direitos reservados.</span>'+
+    '<div class="footer-utilities">'+legalFooter+'</div>'+
+    '<a class="ff-footer-top" href="#conteudo">Voltar ao início ↑</a></div>';
+}
 
 mountFloatingNav({root});
 mountPublicBusiness();

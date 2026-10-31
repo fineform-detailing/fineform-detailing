@@ -1,8 +1,8 @@
 const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
 const reduced=matchMedia('(prefers-reduced-motion: reduce)');
-let paused=true;
-// Decorative animation is disabled by design; the intro slide remains interactive.
-const enabled=()=>false;
+// Motion defaults to enabled, respecting operating-system reduced-motion settings.
+let paused=false;
+const enabled=()=>!reduced.matches&&!paused;
 window.ffMotion={enabled};
 const button=$('#motion-toggle');
 function apply(){

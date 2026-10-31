@@ -1,1 +1,128 @@
-var q=Object.freeze({seenKey:"ff-intro-seen-v2",motionKey:"ff-motion-paused",bootDeadline:5e3,activeDeadline:3e3,readinessDeadline:150,reachDuration:180,gripDuration:100,pullDuration:580,dragThreshold:.86});function I(a,f){try{return a[f]}catch{return null}}function P(a,f,i){try{return a.setItem(f,i),!0}catch{return!1}}function M(a){let f=new a.AbortController,i=new Set,{signal:l}=f;function s(d){return l.aborted?Promise.resolve(!1):new Promise(p=>{let n=()=>{a.clearTimeout(c),l.removeEventListener("abort",n),p(!l.aborted)},c=a.setTimeout(n,d);l.addEventListener("abort",n,{once:!0})})}async function e(d,p,n){if(l.aborted)return!1;if(!d||typeof d.animate!="function")return!0;let c=d.animate(p,{fill:"forwards",...n});i.add(c);try{return await c.finished,!l.aborted}catch{return!1}}function o(){f.abort();for(let d of i)d.cancel();i.clear()}return{signal:l,sleep:s,animate:e,cancel:o}}function X({width:a,height:f,left:i,viewportWidth:l}){let s=f/420,e=115-(l*.035-i)/s,o=a/s,d=Math.max(620,e+o+55),p=(d-346)/604,n=h=>Math.round((h<346?h:346+(h-346)*p)*100)/100,c=Math.max(4,Math.min(22,Math.round((d-327)/90)+1)),k=Array.from({length:c},(h,v)=>{let g=v/(c-1);return{x:327+(d-422)*g,y:315+76*g**.55,rx:17+12*g,ry:10+6*g,angle:22*(1-g)**3}});return{viewBox:[e,0,o,420],base:`M310 260C322 265 333 269 346 275C${n(438)} 317 ${n(528)} 299 ${n(635)} 308C${n(733)} 317 ${n(825)} 335 ${n(950)} 327L${n(950)} 428C${n(750)} 389 ${n(568)} 382 ${n(387)} 355C${n(347)} 349 312 338 280 320`,shade:`M298 288C${n(402)} 356 ${n(575)} 336 ${n(699)} 353C${n(785)} 364 ${n(865)} 366 ${n(950)} 364L${n(950)} 428C${n(750)} 389 ${n(568)} 382 ${n(387)} 355C337 348 289 330 255 307Z`,highlight:`M${n(364)} 292C${n(446)} 326 ${n(535)} 312 ${n(625)} 323C${n(738)} 337 ${n(823)} 347 ${n(916)} 344`,cups:k}}function L(a,f){if(!a||!(f.width>0)||!(f.height>0))return;let i=X(f);a.setAttribute("viewBox",i.viewBox.join(" ")),a.querySelector("[data-arm-base]").setAttribute("d",i.base),a.querySelector("[data-arm-shade]").setAttribute("d",i.shade),a.querySelector("[data-arm-highlight]").setAttribute("d",i.highlight);let l=a.ownerDocument,s=(o,d)=>{let p=l.createElementNS("http://www.w3.org/2000/svg",o);for(let[n,c]of Object.entries(d))p.setAttribute(n,c);return p},e=i.cups.map(o=>{let d=s("g",{transform:`translate(${o.x} ${o.y}) rotate(${o.angle})`});return d.append(s("ellipse",{rx:o.rx,ry:o.ry,fill:"#bde8e1",stroke:"#0b0d0c","stroke-width":3}),s("ellipse",{cy:1,rx:o.rx*.44,ry:o.ry*.46,fill:"#388a7d",stroke:"none"})),d});a.querySelector("[data-intro-tail-cups]").replaceChildren(...e)}var x="cubic-bezier(.18,.8,.2,1)",R="cubic-bezier(.7,0,.2,1)";async function O(a,f){let i=a.querySelector(".ff-hero img, .links-photo img"),l=Promise.resolve();i&&!i.complete&&(l=typeof i.decode=="function"?i.decode():new Promise(e=>{i.addEventListener("load",e,{once:!0,signal:f}),i.addEventListener("error",e,{once:!0,signal:f}),f.addEventListener("abort",e,{once:!0})}));let s=a.fonts?.load('600 16px "FF Sans"')??Promise.resolve();await Promise.allSettled([l,s])}function z(a,f={}){let i=a.document,l={...q,...f.timing},s=i.getElementById("ff-intro");if(!s)throw new Error("Fine Form intro shell is missing.");let e={sheet:s.querySelector("[data-intro-sheet]"),center:s.querySelector("[data-intro-center]"),arm:s.querySelector("[data-intro-tentacle]"),tip:s.querySelector(".intro-arm-tip"),fold:s.querySelector(".intro-fold"),spark:s.querySelector(".intro-grip-spark"),status:s.querySelector("[data-intro-label]"),skip:s.querySelector("[data-intro-skip]"),track:s.querySelector("[data-intro-slider]"),handle:s.querySelector("[data-intro-handle]"),fill:s.querySelector("[data-intro-fill]")},o=null,d=null,p=0,n=new a.AbortController,c=(t,r,m)=>t.addEventListener(r,m,{signal:n.signal}),k=t=>`translate3d(${24*(1-t)}%,${8*(1-t)}%,0) rotate(${3*(1-t)}deg)`;function h(t){i.documentElement.dataset.ffIntro=t,s.dataset.phase=t}function v(){let t=d;if(d=null,t)try{e.handle.releasePointerCapture?.(t.id)}catch{}}function g(){p&&a.cancelAnimationFrame(p),p=0}function b(t,r){t.progress=Math.max(0,Math.min(1,r)),e.handle.style.transform=`translate3d(${t.travel*t.progress}px,0,0)`,e.fill.style.transform=`scaleX(${t.progress})`,e.arm.style.transform=k(t.progress),e.tip.style.transform=`rotate(${-4*t.progress}deg)`}function S(t){t.travel=Math.max(1,e.track.clientWidth-e.handle.offsetWidth-12),L(e.arm.querySelector("svg"),{width:e.arm.clientWidth,height:e.arm.clientHeight,left:e.arm.offsetLeft,viewportWidth:e.sheet.clientWidth})}function u(t="complete"){let r=o;if(o=null,g(),v(),r){a.clearTimeout(r.watchdog),r.scope.cancel();for(let{element:m,wasInert:A}of r.inert)A||m.removeAttribute("inert")}s.hidden=!0,s.removeAttribute("data-phase"),i.documentElement.removeAttribute("data-ff-intro");for(let m of["handle","fill","arm","tip"])e[m].style.removeProperty("transform");if(r){if(P(I(a,"sessionStorage"),l.seenKey,"1"),r.focusBefore?.isConnected&&r.focusBefore!==i.body)r.focusBefore.focus?.({preventScroll:!0});else{let m=i.querySelector("main");m&&(m.setAttribute("tabindex","-1"),m.focus({preventScroll:!0}))}i.dispatchEvent(new a.CustomEvent("ff:intro-complete",{detail:{reason:t}})),r.resolve({reason:t,mode:r.mode})}}async function T(t){let{scope:r}=t;h("reaching"),e.status.textContent="Pode deixar com a Fine Form.",await Promise.all([Promise.race([t.ready,r.sleep(l.readinessDeadline)]),r.animate(e.handle,[{transform:`translate3d(${t.travel*t.progress}px,0,0)`},{transform:`translate3d(${t.travel}px,0,0)`}],{duration:l.reachDuration,easing:x}),r.animate(e.fill,[{transform:`scaleX(${t.progress})`},{transform:"scaleX(1)"}],{duration:l.reachDuration,easing:x}),r.animate(e.arm,[{transform:k(t.progress)},{transform:"translate3d(0,0,0) rotate(0)"}],{duration:l.reachDuration,easing:x}),r.animate(e.tip,[{transform:`rotate(${-4*t.progress}deg)`},{transform:"rotate(-6deg)",offset:.65},{transform:"rotate(0)"}],{duration:l.reachDuration,easing:x})]),!(o!==t||r.signal.aborted)&&(h("gripping"),await Promise.all([r.animate(e.center,[{opacity:1},{opacity:0}],{duration:l.gripDuration+80,easing:x}),r.animate(e.fold,[{opacity:0,transform:"scaleX(.1) rotate(8deg)"},{opacity:1,transform:"scaleX(1) rotate(-3deg)"}],{duration:l.gripDuration,easing:x}),r.animate(e.spark,[{opacity:0,transform:"scale(.4)"},{opacity:1,transform:"scale(1)",offset:.5},{opacity:0,transform:"scale(1.2)"}],{duration:l.gripDuration+80,easing:x})]),!(o!==t||r.signal.aborted)&&(h("revealing"),await r.animate(e.sheet,[{transform:"translate3d(0,0,0) rotate(0)",offset:0},{transform:"translate3d(-.7%,.4%,0) rotate(-.35deg)",offset:.12},{transform:"translate3d(7%,-.6%,0) rotate(.4deg)",offset:.3},{transform:"translate3d(116%,-5%,0) rotate(4deg)",offset:1}],{duration:l.pullDuration,easing:R}),o===t&&u()))}function w(){let t=o;!t||t.committed||(t.committed=!0,g(),v(),t.watchdog=a.setTimeout(()=>u("timeout"),l.activeDeadline),T(t).catch(()=>{o===t&&u("error")}))}function B(t="first"){if(o)return o.promise;let r=M(a),m=[...i.querySelectorAll("body > header, body > main, body > footer, body > .skip-link")].map(y=>({element:y,wasInert:y.hasAttribute("inert")})),A=i.activeElement;for(let{element:y}of m)y.setAttribute("inert","");let C,D=new Promise(y=>{C=y}),E=o={mode:t,scope:r,inert:m,focusBefore:A,promise:D,resolve:C,progress:0,committed:!1};s.hidden=!1,h("ready"),e.status.textContent="Arraste para a direita";try{S(E),b(E,0),E.ready=Promise.resolve().then(()=>f.ready?.(r.signal)??O(i,r.signal)).catch(()=>{}),s.setAttribute("tabindex","-1"),s.focus({preventScroll:!0})}catch{u("error")}return D}function $(){!o||o.committed||(g(),v(),h("ready"),b(o,0))}return c(e.handle,"pointerdown",t=>{if(!(!o||o.committed||d||t.isPrimary===!1||t.button!==0)){S(o),d={id:t.pointerId,x:t.clientX},h("dragging");try{e.handle.setPointerCapture?.(t.pointerId)}catch{}e.handle.focus({preventScroll:!0}),t.preventDefault()}}),c(a,"pointermove",t=>{if(!d||t.pointerId!==d.id||!o||o.committed)return;let r=o;r.progress=Math.max(0,Math.min(1,(t.clientX-d.x)/r.travel)),r.progress>=l.dragThreshold?(b(r,r.progress),w()):p||(p=a.requestAnimationFrame(()=>{p=0,o===r&&!r.committed&&b(r,r.progress)}))}),c(a,"pointerup",t=>{if(!d||t.pointerId!==d.id)return;let r=Math.max(0,Math.min(1,(t.clientX-d.x)/o.travel));r>=l.dragThreshold?(b(o,r),w()):$()}),c(a,"pointercancel",t=>{d?.id===t.pointerId&&$()}),c(e.handle,"lostpointercapture",t=>{d?.id===t.pointerId&&$()}),c(e.handle,"click",t=>{t.detail===0&&w()}),c(e.handle,"keydown",t=>{t.key==="ArrowRight"&&(t.preventDefault(),w())}),c(e.skip,"click",()=>u("skipped")),c(a,"resize",()=>{if(!(!o||o.committed)){$();try{S(o),b(o,0)}catch{u("error")}}}),c(i,"keydown",t=>{if(o&&(t.key==="Escape"&&(t.preventDefault(),u("skipped")),t.key==="Tab")){t.preventDefault();let r=i.activeElement;(r===e.handle?e.skip:r===e.skip?e.handle:t.shiftKey?e.skip:e.handle).focus({preventScroll:!0})}}),{open:B,skip:()=>u("skipped"),cancel:t=>u(t??"cancelled"),get active(){return!!o},destroy(){u("destroyed"),n.abort()}}}function F(){let a=window.matchMedia("(prefers-reduced-motion: reduce)"),f=z(window),i=()=>window.ffMotion?.enabled?.()??!a.matches;window.ffIntro={skip:f.skip,replay:()=>i()?f.open("replay"):Promise.resolve()},window.clearTimeout(window.ffIntroBoot?.deadline),document.documentElement.hasAttribute("data-ff-intro")&&i()&&!document.hidden?f.open(window.ffIntroBoot?.mode??"first"):f.skip();let l=document.querySelector(".footer-utilities, .links-utilities");if(l){let e=document.createElement("button");e.type="button",e.textContent="Rever abertura",e.dataset.introReplay="",e.hidden=!i(),e.addEventListener("click",()=>window.ffIntro.replay()),l.append(e),window.addEventListener("ff:motion",()=>{e.hidden=!i()})}let s=()=>{document.hidden?f.cancel("hidden"):i()||f.skip()};window.addEventListener("ff:motion",s),a.addEventListener("change",s),document.addEventListener("visibilitychange",s),window.addEventListener("pagehide",()=>f.cancel("pagehide")),window.addEventListener("pageshow",e=>{e.persisted&&f.cancel("restored")})}document.readyState==="loading"?document.addEventListener("DOMContentLoaded",F,{once:!0}):F();
+(function fineFormCometLoader() {
+  // Fine Form loading adaptation of the React Bits Comet Dial:
+  // radial ticks, luminous head, variable-width comet trail and a numeric readout.
+  const doc = document;
+  const root = doc.documentElement;
+  const shell = doc.getElementById('ff-intro');
+  if (!shell) { root.removeAttribute('data-ff-intro'); return; }
+  const svg = shell.querySelector('[data-comet-dial]');
+  const ticks = shell.querySelector('[data-comet-ticks]');
+  const track = shell.querySelector('[data-comet-track]');
+  const lit = shell.querySelector('[data-comet-lit]');
+  const head = shell.querySelector('[data-comet-head]');
+  const value = shell.querySelector('[data-comet-value]');
+  const status = shell.querySelector('[data-intro-status]');
+  const skip = shell.querySelector('[data-intro-skip]');
+  const parts = [...shell.querySelectorAll('[data-comet-trail]')];
+  const R = 78, startAngle = 110, sweep = 320;
+  const point = deg => [100 + Math.cos(deg * Math.PI / 180) * R, 100 + Math.sin(deg * Math.PI / 180) * R];
+  const path = (a, b) => {
+    const p = point(a), q = point(b);
+    return 'M ' + p[0].toFixed(3) + ' ' + p[1].toFixed(3) + ' A ' + R + ' ' + R + ' 0 ' + (b - a > 180 ? 1 : 0) + ' 1 ' + q[0].toFixed(3) + ' ' + q[1].toFixed(3);
+  };
+  track.setAttribute('d', path(startAngle, startAngle + sweep));
+  for (let i = 0; i < 61; i++) {
+    const deg = startAngle + sweep * (i / 60);
+    const p = point(deg), q = [100 + Math.cos(deg * Math.PI / 180) * (i % 5 === 0 ? 66 : 70), 100 + Math.sin(deg * Math.PI / 180) * (i % 5 === 0 ? 66 : 70)];
+    const line = doc.createElementNS('http://www.w3.org/2000/svg', 'line');
+    line.setAttribute('x1', p[0]); line.setAttribute('y1', p[1]);
+    line.setAttribute('x2', q[0]); line.setAttribute('y2', q[1]);
+    if (i % 5 === 0) line.classList.add('major');
+    ticks.appendChild(line);
+  }
+  let active = null;
+  const set = n => {
+    const f = Math.min(1, Math.max(0, n / 100));
+    const angle = startAngle + sweep * f;
+    lit.setAttribute('d', f < .001 ? '' : path(startAngle, angle));
+    const p = point(angle);
+    head.setAttribute('cx', p[0].toFixed(3));
+    head.setAttribute('cy', p[1].toFixed(3));
+    const reach = Math.min(135, 26 + 110 * Math.sin(Math.PI * f));
+    for (let j = 0; j < parts.length; j++) {
+      const a = Math.max(startAngle, angle - (j + 1) * reach / parts.length);
+      const b = Math.max(startAngle, angle - j * reach / parts.length);
+      const visible = f > .003 && f < 1 && b - a > .005;
+      parts[j].setAttribute('d', visible ? path(a, b) : '');
+      parts[j].setAttribute('stroke-width', (4.5 + 9 * (1 - j / parts.length)).toFixed(2));
+      parts[j].style.opacity = visible ? (0.74 * (1 - j / parts.length)).toFixed(3) : '0';
+    }
+    value.textContent = String(Math.round(n));
+    svg.setAttribute('aria-valuenow', String(Math.round(n)));
+  };
+  set(0);
+  function end(reason) {
+    const run = active;
+    if (!run) {
+      root.removeAttribute('data-ff-intro');
+      shell.hidden = true;
+      return;
+    }
+    active = null;
+    cancelAnimationFrame(run.raf);
+    clearTimeout(run.watchdog);
+    clearTimeout(run.exitTimer);
+    for (const { el, inert } of run.inert) if (!inert) el.removeAttribute('inert');
+    shell.hidden = true;
+    shell.classList.remove('is-finishing');
+    root.removeAttribute('data-ff-intro');
+    try { sessionStorage.setItem('ff-intro-seen-v2', '1'); } catch {}
+    if (reason === 'skipped' && run.previous?.isConnected) run.previous.focus?.({ preventScroll: true });
+    doc.dispatchEvent(new CustomEvent('ff:intro-complete', { detail: { reason } }));
+    run.resolve({ reason });
+  }
+  async function assetsReady() {
+    const image = doc.querySelector('.ff-hero img');
+    const tasks = [];
+    if (image && !image.complete) {
+      tasks.push(typeof image.decode === 'function' ? image.decode() : new Promise(resolve => {
+        image.addEventListener('load', resolve, { once: true });
+        image.addEventListener('error', resolve, { once: true });
+      }));
+    }
+    if (doc.fonts?.load) tasks.push(doc.fonts.load('600 16px "FF Sans"'));
+    await Promise.allSettled(tasks);
+  }
+  function open(mode) {
+    if (active) return active.promise;
+    let resolve;
+    const promise = new Promise(done => { resolve = done; });
+    const inert = [...doc.querySelectorAll('body > header, body > main, body > footer, body > .skip-link')].map(el => ({el, inert: el.hasAttribute('inert')}));
+    for (const entry of inert) entry.el.setAttribute('inert', '');
+    const run = { promise, resolve, inert, previous: doc.activeElement, raf: 0, watchdog: 0, exitTimer: 0, started: performance.now(), ready: false, finishing: false };
+    active = run;
+    shell.hidden = false;
+    shell.classList.remove('is-finishing');
+    root.dataset.ffIntro = 'ready';
+    status.textContent = 'Preparando a sua experiência';
+    set(0);
+    assetsReady().then(() => { if (active === run) run.ready = true; }, () => { if (active === run) run.ready = true; });
+    run.watchdog = setTimeout(() => end('timeout'), 4600);
+    const frame = now => {
+      if (active !== run) return;
+      const ms = Math.max(0, now - run.started);
+      const calculated = Math.min(96, Math.pow(Math.min(1, ms / 1700), .84) * 96);
+      const done = (run.ready && ms > 1350) || ms > 2800;
+      set(done ? 100 : calculated);
+      if (done && !run.finishing) {
+        run.finishing = true;
+        shell.classList.add('is-finishing');
+        status.textContent = 'Tudo pronto';
+        run.exitTimer = setTimeout(() => end('complete'), 260);
+      } else if (!run.finishing) run.raf = requestAnimationFrame(frame);
+    };
+    run.raf = requestAnimationFrame(frame);
+    return promise;
+  }
+  window.ffIntro = { skip: () => end('skipped'), replay: () => open('replay') };
+  skip.addEventListener('click', () => end('skipped'));
+  doc.addEventListener('keydown', e => { if (active && e.key === 'Escape') end('skipped'); });
+  doc.addEventListener('visibilitychange', () => { if (active && doc.hidden) end('hidden'); });
+  window.addEventListener('pagehide', () => { if (active) end('pagehide'); });
+  window.addEventListener('pageshow', e => { if (active && e.persisted) end('restored'); });
+  const motion = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
+  const boot = window.ffIntroBoot;
+  if (boot?.deadline) clearTimeout(boot.deadline);
+  if (root.hasAttribute('data-ff-intro') && !doc.hidden && !motion) open(boot?.mode || 'first');
+  else { shell.hidden = true; root.removeAttribute('data-ff-intro'); }
+})();

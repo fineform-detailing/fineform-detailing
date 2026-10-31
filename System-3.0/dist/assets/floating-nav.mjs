@@ -70,6 +70,7 @@ export function mountFloatingNav({root = './', window = globalThis.window} = {})
     if (collapsed && links.includes(document.activeElement)) return;
     nav.classList.toggle('ff-dock-collapsed', collapsed);
     compact.hidden = !collapsed;
+    compact.setAttribute('aria-expanded', String(!collapsed));
     links.forEach(link => { link.tabIndex = collapsed ? -1 : 0; });
   }
   function onDockScroll() {

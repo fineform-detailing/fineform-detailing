@@ -499,3 +499,10 @@ body[data-design=kinetic] .ff-dock .ff-dock-compact:focus-visible {
   -webkit-backdrop-filter:none;backdrop-filter:none;
  }
 }
+
+/* Entrada de texto, modal e loader têm prioridade sobre o dock recolhido. */
+body[data-design=kinetic] .ff-dock.ff-dock-keyboard,
+html[data-ff-intro] body[data-design=kinetic] .ff-dock,
+body[data-design=kinetic]:has(dialog[open]) .ff-dock {
+ opacity:0!important;visibility:hidden!important;pointer-events:none!important;
+}

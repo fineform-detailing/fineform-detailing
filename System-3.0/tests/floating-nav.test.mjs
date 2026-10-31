@@ -53,7 +53,7 @@ test('barra libera espaço ao digitar no celular e retorna ao sair do campo', as
 
 test('glassmorphism da barra inferior é permanente, independente da rolagem', () => {
  const css = readFileSync(new URL('../dist/assets/studio.css', import.meta.url), 'utf8');
- assert.match(css, /body\[data-design=kinetic\] \.ff-dock\{\s*background:rgba\(248,250,248,\.72\)/);
+ assert.match(css, /body\[data-design=kinetic\] \.ff-dock\{\s*background:rgba\(248,250,248,\.86\)/);
  assert.match(css, /body\[data-design=kinetic\] \.ff-dock\{[\s\S]*?-webkit-backdrop-filter:blur\(24px\) saturate\(175%\)/);
  assert.match(css, /body\[data-design=kinetic\] \.ff-dock-indicator\{/);
  assert.match(css, /@supports not \(\(-webkit-backdrop-filter:blur\(1px\)\)/);
@@ -89,8 +89,8 @@ test('ao rolar o dock vira círculo de vidro com ícone e retorna expandido', as
  assert.equal(nav.querySelector('.ff-dock-link').tabIndex,0);
  const css=readFileSync(new URL('../dist/assets/studio.css',import.meta.url),'utf8');
  assert.match(css,/\.ff-dock\.ff-dock-collapsed\s*\{/);
- assert.match(css,/width:64px;\s*height:64px/);
- assert.match(css,/backdrop-filter:blur\(18px\) saturate\(145%\)/);
+ assert.match(css,/width:56px;\s*height:56px/);
+ assert.match(css,/backdrop-filter:blur\(24px\) saturate\(175%\)/);
  window.close();
 });
 
@@ -107,4 +107,15 @@ test('o círculo abre a navegação ao toque sem trocar os destinos', async () =
  await new Promise(resolve=>window.setTimeout(resolve,310));
  assert.equal(nav.classList.contains('ff-dock-collapsed'),false,'toque limpa o timer');
  window.close();
+});
+
+test('o dock combina com o header, menos transparente e com tamanho menor', () => {
+ const css=readFileSync(new URL('../dist/assets/studio.css',import.meta.url),'utf8');
+ assert.match(css,/Refinamento: mesmo acabamento do header/);
+ assert.match(css,/width:min\(390px,calc\(100% - 36px\)\)/);
+ assert.match(css,/height:72px/);
+ assert.match(css,/background:rgba\(248,250,248,\.86\)/);
+ assert.match(css,/width:56px;height:56px;min-width:56px/);
+ assert.match(css,/width:54px;height:54px;min-width:54px/);
+ assert.match(css,/backdrop-filter:blur\(24px\) saturate\(175%\)/);
 });

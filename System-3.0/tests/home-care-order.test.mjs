@@ -11,10 +11,11 @@ test('homepage places Fine Form Care after introduction and before Essential Was
   const sections = [...main.children].filter(el => el.tagName === 'SECTION');
   const order = sections.map(el => el.id || [...el.classList].join(' '));
   const intro = sections.findIndex(el => el.classList.contains('ff-hero'));
-  const manifesto = sections.findIndex(el => el.classList.contains('manifesto'));
   const care = sections.findIndex(el => el.id === 'care');
   const services = sections.findIndex(el => el.id === 'cuidados');
-  assert.ok(intro >= 0 && manifesto > intro && care > manifesto && services > care, order.join(' > '));
+  assert.ok(intro >= 0 && care === intro + 1 && services === care + 1, order.join(' > '));
+  assert.equal(main.querySelector('.manifesto'), null, 'texto e linha do manifesto removidos');
+  assert.ok(main.querySelector('.velocity-band #react-velocity'), 'animação de texto preservada');
   assert.equal(services, care + 1, 'Care subscriptions immediately precede the washing/service catalog');
   assert.equal(main.querySelectorAll('#care').length, 1);
   assert.ok(main.querySelector('#care #plan-grid'), 'subscription card mounting point preserved');

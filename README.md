@@ -50,3 +50,17 @@ Este repositório também guarda a plataforma que conecta o site, o atendimento,
 **[Abrir a documentação do projeto →](System-3.0/README.md)**
 
 Código e aplicação em [`System-3.0/`](System-3.0/). Publicação em Cloudflare Workers, com banco D1 e atualizações ao vivo.
+
+## Acesso restrito ao Brasil
+
+A Fine Form 3.0 atende somente requisições com país de origem **Brasil (BR)**, conforme a geolocalização **confiável** fornecida pela Cloudflare ao Worker (`request.cf.country`). Não são usados cabeçalhos enviados pelo visitante para decidir o acesso.
+
+- **Brasil:** o Worker processa normalmente o site, os arquivos estáticos, o painel e a API.
+- **Outros países ou país desconhecido:** o Worker responde **HTTP 403** antes de servir páginas, scripts, imagens, estilos ou executar rotas da API. A mensagem é `Acesso disponível apenas no Brasil.`.
+- **Desenvolvimento local:** apenas os hosts loopback explícitos são isentos. O domínio público continua sujeito à verificação.
+- **Arquivos estáticos:** `System-3.0/wrangler.jsonc` usa `assets.run_worker_first: true`, para que os Assets não contornem a validação.
+- **Testes:** `System-3.0/tests/geography.test.mjs` contém cenários para países internacionais, país ausente, cabeçalhos falsificados, APIs, assets e acesso brasileiro.
+
+**Como interpretar o painel:** contagens de *requests* por cidade ou país incluem tentativas de bots, scanners e requisições recusadas. Essas métricas não equivalem a visitantes autorizados. Uma restrição aplicada no Worker responde HTTP 403, mas a tentativa ainda pode aparecer nos relatórios de tráfego da Cloudflare. Para analisar sucesso ou bloqueio, verifique o status HTTP dos eventos, não apenas o mapa.
+
+**Publicação:** o Worker de produção é `fine-form-3-0`, na conta Cloudflare da Fine Form. O repositório `fineform-detailing/fineform-detailing`, branch `main`, tem build automático do diretório `System-3.0/**`. Alterações no README da raiz apenas documentam a regra e **não acionam** uma publicação da aplicação. Evite publicar uma versão antiga do projeto sobre modificações mais recentes feitas diretamente na Cloudflare sem antes reconciliar os arquivos de produção.

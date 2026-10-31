@@ -13,13 +13,14 @@ test('homepage drops top legends, idle ticker and the rejected one-vehicle sloga
   assert.match(html, /id="plan-grid"/);
 });
 
-test('Care retains the working plan chooser and the new stacked-card styling', async () => {
-  const [markup, css] = await Promise.all([read('assets/care-plans.mjs'), read('assets/studio.css')]);
+test('Care retains working plan controls and real carousel styling without fake cards', async () => {
+  const [markup, css, carousel] = await Promise.all([read('assets/care-plans.mjs'), read('assets/studio.css'), read('assets/care-carousel.css')]);
   assert.match(markup, /data-plan-step/);
   assert.match(markup, /data-plan-index/);
   assert.match(markup, /atendimento\/\?plan=/);
   assert.match(css, /Fine Form editorial continuation/);
-  assert.match(css, /\.care-stage:before/);
+  assert.doesNotMatch(css, /background-image:url\("modern-ducati.webp"\)/);
+  assert.match(carousel, /scroll-snap-type:x mandatory/);
   assert.match(css, /\.care-feature\[hidden\]/);
   assert.match(css, /@media\(max-width:760px\)/);
 });

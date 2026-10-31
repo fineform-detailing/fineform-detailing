@@ -87,7 +87,7 @@ test('a home exibe uma nova imagem e não possui as legendas removidas', async (
     assert.ok(doc.querySelector('.velocity-band #react-velocity'), 'a animação da faixa é mantida');
     assert.equal(doc.querySelector('.manifesto'), null, 'o trecho Cada detalhe merece é removido');
     assert.equal(doc.querySelector('link[rel="preload"][as="image"]').getAttribute('href'), 'assets/hero-fineform-original.webp');
-    assert.match(doc.querySelector('.hero-image img').getAttribute('alt'), /copo medidor/i);
+    assert.match(doc.querySelector('.hero-image img').getAttribute('alt'), /detalhamento automotivo/i);
     assert.match(doc.querySelector('#hero-title span').getAttribute('style'), /text-decoration:none/);
   } finally { dom.window.close(); }
   for (const page of ['atendimento', 'links', 'painel', 'acompanhar', 'assinatura', 'avaliar']) {
@@ -144,7 +144,7 @@ test('foto da capa tem identidade própria e é servida localmente', async () =>
   const dom = new JSDOM(html);
   try {
     const src = dom.window.document.querySelector('.hero-image img').getAttribute('src');
-    assert.ok(src.startsWith('assets/hero-post-cup'));
+    assert.ok(src.startsWith('assets/hero-fineform-original'));
     assert.ok(!src.startsWith('http'));
     assert.ok((await readFile('dist/' + src)).byteLength > 2000, 'imagem deve estar incluída nos assets locais');
     for (const galleryImage of ['modern-gt3.webp','modern-interior.webp','modern-ducati.webp','modern-mclaren.webp']) {

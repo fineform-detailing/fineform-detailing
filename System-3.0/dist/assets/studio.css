@@ -274,23 +274,3 @@ html[data-ff-intro] .ff-dock,body:has(dialog[open]) .ff-dock,.ff-dock.ff-dock-ke
 @media(prefers-reduced-motion:reduce){.ff-dock,.ff-dock-indicator,.ff-dock .ff-dock-link,.ff-dock-primary .ff-dock-icon{transition:none}}
 body.motion-paused .ff-dock,body.motion-paused .ff-dock-indicator,body.motion-paused .ff-dock .ff-dock-link,body.motion-paused .ff-dock-primary .ff-dock-icon{transition:none}
 @media print{.ff-dock{display:none}body.has-ff-dock{padding-bottom:0}}
-
-
-/* Fine Form editorial continuation — 2026-10-30 */
-/* The original floating white navigation stays; remove old decorative chrome. */
-.site-footer,.site-footer .footer-bottom{border-top:0!important}
-.site-footer .footer-bottom{padding-top:4px}
-.site-footer .footer-strip{min-height:60px}
-body[data-page=home] .section-index,
-body[data-page=home] .kicker,
-body[data-page=home] .care-kind,
-body[data-page=home] .photo-tag,
-body[data-page=home] .hero-assurance{display:none!important}
-body[data-page=home] .manifesto{grid-template-columns:minmax(0,1fr) auto;gap:clamp(25px,5vw,70px)}
-body[data-page=home] .velocity-band{display:none!important}
-/* Moderate hierarchy: FF Sans for editorial headlines, FF Display only for the mark. */
-body[data-page=home] h1,body[data-page=home] h2,body[data-page=home] h3{
-  font-family:"FF Sans",Arial,sans-serif;font-weight:600;
-  text-transform:none;letter-spacing:-.043em;line-height:1.13;
-}
-body[data-page=home] p{font-family:"FF Sans",Arial,sans-serif}

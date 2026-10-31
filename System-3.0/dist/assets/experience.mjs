@@ -1,7 +1,7 @@
 const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
 const reduced=matchMedia('(prefers-reduced-motion: reduce)');
-// Motion defaults to enabled, respecting operating-system reduced-motion settings.
 let paused=false;
+try{paused=localStorage.getItem('ff-motion-paused')==='1';}catch{}
 const enabled=()=>!reduced.matches&&!paused;
 window.ffMotion={enabled};
 const button=$('#motion-toggle');

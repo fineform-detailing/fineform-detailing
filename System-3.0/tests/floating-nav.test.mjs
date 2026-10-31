@@ -66,23 +66,45 @@ test('glassmorphism da barra inferior é permanente, independente da rolagem', (
  window.close();
 });
 
-test('o dock desaparece durante scroll e volta após a rolagem parar', async () => {
+
+test('ao rolar o dock vira círculo de vidro com ícone e retorna expandido', async () => {
  const {window,nav}=setup('home');
  Object.defineProperty(window,'scrollY',{configurable:true,writable:true,value:0});
- assert.equal(nav.classList.contains('ff-dock-scrolling'),false);
+ const compact=nav.querySelector('.ff-dock-compact');
+ assert.ok(compact && compact.querySelector('svg'),'ícone acessível disponível');
+ assert.equal(compact.hidden,true);
+ assert.equal(nav.classList.contains('ff-dock-collapsed'),false);
  window.scrollY=120;window.dispatchEvent(new window.Event('scroll'));
- assert.equal(nav.classList.contains('ff-dock-scrolling'),true);
- await new Promise(resolve=>window.setTimeout(resolve,125));
+ assert.equal(nav.classList.contains('ff-dock-collapsed'),true);
+ assert.equal(compact.hidden,false);
+ assert.equal(nav.querySelectorAll('.ff-dock-link').length,5,'links originais preservados');
+ assert.equal(nav.querySelector('.ff-dock-link').tabIndex,-1,'links recolhidos não recebem foco');
+ await new Promise(resolve=>window.setTimeout(resolve,120));
  window.scrollY=250;window.dispatchEvent(new window.Event('scroll'));
- assert.equal(nav.classList.contains('ff-dock-scrolling'),true);
- await new Promise(resolve=>window.setTimeout(resolve,145));
- assert.equal(nav.classList.contains('ff-dock-scrolling'),true,'a pausa entre eventos não deve antecipar retorno');
- await new Promise(resolve=>window.setTimeout(resolve,125));
- assert.equal(nav.classList.contains('ff-dock-scrolling'),false,'volta após 240ms sem scroll');
+ await new Promise(resolve=>window.setTimeout(resolve,160));
+ assert.equal(nav.classList.contains('ff-dock-collapsed'),true,'ainda rolando');
+ await new Promise(resolve=>window.setTimeout(resolve,135));
+ assert.equal(nav.classList.contains('ff-dock-collapsed'),false,'retorna quando a rolagem para');
+ assert.equal(compact.hidden,true);
+ assert.equal(nav.querySelector('.ff-dock-link').tabIndex,0);
  const css=readFileSync(new URL('../dist/assets/studio.css',import.meta.url),'utf8');
- assert.match(css,/body\[data-design=kinetic\] \.ff-dock\.ff-dock-scrolling\{/);
- assert.match(css,/backdrop-filter:blur\(30px\) saturate\(205%\) contrast\(107%\)/);
- assert.match(css,/\.ff-dock::before\{/);
- assert.match(css,/\.ff-dock-primary \.ff-dock-icon\{/);
+ assert.match(css,/\.ff-dock\.ff-dock-collapsed\s*\{/);
+ assert.match(css,/width:64px;\s*height:64px/);
+ assert.match(css,/backdrop-filter:blur\(18px\) saturate\(145%\)/);
+ window.close();
+});
+
+test('o círculo abre a navegação ao toque sem trocar os destinos', async () => {
+ const {window,nav}=setup('booking');
+ Object.defineProperty(window,'scrollY',{configurable:true,writable:true,value:0});
+ window.scrollY=180;window.dispatchEvent(new window.Event('scroll'));
+ const compact=nav.querySelector('.ff-dock-compact');
+ assert.equal(compact.hidden,false);
+ compact.click();
+ assert.equal(nav.classList.contains('ff-dock-collapsed'),false);
+ assert.equal(compact.hidden,true);
+ assert.equal(nav.querySelector('[data-dock="quote"]').getAttribute('aria-current'),'page');
+ await new Promise(resolve=>window.setTimeout(resolve,310));
+ assert.equal(nav.classList.contains('ff-dock-collapsed'),false,'toque limpa o timer');
  window.close();
 });

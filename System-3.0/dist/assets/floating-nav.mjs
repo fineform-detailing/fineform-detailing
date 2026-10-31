@@ -53,26 +53,47 @@ export function mountFloatingNav({root = './', window = globalThis.window} = {})
     if (index >= 0) indicator.style.transform = `translateX(${index * 100}%)`;
   }
 
-  // Oculta durante rolagem efetiva; retorna após 240 ms sem deslocamento.
-  // O indicador de seção segue sendo atualizado, sem interferir em links.
+  // Ao rolar, a barra se transforma em um único botão circular de vidro.
+  // Ao parar, os atalhos reaparecem. Sem alterar as rotas dos cinco links.
+  const compact = document.createElement('button');
+  compact.type = 'button';
+  compact.className = 'ff-dock-compact';
+  compact.setAttribute('aria-label', 'Expandir navegação da Fine Form');
+  compact.setAttribute('aria-expanded', 'false');
+  compact.innerHTML = icon('plus');
+  compact.hidden = true;
+  nav.append(compact);
   let idleTimer = 0;
   let lastScrollY = window.scrollY || 0;
+  function setCollapsed(collapsed) {
+    // Não recolher enquanto o usuário está interagindo com um atalho.
+    if (collapsed && links.includes(document.activeElement)) return;
+    nav.classList.toggle('ff-dock-collapsed', collapsed);
+    compact.hidden = !collapsed;
+    links.forEach(link => { link.tabIndex = collapsed ? -1 : 0; });
+  }
   function onDockScroll() {
     const y = window.scrollY || 0;
     if (Math.abs(y - lastScrollY) < 1) return;
     lastScrollY = y;
-    nav.classList.add('ff-dock-scrolling');
+    setCollapsed(true);
     window.clearTimeout(idleTimer);
     idleTimer = window.setTimeout(() => {
-      nav.classList.remove('ff-dock-scrolling');
+      setCollapsed(false);
       idleTimer = 0;
-    }, 240);
+    }, 270);
   }
+  compact.addEventListener('click', () => {
+    window.clearTimeout(idleTimer);
+    idleTimer = 0;
+    setCollapsed(false);
+  });
   window.addEventListener('scroll', onDockScroll, {passive: true});
   window.addEventListener('pageshow', () => {
     lastScrollY = window.scrollY || 0;
     window.clearTimeout(idleTimer);
-    nav.classList.remove('ff-dock-scrolling');
+    idleTimer = 0;
+    setCollapsed(false);
   });
   
   let frame = 0;

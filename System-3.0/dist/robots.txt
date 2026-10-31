@@ -1,0 +1,8 @@
+User-agent: *
+Disallow: /api/
+Disallow: /painel/
+Disallow: /acompanhar/
+Disallow: /assinatura/
+Disallow: /avaliar/
+
+Sitemap: https://fine-form-3-0.fineformcare.workers.dev/sitemap.xml

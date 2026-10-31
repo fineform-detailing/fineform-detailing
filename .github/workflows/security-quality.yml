@@ -1,0 +1,32 @@
+name: Security and quality checks
+on:
+  pull_request:
+    paths: ['System-3.0/**', '.github/workflows/security-quality.yml']
+  push:
+    branches: [main]
+    paths: ['System-3.0/**', '.github/workflows/security-quality.yml']
+  schedule:
+    - cron: '15 12 * * 1'
+permissions:
+  contents: read
+concurrency:
+  group: audit-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    defaults:
+      run:
+        working-directory: System-3.0
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: 'npm'
+          cache-dependency-path: 'System-3.0/package-lock.json'
+      - run: npm ci
+      - run: npm run audit:deps
+      - run: npm test
+      - run: npm run build && node scripts/verify-build-assets.mjs

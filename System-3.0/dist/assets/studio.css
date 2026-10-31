@@ -345,3 +345,6 @@ body[data-design=kinetic] .site-header .nav-links a:hover{
 @media(prefers-reduced-motion:reduce){
  body[data-design=kinetic] .site-header .nav-links{transition:none}
 }
+
+/* O indicador de leitura antigo desenhava uma linha sob a barra; no novo header não existe barra. */
+body[data-page=home] .site-header::after{display:none!important;content:none!important}

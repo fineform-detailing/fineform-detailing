@@ -43,7 +43,7 @@ body[data-page="home"] .ff-discover h1 span{color:#3b7569;text-decoration:none}
 .ff-search:focus-within{outline:2px solid #53c3b188;outline-offset:2px}
 .ff-search button{display:grid;place-items:center;flex:none;width:43px;height:43px;border-radius:50%;background:#fff;color:var(--ff-ink);border:1px solid #eef0ed}
 .ff-search button svg{width:22px;height:22px}
-.ff-featured-photo{display:block;position:relative;overflow:hidden;height:clamp(310px,38vw,445px);border-radius:27px;background:#101817;color:#fff;isolation:isolate}
+.ff-featured-photo{animation:none!important;display:block;position:relative;overflow:hidden;height:clamp(310px,38vw,445px);border-radius:27px;background:#101817;color:#fff;isolation:isolate}
 .ff-featured-photo>img{position:absolute;inset:0;width:100%;height:100%;max-width:none;object-fit:cover;object-position:center 54%;filter:brightness(.8);transition:transform .55s ease}
 .ff-featured-photo:after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,#071310b9 0%,#0713104d 55%,transparent 100%),linear-gradient(0deg,#07131099,transparent 50%);z-index:0;pointer-events:none}
 .ff-featured-photo:hover img{transform:scale(1.025)}

@@ -19,8 +19,9 @@ test('Premium é o único serviço em destaque e Extra fica sem polimento',async
  assert.ok(extra.includes.every(x=>!/polimento/i.test(x)));
  assert.ok(!/polimento/i.test(extra.description));
  assert.equal(extra.covered.includes('polishLight'),false);
- for (const id of ['polishLight','polishMedium','polishPremium'])
+ for (const id of ['polishLight','polishPremium'])
   assert.ok(availableTreatments(state).some(x=>x.id===id),'polimento independente '+id);
+ assert.ok(!availableTreatments(state).some(x=>x.id==='polishMedium'),'Polimento Médio não deve estar à venda');
  assert.equal(quoteFor(state).total,1200);
  assert.equal(treatmentPrice('coating',state),1250);
  assert.equal(quoteFor({...state,treatments:['coating']}).total,2450);

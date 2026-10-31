@@ -22,10 +22,10 @@ test('Premium é o único serviço em destaque e Extra fica sem polimento',async
  for (const id of ['polishLight','polishMedium','polishPremium'])
   assert.ok(availableTreatments(state).some(x=>x.id===id),'polimento independente '+id);
  assert.equal(quoteFor(state).total,1200);
- assert.equal(treatmentPrice('coating',state),1390);
- assert.equal(quoteFor({...state,treatments:['coating']}).total,2490);
- assert.equal(quoteFor({...state,treatments:['polishLight']}).total,1520);
- assert.equal(quoteFor({...state,treatments:['polishPremium']}).total,2090);
+ assert.equal(treatmentPrice('coating',state),1250);
+ assert.equal(quoteFor({...state,treatments:['coating']}).total,2450);
+ assert.equal(quoteFor({...state,treatments:['polishLight']}).total,1620);
+ assert.equal(quoteFor({...state,treatments:['polishPremium']}).total,2050);
  assert.ok(normalizeTreatments({...state,treatments:['polishPremium']}).includes('polishPremium'));
  assert.ok(createSummary(state).includes('1.200'),'resumo deve apresentar o preço R$ 1.200');
  assert.ok(html.includes('id="react-velocity"'),'animação mantida');

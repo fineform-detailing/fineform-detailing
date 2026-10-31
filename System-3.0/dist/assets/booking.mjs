@@ -66,7 +66,7 @@ function stepCare(){
  html+='<div class="mode-tabs" role="group" aria-label="Modalidade de atendimento">'+[['single','Um atendimento'],['plan','Care mensal'],['guidance','Quero orientação']].map(([v,l])=>'<button type="button" class="'+(state.mode===v?'active':'')+'" data-action="mode" data-value="'+v+'" aria-pressed="'+(state.mode===v)+'">'+l+'</button>').join('')+'</div>';
  if(state.mode==='single'){
   const serviceChoice=s=>choice({value:s.id,title:s.label,description:s.description,selected:state.service===s.id,extra:'<small>'+money(s.price)+'</small>'});
-  const vehicleServices=services.filter(s=>s.vehicle===state.vehicle);
+  const vehicleServices=services.filter(s=>s.vehicle===state.vehicle&&s.id!=='polishMedium');
   html+='<div class="choice-stack" role="group" aria-label="Cuidado principal">'+vehicleServices.filter(s=>s.class!=='Classe C').map(serviceChoice).join('')+'</div>';
   const treatments=vehicleServices.filter(s=>s.class==='Classe C');
   if(treatments.length)html+='<details class="booking-treatments" '+(treatments.some(s=>s.id===state.service)?'open':'')+'><summary>Higienização, polimentos e vitrificação <span aria-hidden="true">+</span></summary><div class="choice-stack" role="group" aria-label="Tratamento principal">'+treatments.map(serviceChoice).join('')+'</div></details>';

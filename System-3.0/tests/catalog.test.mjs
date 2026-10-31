@@ -154,3 +154,32 @@ test('orientação sem serviço não herda total, e mensagem usa o mesmo orçame
  assert.match(planMessage,/Adicionais nesta visita: R\$[\s\u00a0]*350/);
  assert.match(planMessage,/Total deste pedido: R\$[\s\u00a0]*610/);
 });
+
+test('escopo de lavagem e oferta pública dos polimentos estão consistentes',async()=>{
+ const {readFile}=await import('node:fs/promises');
+ const realce=findService('polishLight'),premium=findService('polishPremium'),medio=findService('polishMedium'),vit=findService('coating');
+ assert.ok(realce.includes.some(x=>x.includes('Lavagem técnica')));
+ assert.ok(!realce.includes.some(x=>x.includes('Lavagem Essencial')));
+ assert.ok(premium.includes.some(x=>x.includes('Lavagem Essencial')));
+ assert.ok(!premium.includes.some(x=>x.includes('Lavagem técnica')));
+ assert.equal(premium.price,950);
+ assert.equal(vit.price,1250);
+ assert.equal(vit.preparedPrice,830);
+ assert.ok(medio,'polimento médio permanece no catálogo somente para pedidos antigos');
+ assert.ok(!availableTreatments({...sample,service:'extra'}).some(x=>x.id==='polishMedium'));
+ const [app,booking]=await Promise.all([
+  readFile('dist/assets/app.mjs','utf8'),
+  readFile('dist/assets/booking.mjs','utf8')
+ ]);
+ assert.ok(app.includes("['polishLight','polishPremium','coating']"));
+ assert.ok(!app.includes("[...polishIds,'coating'].map"));
+ assert.ok(booking.includes("s.id!=='polishMedium'"));
+ assert.equal(quoteFor({...sample,service:'polishLight',treatments:['fullClean']}).total,870);
+ assert.equal(quoteFor({...sample,service:'fullClean',treatments:['polishLight']}).total,870);
+ assert.equal(quoteFor({...sample,service:'polishPremium',treatments:['coating']}).total,1780);
+ assert.equal(quoteFor({...sample,service:'coating',treatments:['polishPremium']}).total,1780);
+ const plastico=extras.find(x=>x.id==='plasticCoating');
+ assert.ok(plastico.description.length<260);
+ assert.match(plastico.description,/cura/);
+ assert.match(plastico.description,/pneus, freios, banco, manoplas ou pedaleiras/);
+});

@@ -1,0 +1,109 @@
+/* Fine Form — interface com referencia mobile clean, 31/10/2026.
+ * Tokens da identidade: turquesa #53c3b1, off-white #efeee8, preto #0f0f0f.
+ * Os cards sao de servicos automotivos, nao simulam ecommerce. */
+:root{--ff-mint:#53c3b1;--ff-shell:#f5f6f3;--ff-ink:#0f0f0f;--ff-white:#fff;--ff-stroke:#e9ece8;--ff-soft:#e6f8f4}
+body[data-design="kinetic"]{background:var(--ff-shell);color:var(--ff-ink)}
+body[data-design="kinetic"] .site-header{position:fixed!important;top:16px!important;left:50%!important;right:auto!important;transform:translateX(-50%)!important;width:calc(100% - 40px)!important;max-width:1220px!important;height:72px!important;padding:10px 14px!important;margin:0!important;display:flex!important;align-items:center!important;justify-content:space-between!important;background:rgba(255,255,255,.97)!important;color:var(--ff-ink)!important;border:1px solid var(--ff-stroke)!important;border-radius:24px!important;box-shadow:0 12px 30px #0b0d0c0b!important;backdrop-filter:blur(18px)!important;z-index:100!important}
+.site-header .ff-menu-side{position:relative;display:flex;align-items:center;flex:0 0 auto}
+.site-header .nav-toggle{display:grid!important;place-items:center!important;width:48px!important;height:48px!important;min-width:48px!important;min-height:48px!important;padding:0!important;background:#f8f9f7!important;color:var(--ff-ink)!important;border:1px solid var(--ff-stroke)!important;border-radius:16px!important;box-shadow:0 2px 8px #00000008!important;line-height:1!important;font-size:0!important}
+.ff-menu-lines{display:flex;flex-direction:column;gap:4px;align-items:flex-start;width:19px}
+.ff-menu-lines i{display:block;height:2px;width:19px;background:currentColor;border-radius:4px;transition:transform .2s,width .2s,opacity .2s}
+.ff-menu-lines i:nth-child(2){width:15px}
+.nav-toggle[aria-expanded="true"] .ff-menu-lines i:first-child{transform:translateY(6px) rotate(45deg)}
+.nav-toggle[aria-expanded="true"] .ff-menu-lines i:nth-child(2){opacity:0}
+.nav-toggle[aria-expanded="true"] .ff-menu-lines i:last-child{transform:translateY(-6px) rotate(-45deg)}
+.site-header .brand{margin-left:auto;display:flex!important;align-items:center;justify-content:flex-end;gap:9px;min-height:48px}
+.site-header .brand-title{font-family:"FF Display",Impact,Arial,sans-serif;font-size:clamp(21px,2.3vw,27px)!important;font-weight:600!important;letter-spacing:.01em!important;line-height:1!important;white-space:nowrap;color:var(--ff-ink)!important}
+.site-header .brand img{display:block!important;width:36px!important;height:36px!important;object-fit:contain!important;mix-blend-mode:multiply!important;filter:none!important;border:0!important;border-radius:0!important}
+.site-header .nav-links{position:absolute!important;top:calc(100% + 13px)!important;left:0!important;right:auto!important;transform:none!important;display:none!important;flex-direction:column!important;align-items:stretch!important;gap:3px!important;width:min(310px,calc(100vw - 44px))!important;padding:12px!important;background:#fff!important;border:1px solid var(--ff-stroke)!important;border-radius:22px!important;box-shadow:0 18px 48px #0b0d0c21!important;z-index:110!important}
+.site-header .nav-links.open{display:flex!important}
+.site-header .nav-links a{display:flex!important;align-items:center!important;justify-content:space-between!important;min-height:46px!important;padding:12px 14px!important;margin:0!important;color:#37433d!important;background:transparent!important;border-radius:13px!important;font-size:14px!important;line-height:1.4!important}
+.site-header .nav-links a:hover,.site-header .nav-links a:focus-visible{background:#f0f7f5!important;color:var(--ff-ink)!important}
+.site-header .nav-links .ff-menu-quote{margin-top:5px!important;background:var(--ff-mint)!important;color:var(--ff-ink)!important;font-weight:700}
+.site-header .header-actions,.site-header .header-cta{display:none!important}
+body[data-page="home"],body[data-page="booking"]{padding-top:104px}
+body[data-page="home"] main{padding:0 18px}
+body[data-page="home"] .ff-hero{max-width:1200px;width:100%;margin:8px auto 0;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,.92fr);align-items:center;gap:clamp(20px,4vw,54px);padding:clamp(24px,4.5vw,60px);min-height:510px;border-radius:32px;background:linear-gradient(120deg,#e9f9f5 0%,#d9f5ed 52%,#cfefe6 100%);overflow:hidden}
+body[data-page="home"] .hero-content{padding:0;position:relative;z-index:1}
+body[data-page="home"] .hero-content h1{font-family:"FF Sans",Arial,sans-serif;font-weight:600;font-size:clamp(46px,5.2vw,75px);line-height:1.08;letter-spacing:-.055em;max-width:580px;color:var(--ff-ink)}
+body[data-page="home"] .hero-content h1>span{text-decoration-color:#6bcfbd;text-decoration-thickness:.12em}
+body[data-page="home"] .hero-lead{font-size:15px;line-height:1.8;color:#3f5b54;margin-top:23px}
+body[data-page="home"] .hero-actions{margin-top:27px}
+body[data-page="home"] .hero-actions .button{background:var(--ff-ink);border-color:var(--ff-ink);color:#fff;min-height:52px;border-radius:999px;box-shadow:0 7px 19px #0f0f0f16}
+body[data-page="home"] .hero-image{height:435px;min-width:0;width:100%;max-width:none;margin:0;border:0;border-radius:27px;box-shadow:0 14px 40px #173c2f19;animation:none}
+body[data-page="home"] .hero-image img{object-position:center 52%;transform:none}
+body[data-page="home"] .hero-image figcaption{padding:40px 21px 19px}
+.ff-shortcuts{max-width:1200px;margin:25px auto 0;padding:0 1px}
+.ff-shortcuts-heading{display:flex;align-items:center;justify-content:space-between;gap:18px;margin-bottom:15px;font-size:16px;font-weight:600}
+.ff-shortcuts-heading>a{color:#4a8679;font-size:12px;font-weight:600}
+.ff-shortcuts-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:13px}
+.ff-shortcuts-grid a{display:flex;flex-direction:column;align-items:flex-start;gap:5px;min-height:124px;padding:19px;border-radius:22px;background:#fff;border:1px solid var(--ff-stroke);transition:border-color .2s,transform .2s,box-shadow .2s}
+.ff-shortcuts-grid a:hover{border-color:#8ad9cb;transform:translateY(-2px);box-shadow:0 11px 22px #1b4e4112}
+.ff-shortcut-icon{display:grid;place-items:center;width:32px;height:32px;margin-bottom:6px;border-radius:11px;background:var(--ff-soft);color:#227b6d;font-size:11px;font-weight:700;font-variant-numeric:tabular-nums}
+.ff-shortcuts-grid strong{font-size:14px;color:var(--ff-ink);font-weight:600}
+.ff-shortcuts-grid small{font-size:11px;color:#687772}
+body[data-page="home"] .velocity-band{display:none}
+body[data-page="home"] .ff-section,body[data-page="home"] .explorer-section{max-width:1200px;background:transparent;padding:76px clamp(6px,2.8vw,34px);color:var(--ff-ink)}
+body[data-page="home"] .ff-section h2,body[data-page="home"] .explorer-heading h2{letter-spacing:-.05em}
+body[data-page="home"] .care-section,body[data-page="home"] .menu-section{padding-top:52px}
+body[data-page="home"] .menu-section{background:#fff;border-radius:32px;padding:clamp(25px,4.5vw,55px)!important;margin:20px auto;border:1px solid var(--ff-stroke)}
+body[data-page="home"] .menu-heading{max-width:760px}
+body[data-page="home"] .menu-heading p{color:#5b6863;line-height:1.75}
+body[data-page="home"] .menu-tabs .segmented{background:#f4f6f3;border-color:var(--ff-stroke);padding:5px;border-radius:40px}
+body[data-page="home"] .menu-tabs .segmented button{border-radius:40px}
+body[data-page="home"] .menu-tabs .segmented button.active{background:var(--ff-mint);color:var(--ff-ink)}
+body[data-page="home"] .service-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));align-items:stretch;gap:16px}
+body[data-page="home"] .service-row{display:flex;flex-direction:column;align-items:stretch;gap:12px;min-width:0;min-height:310px;padding:clamp(22px,3vw,31px);background:#f8faf8;border:1px solid var(--ff-stroke);border-radius:26px;box-shadow:none;translate:none}
+body[data-page="home"] .service-row.service-complete{background:#e9faf5;border-color:#bfeadd}
+body[data-page="home"] .service-row .menu-number{margin:0 0 7px;align-self:flex-start;padding:7px 11px;border-radius:30px;background:#e8efeb;color:#487669;font-size:10px;font-weight:700}
+body[data-page="home"] .service-row .menu-row-copy h3{font-size:clamp(24px,2.8vw,33px);margin:0 0 8px}
+body[data-page="home"] .service-row .menu-row-copy p{font-size:13px;line-height:1.68}
+body[data-page="home"] .service-row .menu-row-price{margin-top:auto;text-align:left}
+body[data-page="home"] .service-row .menu-row-price strong{font-size:29px}
+body[data-page="home"] .service-row .service-open{align-self:stretch;justify-content:space-between;background:#fff;border-radius:999px;padding:3px 4px 3px 17px;min-height:49px;font-size:12px;font-weight:600}
+body[data-page="home"] .service-row .service-open>span{display:inline}
+body[data-page="home"] .service-row .service-open>b{border:0;background:var(--ff-mint);color:#0f0f0f}
+body[data-page="home"] .care-feature{border-radius:30px;background:#fff;border-color:var(--ff-stroke);box-shadow:0 13px 38px #0b0d0c09}
+body[data-page="home"] .care-photo{border-radius:24px}
+body[data-page="home"] .care-stage{border-radius:30px}
+body[data-page="home"] .explorer-section{background:#fff;border-radius:32px;padding:clamp(26px,4vw,54px);margin:24px auto}
+body[data-page="home"] .explorer-media{border-radius:27px;overflow:hidden}
+body[data-page="home"] .process-section,body[data-page="home"] .reviews-section{background:#fff;border-radius:32px;margin:22px auto;padding:clamp(26px,4vw,54px)}
+body[data-page="home"] .treatment-item,body[data-page="home"] .extra-item{border-radius:18px}
+body[data-page="home"] .closing-panel{border-radius:30px}
+body[data-page="booking"] .booking-shell,body[data-page="booking"] .booking-main{border-radius:24px}
+a,button{ -webkit-tap-highlight-color:transparent }
+@media(max-width:850px){
+ body[data-page="home"] .ff-hero{grid-template-columns:1fr;gap:20px;padding:25px;border-radius:27px;min-height:0}
+ body[data-page="home"] .hero-content h1{font-size:clamp(40px,8vw,57px)}
+ body[data-page="home"] .hero-image{height:340px;border-radius:23px}
+ .ff-shortcuts-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+ body[data-page="home"] .service-list{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media(max-width:600px){
+ body[data-design="kinetic"] .site-header{top:12px!important;width:calc(100% - 24px)!important;height:66px!important;padding:8px 11px!important;border-radius:22px!important}
+ .site-header .brand-title{font-size:23px!important}
+ .site-header .brand img{width:32px!important;height:32px!important}
+ .site-header .nav-toggle{width:46px!important;height:46px!important;min-width:46px!important;min-height:46px!important;border-radius:15px!important}
+ body[data-page="home"],body[data-page="booking"]{padding-top:91px}
+ body[data-page="home"] main{padding:0 12px}
+ body[data-page="home"] .ff-hero{margin:0 auto;padding:24px 21px 18px;border-radius:26px}
+ body[data-page="home"] .hero-content h1{font-size:clamp(39px,10vw,50px)}
+ body[data-page="home"] .hero-lead{font-size:13px;line-height:1.7;margin-top:17px}
+ body[data-page="home"] .hero-actions{margin-top:19px}
+ body[data-page="home"] .hero-image{height:285px;border-radius:23px}
+ .ff-shortcuts{margin-top:24px}
+ .ff-shortcuts-heading{font-size:15px}
+ .ff-shortcuts-grid{gap:10px}
+ .ff-shortcuts-grid a{min-height:116px;padding:14px;border-radius:20px}
+ .ff-shortcuts-grid strong{font-size:13px}
+ body[data-page="home"] .ff-section,body[data-page="home"] .explorer-section{padding:55px 6px}
+ body[data-page="home"] .menu-section,body[data-page="home"] .explorer-section,body[data-page="home"] .process-section,body[data-page="home"] .reviews-section{border-radius:24px;padding:24px 18px!important}
+ body[data-page="home"] .service-list{grid-template-columns:1fr;gap:12px}
+ body[data-page="home"] .service-row{min-height:0;padding:22px;border-radius:21px}
+ body[data-page="home"] .service-row .menu-row-copy h3{font-size:26px}
+ body[data-page="home"] .care-feature{border-radius:23px}
+ body[data-page="home"] .care-photo{border-radius:18px}
+ body[data-page="home"] .hero-photo-note{display:none}
+}
+@media(prefers-reduced-motion:reduce){.ff-shortcuts-grid a,.ff-menu-lines i{transition:none!important}}

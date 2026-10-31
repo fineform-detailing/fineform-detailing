@@ -25,3 +25,11 @@ html[data-ff-intro],html[data-ff-intro] body{overflow:hidden}
 .ff-intro.is-finishing .intro-sheet{opacity:0;transition:opacity 240ms ease-out}
 @media(max-height:620px){.ff-intro .intro-sheet{padding-top:18px;padding-bottom:18px}.ff-intro .intro-logo{width:34px;height:34px;margin-bottom:10px}.ff-intro .intro-subtitle{margin-bottom:8px}.ff-intro .comet-dial{--cd-size:min(42vh,195px)}}
 @media(prefers-reduced-motion:reduce){.ff-intro *{animation:none!important;transition:none!important}}
+
+/* Fine Form: somente o simbolo transparente e transicao dissolve. */
+.ff-intro .intro-sheet{background:var(--intro-paper);transition:opacity .55s ease,transform .55s ease}
+.ff-intro .intro-logo{width:clamp(74px,16vw,104px)!important;height:clamp(74px,16vw,104px)!important;margin:0!important;color:var(--intro-ink);animation:ff-logo-reveal .58s ease-out both}
+.ff-intro .intro-wordmark,.ff-intro .intro-subtitle,.ff-intro .comet-dial,.ff-intro .intro-status{display:none!important}
+.ff-intro.is-finishing .intro-sheet{opacity:0;transform:scale(1.025);transition:opacity .55s ease,transform .55s ease}
+@keyframes ff-logo-reveal{from{opacity:0;transform:scale(.965)}to{opacity:1;transform:scale(1)}}
+@media(prefers-reduced-motion:reduce){.ff-intro .intro-logo{animation:none!important}.ff-intro.is-finishing .intro-sheet{transition:none!important;transform:none}}

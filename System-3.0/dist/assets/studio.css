@@ -550,3 +550,58 @@ body[data-design=kinetic] .ff-dock.ff-dock-collapsed {
   backdrop-filter:none;-webkit-backdrop-filter:none;
  }
 }
+
+
+/* Fine Form Care — cards compactos, sem selos ou setas redundantes. */
+.care-section .care-showcase{max-width:980px;margin-inline:auto}
+.care-section .care-feature{align-items:center;gap:clamp(0px,2vw,24px)}
+.care-section .care-photo:after{display:none}
+.care-section .care-copy{
+ text-align:center;
+ padding:clamp(24px,3vw,42px);
+ justify-self:center;
+}
+.care-section .care-copy h3{margin:0 0 10px;letter-spacing:-.035em}
+.care-section .care-description{max-width:40ch;margin:0 auto;line-height:1.65}
+.care-section .care-price{justify-content:center;margin:18px 0 16px}
+.care-section .care-facts{
+ display:flex;justify-content:center;align-items:center;
+ gap:0;text-align:center;padding-top:15px;margin:0 auto 20px;
+ max-width:340px;
+}
+.care-section .care-facts>div{display:flex;align-items:baseline;justify-content:center;gap:9px;flex-wrap:wrap}
+.care-section .care-facts dt{margin:0}
+.care-section .care-facts dd{font-weight:700}
+.care-section .care-interest.button{
+ display:flex;width:100%;max-width:350px;margin-inline:auto;
+ justify-content:center;gap:18px;
+}
+.care-section .care-controls{margin-top:15px;gap:0}
+.care-section .care-selectors{display:flex;justify-content:center;gap:8px;max-width:580px;width:100%;margin-inline:auto}
+.care-section .care-selectors button{
+ flex:1;min-width:0;white-space:nowrap;
+ padding:10px 12px;min-height:44px;gap:0;
+ border:1px solid transparent;border-radius:14px;
+ font-size:12px;font-weight:600;line-height:1.25;
+}
+.care-section .care-selectors button[aria-pressed=true]{
+ background:#e5f5f1;border-color:#b7e1d7;color:#174f45;
+}
+@media(max-width:600px){
+ .care-section .care-heading{margin-bottom:20px}
+ .care-section .care-feature{gap:0;padding:8px}
+ .care-section .care-photo{height:225px;border-radius:17px}
+ .care-section .care-copy{padding:22px 16px 20px}
+ .care-section .care-copy h3{font-size:30px;margin-bottom:9px}
+ .care-section .care-description{font-size:14px;line-height:1.6}
+ .care-section .care-price{margin:16px 0 15px}
+ .care-section .care-price strong{font-size:40px}
+ .care-section .care-facts{padding-top:15px;margin-bottom:18px}
+ .care-section .care-interest.button{max-width:none;min-height:48px}
+ .care-section .care-controls{margin-top:14px}
+ .care-section .care-selectors{order:initial;gap:5px}
+ .care-section .care-selectors button{
+  min-height:44px;padding:9px 4px;
+  font-size:clamp(10px,2.8vw,12px);letter-spacing:-.02em;
+ }
+}

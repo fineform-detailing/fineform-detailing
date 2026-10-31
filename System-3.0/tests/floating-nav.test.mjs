@@ -93,7 +93,8 @@ test('fade não altera dimensões nem acabamento Liquid Glass', () => {
  const fade=css.slice(css.indexOf('/* Fade discreto da barra inteira'));
  assert.match(fade,/opacity:0/);
  assert.match(fade,/visibility:hidden/);
- assert.match(fade,/transition:opacity \.26s ease,visibility \.26s ease/);
+ assert.match(fade,/transition:grid-template-columns \.46s/);
+ assert.match(fade,/opacity \.26s ease,visibility \.26s ease/);
  assert.ok(!fade.includes('width:56px'),'nenhum tamanho compacto');
  assert.ok(!css.includes('ff-dock-collapsed'),'classe de encolhimento removida');
  assert.ok(!css.includes('ff-dock-compact'),'botão circular removido');

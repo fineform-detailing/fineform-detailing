@@ -787,7 +787,8 @@ body.motion-paused[data-design=kinetic] .ff-dock .ff-dock-label{
 
 /* Fade discreto da barra inteira ao rolar — sem encolhimento. */
 body[data-design=kinetic] .ff-dock {
- transition:opacity .26s ease,visibility .26s ease;
+ transition:grid-template-columns .46s cubic-bezier(.22,1,.36,1),
+  opacity .26s ease,visibility .26s ease;
 }
 body[data-design=kinetic] .ff-dock.ff-dock-scroll-hidden {
  opacity:0;

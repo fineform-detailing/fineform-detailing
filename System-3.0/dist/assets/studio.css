@@ -690,3 +690,61 @@ body[data-page=home] .faq-list details:first-child{
 body[data-page=home] .velocity-band{border-bottom:0}
 body[data-page=home] .footer-bottom{padding-top:12px}
 body[data-page=links] .links-end{border-top:0}
+
+
+/* Página inicial mais direta — só horários entre avaliações e perguntas. */
+body[data-page=home] .menu-section{
+ padding-bottom:clamp(48px,4.5vw,72px);
+}
+body[data-page=home] .reviews-section{
+ padding-top:clamp(44px,4vw,68px);
+ padding-bottom:clamp(30px,3vw,48px);
+}
+body[data-page=home] .reviews-section .reviews-list{min-height:0}
+body[data-page=home] .personal-section{
+ padding-top:clamp(18px,2vw,32px);
+ padding-bottom:clamp(42px,4vw,64px);
+}
+body[data-page=home] .personal-section .personal-layout{
+ display:flex;
+ align-items:stretch;
+ justify-content:center;
+ max-width:720px;
+ width:100%;
+ margin-inline:auto;
+ gap:0;
+}
+body[data-page=home] .personal-section .hours-panel{
+ width:100%;
+ padding:clamp(24px,3vw,40px);
+ border-radius:24px;
+}
+body[data-page=home] .personal-section .hours-panel dl{
+ margin:0 0 16px;
+}
+body[data-page=home] .personal-section .hours-panel dl>div{
+ padding:15px 0;
+}
+body[data-page=home] .personal-section .hours-panel dl>div:first-child{
+ padding-top:0;
+}
+body[data-page=home] .personal-section .hours-panel>p{
+ margin-top:18px;
+}
+body[data-page=home] .faq-section{
+ padding-top:clamp(40px,4vw,64px);
+ padding-bottom:clamp(44px,4.8vw,72px);
+ column-gap:clamp(25px,4vw,65px);
+}
+body[data-page=home] .faq-section .faq-list summary{padding:18px 0}
+body[data-page=home] .closing-section{padding-top:0}
+@media(max-width:600px){
+ body[data-page=home] .menu-section{padding-bottom:42px}
+ body[data-page=home] .reviews-section{padding-top:36px;padding-bottom:22px}
+ body[data-page=home] .reviews-heading{margin-bottom:22px}
+ body[data-page=home] .personal-section{padding-top:16px;padding-bottom:34px}
+ body[data-page=home] .personal-section .hours-panel{padding:24px 22px;border-radius:22px}
+ body[data-page=home] .personal-section .hours-panel dl>div{gap:10px}
+ body[data-page=home] .faq-section{padding-top:34px;padding-bottom:48px;gap:22px}
+ body[data-page=home] .faq-section .faq-list summary{padding:18px 0;line-height:1.5}
+}

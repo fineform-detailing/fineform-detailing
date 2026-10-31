@@ -47,7 +47,7 @@ photo?.addEventListener('pointerleave',()=>{point=null;photo.classList.remove('i
 measure();sync();
 
 // Content is visible without JS; once-only reveals are enabled progressively.
-const revealSelector='.ff-section>.section-index,.menu-heading,.manifesto-copy,.service-row,.treatment-item,.extra-item,.explorer-heading,#react-gallery,.process-intro,.process-steps article,.care-heading,.care-stage,.care-controls,.personal-layout>div,.hours-panel,.faq-list>details,.closing-panel,.reviews-heading,.reviews-empty,.review-card';
+const revealSelector='.ff-section>.section-index,.menu-heading,.manifesto-copy,.service-row,.treatment-item,.extra-item,.care-heading,.care-stage,.care-controls,.personal-layout>div,.hours-panel,.faq-list>details,.closing-panel,.reviews-heading,.reviews-empty,.review-card';
 const show=element=>{element.dataset.revealState='visible';observer?.unobserve(element);};
 const observer=typeof IntersectionObserver==='function'?new IntersectionObserver(entries=>{entries.forEach(entry=>{if(entry.isIntersecting)show(entry.target);});},{threshold:.05,rootMargin:'0px 0px -20px 0px'}):null;
 function watchContent(){
@@ -55,8 +55,8 @@ function watchContent(){
  const candidates=$$(revealSelector).filter(element=>!element.dataset.revealState).map(element=>({element,rect:element.getBoundingClientRect()}));
  candidates.forEach(({element,rect})=>{
   if(!enabled()||!observer||rect.bottom<0){element.dataset.revealState='visible';return;}
-  if(element.matches('.service-row,.treatment-item,.extra-item,.process-steps article,.faq-list>details,.review-card'))element.dataset.revealKind='card';
-  else if(element.matches('#react-gallery,.care-stage'))element.dataset.revealKind='image';
+  if(element.matches('.service-row,.treatment-item,.extra-item,.faq-list>details,.review-card'))element.dataset.revealKind='card';
+  else if(element.matches('.care-stage'))element.dataset.revealKind='image';
   const siblings=[...element.parentElement.children],index=siblings.indexOf(element);
   element.style.setProperty('--reveal-delay',Math.min(index,3)*40+'ms');
   element.dataset.revealState='pending';observer.observe(element);

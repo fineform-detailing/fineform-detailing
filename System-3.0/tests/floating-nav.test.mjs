@@ -65,3 +65,24 @@ test('glassmorphism da barra inferior é permanente, independente da rolagem', (
  assert.equal(nav.querySelector('[aria-current]')?.dataset.dock,'care','o indicador segue funcionando');
  window.close();
 });
+
+test('o dock desaparece durante scroll e volta após a rolagem parar', async () => {
+ const {window,nav}=setup('home');
+ Object.defineProperty(window,'scrollY',{configurable:true,writable:true,value:0});
+ assert.equal(nav.classList.contains('ff-dock-scrolling'),false);
+ window.scrollY=120;window.dispatchEvent(new window.Event('scroll'));
+ assert.equal(nav.classList.contains('ff-dock-scrolling'),true);
+ await new Promise(resolve=>window.setTimeout(resolve,125));
+ window.scrollY=250;window.dispatchEvent(new window.Event('scroll'));
+ assert.equal(nav.classList.contains('ff-dock-scrolling'),true);
+ await new Promise(resolve=>window.setTimeout(resolve,145));
+ assert.equal(nav.classList.contains('ff-dock-scrolling'),true,'a pausa entre eventos não deve antecipar retorno');
+ await new Promise(resolve=>window.setTimeout(resolve,125));
+ assert.equal(nav.classList.contains('ff-dock-scrolling'),false,'volta após 240ms sem scroll');
+ const css=readFileSync(new URL('../dist/assets/studio.css',import.meta.url),'utf8');
+ assert.match(css,/body\[data-design=kinetic\] \.ff-dock\.ff-dock-scrolling\{/);
+ assert.match(css,/backdrop-filter:blur\(30px\) saturate\(205%\) contrast\(107%\)/);
+ assert.match(css,/\.ff-dock::before\{/);
+ assert.match(css,/\.ff-dock-primary \.ff-dock-icon\{/);
+ window.close();
+});

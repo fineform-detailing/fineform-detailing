@@ -422,3 +422,64 @@ body[data-design=kinetic] .ff-dock-indicator{
  }
  body[data-design=kinetic] .ff-dock-indicator{background:#c3ece1}
 }
+
+/* Liquid Glass: aparência translúcida perolada com brilho de borda.
+   Permanece ativa ao repousar; durante scroll o dock se recolhe suavemente.
+   CSS simula o vidro óptico sem inventar mídia nem trocar a identidade Fine Form. */
+body[data-design=kinetic] .ff-dock{
+ background:
+  radial-gradient(ellipse 110% 130% at 10% 4%,rgba(255,255,255,.68),transparent 52%),
+  radial-gradient(ellipse 100% 120% at 88% 104%,rgba(83,195,177,.23),transparent 68%),
+  linear-gradient(123deg,rgba(255,255,255,.46),rgba(230,247,246,.21) 52%,rgba(255,255,255,.39));
+ border:1px solid rgba(255,255,255,.87);
+ -webkit-backdrop-filter:blur(30px) saturate(205%) contrast(107%);
+ backdrop-filter:blur(30px) saturate(205%) contrast(107%);
+ box-shadow:0 16px 44px rgba(14,32,27,.17),
+  0 3px 9px rgba(15,39,35,.08),
+  inset 0 1.5px 1px rgba(255,255,255,.95),
+  inset 1px 0 2px rgba(255,255,255,.66),
+  inset -1px -1.5px 2px rgba(72,173,156,.24);
+ transition:opacity .23s ease,transform .32s cubic-bezier(.2,.8,.25,1),visibility 0s;
+ will-change:auto;
+}
+body[data-design=kinetic] .ff-dock::before{
+ content:"";position:absolute;inset:1px;border-radius:inherit;
+ pointer-events:none;z-index:3;
+ box-shadow:inset 0 2px 2px rgba(255,255,255,.75),
+  inset 1px 0 1px rgba(255,255,255,.63),
+  inset 0 -2px 3px rgba(90,189,173,.20);
+}
+body[data-design=kinetic] .ff-dock-indicator{
+ background:linear-gradient(145deg,rgba(255,255,255,.43),rgba(83,195,177,.27) 64%,rgba(255,255,255,.30));
+ border:1px solid rgba(255,255,255,.70);
+ box-shadow:inset 0 1px 1px rgba(255,255,255,.90),0 2px 8px rgba(42,144,126,.08);
+}
+body[data-design=kinetic] .ff-dock-primary .ff-dock-icon{
+ background:linear-gradient(145deg,#9de8dc 0%,#53c3b1 53%,#35a996 100%);
+ border-color:rgba(229,255,249,.92);
+ box-shadow:0 0 0 1px rgba(40,151,130,.32),0 5px 13px rgba(13,98,84,.22),inset 0 1px 2px rgba(255,255,255,.72);
+}
+body[data-design=kinetic] .ff-dock.ff-dock-scrolling{
+ opacity:0;visibility:hidden;pointer-events:none;
+ transform:translate(-50%,18px) scale(.97);
+ transition:opacity .20s ease,transform .26s ease,visibility 0s linear .26s;
+}
+@supports not ((-webkit-backdrop-filter:blur(1px)) or (backdrop-filter:blur(1px))){
+ body[data-design=kinetic] .ff-dock{
+  background:rgba(245,251,249,.97);
+ }
+}
+@media(prefers-reduced-motion:reduce){
+ body[data-design=kinetic] .ff-dock.ff-dock-scrolling{
+  transform:translateX(-50%);
+  transition:none;
+ }
+ body[data-design=kinetic] .ff-dock{transition:none}
+}
+@media(prefers-contrast:more){
+ body[data-design=kinetic] .ff-dock{
+  background:#fff;border-color:#40574f;
+  -webkit-backdrop-filter:none;backdrop-filter:none;
+ }
+ body[data-design=kinetic] .ff-dock-indicator{background:#d0f2e9}
+}

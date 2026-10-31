@@ -53,6 +53,28 @@ export function mountFloatingNav({root = './', window = globalThis.window} = {})
     if (index >= 0) indicator.style.transform = `translateX(${index * 100}%)`;
   }
 
+  // Oculta durante rolagem efetiva; retorna após 240 ms sem deslocamento.
+  // O indicador de seção segue sendo atualizado, sem interferir em links.
+  let idleTimer = 0;
+  let lastScrollY = window.scrollY || 0;
+  function onDockScroll() {
+    const y = window.scrollY || 0;
+    if (Math.abs(y - lastScrollY) < 1) return;
+    lastScrollY = y;
+    nav.classList.add('ff-dock-scrolling');
+    window.clearTimeout(idleTimer);
+    idleTimer = window.setTimeout(() => {
+      nav.classList.remove('ff-dock-scrolling');
+      idleTimer = 0;
+    }, 240);
+  }
+  window.addEventListener('scroll', onDockScroll, {passive: true});
+  window.addEventListener('pageshow', () => {
+    lastScrollY = window.scrollY || 0;
+    window.clearTimeout(idleTimer);
+    nav.classList.remove('ff-dock-scrolling');
+  });
+  
   let frame = 0;
   const services = document.getElementById('cuidados');
   const plans = document.getElementById('care');

@@ -18,7 +18,7 @@ test('homepage places Fine Form Care after introduction and before Essential Was
   assert.equal(services, care + 1, 'Care subscriptions immediately precede the washing/service catalog');
   assert.equal(main.querySelectorAll('#care').length, 1);
   assert.ok(main.querySelector('#care #plan-grid'), 'subscription card mounting point preserved');
-  assert.ok(main.querySelector('#cuidados #service-menu'), 'service cards mounting point preserved');
+  assert.ok(main.querySelector('#cuidados #service-grid'), 'service cards mounting point preserved');
   assert.ok(document.querySelector('header.site-header[data-header]'), 'original header preserved');
   assert.ok(document.querySelector('#ff-intro'), 'intro loader preserved');
   assert.ok(document.querySelector('[data-footer]'), 'footer preserved');

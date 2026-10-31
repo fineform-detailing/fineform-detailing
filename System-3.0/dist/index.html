@@ -3,9 +3,9 @@
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#FFFFFF">
 <title>Fine Form — Seu veículo, em boa forma</title><meta name="description" content="Estética para carros e motos. Da pré-lavagem à proteção, escolha seu cuidado e converse diretamente com Mateus.">
 <meta property="og:title" content="Fine Form — Seu veículo, em boa forma"><meta property="og:description" content="Seu veículo, em boa forma. Estética automotiva e atendimento pessoal.">
-<link rel="icon" href="assets/logo-original.png"><link rel="stylesheet" href="assets/style.css"><link rel="stylesheet" href="assets/studio.css"><link rel="stylesheet" href="assets/studio-motion.css"><link rel="stylesheet" href="assets/reviews.css"><link rel="stylesheet" href="assets/fineform-ui.css" data-ff-ui="2026">
+<link rel="icon" href="assets/logo-original.png"><link rel="stylesheet" href="assets/style.css"><link rel="stylesheet" href="assets/studio.css"><link rel="stylesheet" href="assets/studio-motion.css"><link rel="stylesheet" href="assets/reviews.css"><link rel="stylesheet" href="assets/fineform-ui.css?v=2" data-ff-ui="2026">
 <link rel="preload" as="image" href="assets/hero-detail-wash.jpg" imagesrcset="assets/hero-detail-wash-mobile.jpg 560w, assets/hero-detail-wash.jpg 933w" imagesizes="(max-width:700px) calc(100vw - 44px), 520px"><link rel="preload" as="font" type="font/woff2" href="assets/fonts/body-600-latin-v1.woff2" crossorigin>
-<script src="config.js" defer></script><script type="module" src="assets/app.mjs"></script><script type="module" src="assets/experience.mjs"></script><script type="module" src="assets/studio-motion.mjs"></script><script type="module" src="assets/reviews.mjs"></script>
+<script src="config.js" defer></script><script type="module" src="assets/app.mjs"></script><script type="module" src="assets/discover.mjs"></script><script type="module" src="assets/experience.mjs"></script><script type="module" src="assets/studio-motion.mjs"></script><script type="module" src="assets/reviews.mjs"></script>
 <!-- ff:intro:head:start --><link rel="stylesheet" href="/assets/intro-loader.css"><script src="/assets/intro-boot.js"></script><script type="module" src="/assets/intro-loader.mjs"></script><!-- ff:intro:head:end --><link rel="stylesheet" href="/assets/compliance.css"><script type="module" src="/assets/privacy.mjs"></script></head><body data-design="kinetic" data-page="home" data-root="./"><!-- ff:intro:body:start --><div class="ff-intro" id="ff-intro" role="status" aria-label="Carregando Fine Form" aria-live="off" hidden>
   <div class="intro-sheet">
     <svg class="intro-logo" viewBox="0 0 100 100" width="48" height="48" aria-hidden="true" focusable="false">
@@ -54,19 +54,49 @@
 <!-- ff:intro:body:end -->
 <a class="skip-link" href="#conteudo">Ir para o conteúdo</a><header class="site-header" data-header></header>
 <main id="conteudo" tabindex="-1">
-<section class="ff-hero" aria-labelledby="hero-title">
-<div class="hero-content"><h1 id="hero-title">Seu veículo.<br><span>Em boa forma.</span></h1><p class="hero-lead">Cuidado para carros e motos, do primeiro olhar ao último acabamento. Com atenção aos detalhes e conversa direta com Mateus.</p><div class="hero-actions"><a class="button orange" href="atendimento/">Escolher meu cuidado <span aria-hidden="true">↗</span></a></div></div>
-<figure class="hero-image" data-hero-image><img src="assets/hero-detail-wash.jpg" srcset="assets/hero-detail-wash-mobile.jpg 560w, assets/hero-detail-wash.jpg 933w" sizes="(max-width:700px) calc(100vw - 44px), 520px" decoding="async" alt="Detalhe de lavagem manual no farol de um carro preto, com espuma e esponja" width="933" height="1400" fetchpriority="high"><figcaption><span>FINE FORM <b>CAR CARE</b></span><span class="hero-photo-note">FOTOGRAFIA EDITORIAL</span></figcaption></figure>
+<section class="ff-hero ff-discover" aria-labelledby="hero-title">
+  <div class="ff-intro-copy">
+    <span class="ff-small-intro">FINE FORM · ESTÉTICA AUTOMOTIVA</span>
+    <h1 id="hero-title">Seu próximo<br><span>cuidado começa aqui.</span></h1>
+    <p>Explore os cuidados para seu carro ou moto. Escolha com calma, conheça os detalhes e peça seu orçamento.</p>
+  </div>
+  <form class="ff-search" id="ff-care-search" role="search" action="#destaques">
+    <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="10.8" cy="10.8" r="6.6"/><path d="m16 16 5 5"/></svg>
+    <label class="sr-only" for="ff-care-query">Buscar cuidados automotivos</label>
+    <input id="ff-care-query" type="search" autocomplete="off" enterkeyhint="search" placeholder="Qual cuidado você procura?">
+    <button type="submit" aria-label="Buscar cuidados"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true" stroke="currentColor" stroke-width="1.7"><path d="M4 7h16M7 12h10m-7 5h4"/><circle cx="9" cy="7" r="2"/><circle cx="15" cy="12" r="2"/></svg></button>
+  </form>
+  <a class="ff-featured-photo" href="#cuidados" aria-label="Conhecer os serviços de estética automotiva">
+    <img src="assets/hero-detail-wash.jpg" srcset="assets/hero-detail-wash-mobile.jpg 560w, assets/hero-detail-wash.jpg 933w" sizes="(max-width:700px) 100vw, 1160px" width="933" height="1400" decoding="async" fetchpriority="high" alt="Profissional realizando lavagem detalhada de um carro preto">
+    <span class="ff-featured-overlay">
+      <span class="ff-featured-tag">O CUIDADO FAZ A DIFERENÇA</span>
+      <strong>Detalhes que<br>transformam.</strong>
+      <span class="ff-featured-foot">Descubra nossos serviços <b aria-hidden="true">↗</b></span>
+    </span>
+  </a>
 </section>
-<nav class="ff-shortcuts" aria-label="Explorar cuidados da Fine Form">
- <div class="ff-shortcuts-heading"><span>Explore a Fine Form</span><a href="atendimento/">Ver atendimentos <span aria-hidden="true">↗</span></a></div>
+<nav class="ff-shortcuts" aria-label="Categorias de cuidados">
+ <div class="ff-shortcuts-heading"><h2>Categorias</h2><a href="#cuidados">Ver cuidados <span aria-hidden="true">↗</span></a></div>
  <div class="ff-shortcuts-grid">
-  <a href="#cuidados"><span class="ff-shortcut-icon" aria-hidden="true">01</span><strong>Lavagens</strong><small>Essencial e Premium</small></a>
-  <a href="#paint-treatments"><span class="ff-shortcut-icon" aria-hidden="true">02</span><strong>Polimento</strong><small>Brilho e correção</small></a>
-  <a href="#care"><span class="ff-shortcut-icon" aria-hidden="true">03</span><strong>Fine Care</strong><small>Cuidado recorrente</small></a>
-  <a href="atendimento/?vehicle=moto&service=motoPremium"><span class="ff-shortcut-icon" aria-hidden="true">04</span><strong>Motos</strong><small>Cuidados específicos</small></a>
+  <a href="#cuidados"><span class="ff-shortcut-visual"><img src="assets/hero-detail-wash-mobile.jpg" alt="" width="560" height="840" loading="lazy"></span><strong>Lavagens</strong></a>
+  <a href="atendimento/?mode=guidance&amp;area=interior"><span class="ff-shortcut-visual"><img src="assets/modern-interior-mobile.webp" alt="" width="560" height="840" loading="lazy"></span><strong>Interior</strong></a>
+  <a href="#paint-treatments"><span class="ff-shortcut-visual"><img src="assets/modern-gt3-mobile.webp" alt="" width="560" height="840" loading="lazy"></span><strong>Pintura</strong></a>
+  <a href="atendimento/?vehicle=moto&amp;service=motoPremium"><span class="ff-shortcut-visual"><img src="assets/modern-ducati-mobile.webp" alt="" width="560" height="840" loading="lazy"></span><strong>Motos</strong></a>
  </div>
 </nav>
+<section class="ff-highlights" id="destaques" aria-labelledby="ff-highlights-title">
+ <div class="ff-highlights-heading"><div><span class="ff-section-subtitle">PARA CADA NECESSIDADE</span><h2 id="ff-highlights-title">Cuidados em destaque</h2></div><a href="#cuidados">Ver todos <span aria-hidden="true">↗</span></a></div>
+ <div class="ff-filters" role="group" aria-label="Filtrar serviços">
+  <button type="button" data-ff-filter="all" aria-pressed="true">Todos</button>
+  <button type="button" data-ff-filter="wash" aria-pressed="false">Lavagens</button>
+  <button type="button" data-ff-filter="interior" aria-pressed="false">Interior</button>
+  <button type="button" data-ff-filter="paint" aria-pressed="false">Pintura</button>
+  <button type="button" data-ff-filter="moto" aria-pressed="false">Motos</button>
+ </div>
+ <div id="ff-highlight-grid" class="ff-product-grid" aria-label="Serviços disponíveis"></div>
+ <p id="ff-highlight-empty" class="ff-no-results" role="status" hidden>Nenhum cuidado corresponde à busca. Experimente outro termo ou escolha Todos.</p>
+ <p class="ff-highlight-note">Valores iniciais por serviço. A avaliação e a disponibilidade são confirmadas antes do atendimento.</p>
+</section>
 <div class="velocity-band"><div id="react-velocity"><div class="rb-static" aria-hidden="true">LIMPAR. CORRIGIR. PROTEGER. ✳</div></div></div>
 <section class="ff-section manifesto" aria-labelledby="manifesto-title"><div class="manifesto-copy"><h2 id="manifesto-title">Cada detalhe merece<br>um cuidado próprio.</h2><p>Pintura, vidros, rodas, bancos e acabamentos. Cada material pede um cuidado próprio. Na Fine Form, a gente começa entendendo o veículo e o que você quer melhorar.</p><a class="underlined-link" href="#experiencia">Encontre seu ponto de partida <span>↗</span></a></div><div class="manifesto-mark" aria-hidden="true"><img src="assets/logo-original.png" alt=""><span>FINE FORM<br>CAR CARE</span></div></section>
 <section class="ff-section care-section" id="care" aria-labelledby="care-title"><div class="care-heading"><h2 id="care-title">Cuidado que faz<br>parte da sua rotina.</h2><p>Planos mensais para um veículo cadastrado.<br>As visitas são combinadas diretamente comigo.</p></div><div id="plan-grid" class="care-showcase"></div><p class="section-footnote">Sem divisão por porte. Sujidade excepcional e tratamentos adicionais são avaliados previamente. Etapas incluídas não são cobradas novamente.</p></section>

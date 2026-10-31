@@ -1,6 +1,7 @@
 import {test} from 'node:test';
 import assert from 'node:assert/strict';
 import {JSDOM} from 'jsdom';
+import {readFileSync} from 'node:fs';
 import {mountFloatingNav} from '../dist/assets/floating-nav.mjs';
 
 function setup(page = 'home') {
@@ -48,4 +49,19 @@ test('barra libera espaço ao digitar no celular e retorna ao sair do campo', as
   input.blur(); await Promise.resolve();
   assert.equal(nav.classList.contains('ff-dock-keyboard'), false);
   window.close();
+});
+
+test('glassmorphism da barra inferior é permanente, independente da rolagem', () => {
+ const css = readFileSync(new URL('../dist/assets/studio.css', import.meta.url), 'utf8');
+ assert.match(css, /body\[data-design=kinetic\] \.ff-dock\{\s*background:rgba\(248,250,248,\.72\)/);
+ assert.match(css, /body\[data-design=kinetic\] \.ff-dock\{[\s\S]*?-webkit-backdrop-filter:blur\(24px\) saturate\(175%\)/);
+ assert.match(css, /body\[data-design=kinetic\] \.ff-dock-indicator\{/);
+ assert.match(css, /@supports not \(\(-webkit-backdrop-filter:blur\(1px\)\)/);
+ const {window,nav,scrollTo}=setup();
+ assert.equal(nav.classList.contains('is-scrolled'),false,'sem estado de scroll na barra');
+ assert.equal(nav.querySelectorAll('.ff-dock-link').length,5);
+ scrollTo(1000);
+ assert.equal(nav.classList.contains('is-scrolled'),false,'o visual não depende da rolagem');
+ assert.equal(nav.querySelector('[aria-current]')?.dataset.dock,'care','o indicador segue funcionando');
+ window.close();
 });

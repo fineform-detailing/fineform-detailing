@@ -82,8 +82,11 @@ test('a home exibe uma nova imagem e não possui as legendas removidas', async (
     assert.equal(doc.querySelectorAll('.section-index').length, 0);
     assert.equal(doc.querySelector('.hero-secondary'), null);
     assert.equal(doc.querySelector('.hero-assurance'), null);
-    assert.ok(doc.querySelector('.hero-image img').getAttribute('src').includes('modern-mclaren.webp'));
-    assert.ok(doc.querySelector('link[rel="preload"][as="image"]').getAttribute('href').includes('modern-mclaren.webp'));
+    assert.equal(doc.querySelector('.hero-image img').getAttribute('src'), 'assets/hero-detail-wash.jpg');
+    assert.match(doc.querySelector('.hero-image img').getAttribute('srcset'), /hero-detail-wash-mobile\\.jpg/);
+    assert.ok(!doc.querySelector('.hero-image img').getAttribute('src').includes('modern-mclaren'));
+    assert.equal(doc.querySelector('link[rel="preload"][as="image"]').getAttribute('href'), 'assets/hero-detail-wash.jpg');
+    assert.match(doc.querySelector('.hero-image img').getAttribute('alt'), /lavagem manual/);
   } finally { dom.window.close(); }
   for (const page of ['atendimento', 'links', 'painel', 'acompanhar', 'assinatura', 'avaliar']) {
     assert.ok(!(await readFile('dist/' + page + '/index.html', 'utf8')).includes('intro-boot.js'));
@@ -132,4 +135,17 @@ test('Comet Dial avança continuamente do 76% até o 100%, sem saltos', async ()
     if (!doc.getElementById('ff-intro').hidden) win.ffIntro.skip();
     win.close();
   }
+});
+
+test('foto da capa tem identidade própria e é servida localmente', async () => {
+  const html = await readFile('dist/index.html', 'utf8');
+  const dom = new JSDOM(html);
+  try {
+    const src = dom.window.document.querySelector('.hero-image img').getAttribute('src');
+    assert.ok(src.startsWith('assets/hero-detail-wash'));
+    assert.ok(!src.startsWith('http'));
+    for (const galleryImage of ['modern-gt3.webp','modern-interior.webp','modern-ducati.webp','modern-mclaren.webp']) {
+      assert.ok(!src.endsWith(galleryImage), 'capa não pode repetir fotos de outras seções');
+    }
+  } finally {dom.window.close();}
 });

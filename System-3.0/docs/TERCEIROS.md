@@ -10,3 +10,5 @@ O pacote preserva as fotos, fontes e logo do projeto Fine Form original. Crédit
 - Dependências npm: React, React DOM, Motion, esbuild, Wrangler, Miniflare e jsdom; versões fixadas no package-lock. As licenças desses pacotes acompanham a instalação npm.
 
 Não há efeito Ferrofluid no código do site. Esta entrega não muda a titularidade dos arquivos originais nem atribui uma nova licença geral ao projeto da Fine Form.
+
+- Foto de capa exclusiva da abertura: detalhe de lavagem de carro preto por Kaboompics, fonte [Pexels](https://www.pexels.com/photo/person-cleaning-a-black-car-4870700/), sob [licença Pexels](https://www.pexels.com/license/). O processo de build cria variantes JPEG para celular e desktop, servidas localmente em `dist/assets/hero-detail-wash*.jpg`.

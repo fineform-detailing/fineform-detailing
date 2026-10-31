@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" role="img" aria-label="Símbolo Fine Form">
+<defs>
+<filter id="ff-logo-reverse" color-interpolation-filters="sRGB">
+<feColorMatrix type="matrix" values="-1 0 0 0 1  0 -1 0 0 1  0 0 -1 0 1  0 0 0 1 0"/>
+</filter>
+<mask id="ff-logo-alpha" maskUnits="userSpaceOnUse" x="0" y="0" width="128" height="128" style="mask-type:luminance">
+<image href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAIAAAACACAYAAADDPmHLAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAOdEVYdFNvZnR3YXJlAEZpZ21hnrGWYwAABERJREFUeAHt3b9SGlEUBvCzTsok+ARoHgDGNiozUiYptFV8AKJFStBG0xDsbAikJ9pa+Kc0GTQ1o6YO+gSYpCf3IMw4FnFZ7q7n3vP9ZnbYSLrv4wJ3914CeqDX6y2Yh0VzLJljmsAH7cHxMQiCzv0nguGJCX7SPGyb4wOBz3bprghd/ke/AIPwT80xQ6ABjwZ5LsHE4A/bhPA14ay3+CQwr/5p8/iLQKM8jwBbBFotcgEw9Ou1xG8BPQK1JghUQwGUQwGUQwGUQwGUQwGUQwGUQwGUQwGUQwGUQwGUQwGUQwGUQwGUQwGUQwGUe0ae6Xa7tLyyTK2zM5Ls7+8/JIFXBeDw37x7S5eXlwThePMWcH19TbPzcwh/RF4UgMPnV/7NzQ3BaJwvwMXFBcIfg9OfAYbh397eEkTj7AjQbDYRvgVOFqBWq1Fx7T3Ct8C5AlQqFSptlAnscKoAHH6l+onAHmc+BJZKJarVPxPYJX4E4Nm9YrGI8GMiegTA1G78xI4Aw9k9hB8vkSMApnaTI24EQPjJElUAntrlK3oIPzliCtBqtTC1+wTEbBHz/OUL0kTKHUG4J1A57+4JZNlslnaqVYLHeVmAVCpFufkcwePwFqCclwXAqz887wqwubFpjg2CcLwqAMIfnTcFQPjReFEAhB+d8wVA+ONxugAIf3zOFgDh2+FkARC+Pc4VAOHb5dS1gLDh88qhw6NDSlKj0aCp9BS5xpkChA0fi0dG40QBwoaPxSOjE1+AsOHz4pHm3leC0YguQKPeoNVC4b//x5VNoaQSW4Cw4WPxyHhEfg0MEz42hbJDXAHCho/FI3aIKgDCT56YAoQJHyuH7HPmt4Ol7wj28+rKyZlAJ64F8I5g/MrHsjH7xBdguCMYxEN0AbAjWPzEFgAXdZIhsgAIPznipoJxUSdZYgrA8/rlctlK+Px1rFBYoSRNpibJRWLmAV7PzVqb18/lcnRydEzwODGfAXBR52lgebhyKIByKIByKIByKIByKIByKIByKIBy3hWAp4G/1BsE4XhVgGwmSz/OzymdThOE400BOPyT4+P+LqEQnhcF6F/8QfiROF+A1cJq/8ofwo/G6QJw+I16nSA6ZwuwvraO8C1wdpMo/B6AHdgkSjmnCoDw7XOmAAg/Hk5sErVT3TEf+tYI7BNfgDDLxiE60W8BCD9+IkcAXmSxv7+H3/5JgLgCcPg8r5/JZAjiJ+otAOEnT0wB+EYOvpaP8JMlZm0gb/yEGzmS58wmURAP3BSqHAqgHAqgHAqgHAqgHAqgHAqgHAqgHAqgHAqgHAqgHAqgHAqgHAqgHAqgHAqgHBegQ6BVmwtwQKBVm28JWzAnpwQavZoIguCbOdkl0GbXZN8J+MyMAvx7JzwKzBBo0DZH3hSg2/8WwCf8B8JIoAFnnB9kTsHDZ81oMG0etuhuNMCI4IcO3X3YPzDBf7//xD+/NIlunOQ2pQAAAABJRU5ErkJggg==" x="0" y="0" width="128" height="128" filter="url(#ff-logo-reverse)"/>
+</mask>
+</defs>
+<rect width="128" height="128" fill="#0f0f0f" mask="url(#ff-logo-alpha)"/>
+</svg>

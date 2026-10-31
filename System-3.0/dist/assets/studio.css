@@ -277,3 +277,71 @@ body.motion-paused .ff-dock,body.motion-paused .ff-dock-indicator,body.motion-pa
 
 /* Fine Form — no overlines preceding primary section headings. */
 .section-index,.closing-copy>.kicker{display:none!important}
+
+/* Fine Form — header transparente e minimalista (referência mobile).
+   Somente ícone de menu à esquerda e símbolo oficial à direita.
+   Sem barra, fundo, cápsula, sombra, bordas ou título escrito. */
+body[data-design=kinetic] .site-header{
+  position:absolute;top:0;left:0;right:0;z-index:80;transform:none;
+  width:100%;max-width:none;height:88px;margin:0;
+  padding:0 clamp(24px,5vw,72px);
+  display:flex;align-items:center;justify-content:space-between;gap:16px;
+  color:#0f0f0f;background:transparent;border:0;border-radius:0;
+  box-shadow:none;backdrop-filter:none;-webkit-backdrop-filter:none;
+}
+body[data-design=kinetic] .site-header .ff-header-menu{
+  position:relative;display:flex;align-items:center;justify-content:flex-start;
+}
+body[data-design=kinetic] .site-header .nav-toggle{
+  display:grid;place-items:center;width:44px;height:44px;padding:8px;
+  border:0;border-radius:0;background:transparent;color:#0f0f0f;
+  box-shadow:none;font-size:0;line-height:0;
+}
+body[data-design=kinetic] .site-header .nav-toggle svg{
+  display:block;width:25px;height:25px;flex:none;
+}
+body[data-design=kinetic] .site-header .brand.ff-header-mark{
+  display:flex;align-items:center;justify-content:center;flex:0 0 50px;
+  width:50px;height:50px;margin:0;padding:0;background:transparent;
+  color:#0f0f0f;text-decoration:none;border:0;box-shadow:none;
+}
+body[data-design=kinetic] .site-header .brand.ff-header-mark img{
+  display:block;width:44px;height:44px;object-fit:contain;
+  border:0;border-radius:0;background:transparent;
+  filter:none!important;mix-blend-mode:normal!important;
+}
+body[data-design=kinetic] .site-header .nav-links{
+  display:none;position:absolute;left:0;top:calc(100% + 7px);right:auto;
+  transform:none;width:min(300px,calc(100vw - 44px));
+  padding:10px;flex-direction:column;align-items:stretch;gap:3px;
+  background:#fff;border:1px solid #e8ece8;border-radius:17px;
+  box-shadow:0 14px 32px #10191519;
+}
+body[data-design=kinetic] .site-header .nav-links.open{display:flex}
+body[data-design=kinetic] .site-header .nav-links a{
+  display:flex;align-items:center;min-height:44px;padding:12px 14px;
+  border-radius:10px;font-size:14px;color:#1a2420;background:transparent;
+}
+body[data-design=kinetic] .site-header .nav-links a:hover{
+  color:#0f0f0f;background:#edf7f4;
+}
+@media(max-width:600px){
+  body[data-design=kinetic] .site-header{
+    top:0;left:0;right:0;transform:none;
+    width:100%;height:76px;padding:0 18px;border:0;border-radius:0;
+    background:transparent;box-shadow:none;
+  }
+  body[data-design=kinetic] .site-header .brand.ff-header-mark{
+    width:44px;height:44px;flex-basis:44px;
+  }
+  body[data-design=kinetic] .site-header .brand.ff-header-mark img{
+    width:39px;height:39px;
+  }
+  body[data-design=kinetic] .site-header .nav-toggle{
+    display:grid;width:44px;height:44px;border:0;background:transparent;
+  }
+  body[data-design=kinetic] .site-header .nav-links{top:calc(100% + 8px)}
+}
+@media(prefers-reduced-motion:reduce){
+ body[data-design=kinetic] .site-header .nav-links{transition:none}
+}

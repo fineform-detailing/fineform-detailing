@@ -104,8 +104,8 @@ function radiusFromCss(text,w,h){
  const n=parseFloat(text)||0;
  return clamp(text.trim().endsWith('%')?n/100*Math.min(w,h):n,0,Math.min(w,h)/2);
 }
-export function mountRefractiveSurface(el,{active=()=>true,win=window}={}){
- if(!el||!supportsRefractiveBackdrop(win.navigator)||!win.matchMedia||!win.ResizeObserver)return ()=>{};
+export function mountRefractiveSurface(el,{active=()=>true,win=globalThis.window}={}){
+ if(!el||!win||!supportsRefractiveBackdrop(win.navigator)||!win.matchMedia||!win.ResizeObserver)return ()=>{};
  if(win.matchMedia('(prefers-contrast: more)').matches||
     win.matchMedia('(prefers-reduced-transparency: reduce)').matches||
     win.navigator.connection?.saveData)return ()=>{};

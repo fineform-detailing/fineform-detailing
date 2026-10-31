@@ -30,7 +30,7 @@ test('public footer has no redundant motion toggle, while native dock links surv
     read('assets/floating-nav.mjs'), read('assets/studio.css'),
   ]);
   assert.doesNotMatch(app, /id="motion-toggle"/);
-  assert.match(motion, /const enabled=\(\)=>false;/);
+  assert.match(motion, /const enabled=\(\)=>!reduced\.matches&&!paused;/);
   assert.match(dock, /mountFloatingNav/);
   assert.match(css, /\.site-footer \.footer-bottom\{border-top:0!important\}/);
 });

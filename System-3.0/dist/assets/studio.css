@@ -348,3 +348,51 @@ body[data-design=kinetic] .site-header .nav-links a:hover{
 
 /* O indicador de leitura antigo desenhava uma linha sob a barra; no novo header não existe barra. */
 body[data-page=home] .site-header::after{display:none!important;content:none!important}
+
+/* Header Fine Form — transparência no topo; Apple-like frosted glass após scroll.
+   Fixo sem deslocar o conteúdo e sem esconder o menu ou o símbolo oficial. */
+body[data-design=kinetic] .site-header{
+ left:50%;right:auto;transform:translateX(-50%);
+ transition:top .26s ease,width .26s ease,height .26s ease,
+  padding .26s ease,border-radius .26s ease,background-color .26s ease,
+  box-shadow .26s ease,backdrop-filter .26s ease;
+}
+body[data-design=kinetic] .site-header.is-scrolled{
+ position:fixed;top:10px;left:50%;right:auto;transform:translateX(-50%);
+ width:min(1120px,calc(100% - 28px));max-width:1120px;height:70px;
+ padding:0 clamp(18px,3vw,30px);border-radius:23px;
+ border:1px solid rgba(255,255,255,.80);
+ background:rgba(248,250,248,.72);
+ -webkit-backdrop-filter:blur(24px) saturate(175%);
+ backdrop-filter:blur(24px) saturate(175%);
+ box-shadow:0 12px 34px rgba(22,35,31,.13),inset 0 1px 0 rgba(255,255,255,.78);
+}
+body[data-design=kinetic] .site-header.is-scrolled .nav-links{
+ background:rgba(255,255,255,.96);
+ -webkit-backdrop-filter:blur(18px);backdrop-filter:blur(18px);
+}
+@supports not ((-webkit-backdrop-filter:blur(1px)) or (backdrop-filter:blur(1px))){
+ body[data-design=kinetic] .site-header.is-scrolled{background:rgba(249,250,249,.97)}
+}
+/* Subir o conteúdo textual da abertura sem alterar a capa ou outras seções. */
+body[data-page=home] .ff-hero .hero-content{
+ position:relative;top:-24px;
+}
+@media(max-width:850px){
+ body[data-page=home] .ff-hero .hero-content{top:-18px}
+}
+@media(max-width:600px){
+ body[data-design=kinetic] .site-header.is-scrolled{
+  top:calc(8px + env(safe-area-inset-top,0px));
+  width:calc(100% - 22px);height:63px;padding:0 14px;
+  border-radius:20px;
+ }
+ body[data-page=home] .ff-hero{
+  padding-top:20px;gap:22px;
+ }
+ body[data-page=home] .ff-hero .hero-content{top:-12px}
+}
+@media(prefers-reduced-motion:reduce){
+ body[data-design=kinetic] .site-header{transition:none}
+}
+body.motion-paused[data-design=kinetic] .site-header{transition:none}

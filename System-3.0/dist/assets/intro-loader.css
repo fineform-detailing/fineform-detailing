@@ -1,1 +1,33 @@
 .ff-intro{--intro-cyan: #53c3b1;--intro-ink: #0f0f0f;--intro-paper: #efeee8;position:fixed;inset:0;z-index:1000;isolation:isolate;overflow:hidden;contain:layout style paint;color:var(--intro-ink);font-family:FF Sans,Arial,sans-serif}.ff-intro *,.ff-intro *:before,.ff-intro *:after{box-sizing:border-box}html:not([data-ff-intro]) .ff-intro{display:none!important}html[data-ff-intro] .ff-intro{display:block!important}html[data-ff-intro],html[data-ff-intro] body{overflow:hidden}.intro-sheet{position:absolute;inset:-3px;overflow:hidden;background:var(--intro-paper);transform-origin:100% 75%;border-left:3px solid var(--intro-ink)}.intro-sheet:before{content:"";position:absolute;pointer-events:none;inset:0;background:radial-gradient(ellipse at 50% 38%,#fff,#fff0 65%)}.intro-center{position:absolute;z-index:2;top:41%;left:0;width:100%;padding:0 24px;text-align:center;translate:0 -50%}.intro-logo{display:block;width:64px;height:64px;margin:0 auto 30px;color:var(--intro-ink)}.intro-wordmark{width:min(580px,100%);margin:0 auto;color:var(--intro-ink);line-height:0}.intro-wordmark-art{display:block;width:100%;height:auto;overflow:visible}.intro-slider{position:relative;width:min(344px,100%);height:78px;margin:38px auto 18px;border:1px solid #dedfd9;border-radius:999px;background:#e5e6e1;box-shadow:inset 0 2px 5px #0f0f0f07,0 1px #fff;isolation:isolate}.intro-slider-fill{position:absolute;inset:0;border-radius:inherit;background:var(--intro-cyan);transform:scaleX(0);transform-origin:0 50%}.intro-slider-arrow{position:absolute;right:22px;top:50%;translate:0 -52%;color:var(--intro-ink);font-family:Arial,sans-serif;font-size:34px;line-height:1}.intro-slider-handle{position:absolute;top:6px;left:6px;width:calc(100% - 88px);height:64px;display:flex;align-items:center;justify-content:center;gap:24px;margin:0;padding:0 22px;border:1px solid #fff;border-radius:inherit;background:linear-gradient(180deg,#fff,#fafaf8);box-shadow:0 5px 8px #0f0f0f14,inset 0 -2px 2px #0f0f0f04;color:var(--intro-ink);font:600 20px/1 FF Sans,Arial,sans-serif;letter-spacing:-.025em;cursor:grab;touch-action:none;user-select:none;-webkit-user-select:none;-webkit-tap-highlight-color:transparent}.intro-handle-grip{display:flex;gap:4px}.intro-handle-grip i{width:2px;height:15px;background:#b6bbb6;border-radius:3px}.intro-status{min-height:22px;margin:0;color:#505953;font-size:12px;line-height:1.6;letter-spacing:.01em}.ff-intro[data-phase=dragging] .intro-slider-handle{cursor:grabbing}.ff-intro[data-phase=ready] .intro-slider-handle,.ff-intro[data-phase=ready] .intro-slider-fill,.ff-intro[data-phase=ready] .intro-tentacle,.ff-intro[data-phase=ready] .intro-arm-tip{transition:transform .22s cubic-bezier(.18,.8,.2,1)}.intro-slider-handle:focus-visible,.intro-skip:focus-visible{outline:3px solid #247467;outline-offset:4px}.intro-skip{position:absolute;z-index:2;right:5vw;bottom:max(20px,env(safe-area-inset-bottom));display:flex;align-items:center;gap:20px;min-height:44px;padding:10px 15px;border:1px solid #0f0f0f30;border-radius:50px;background:#f8f8f3;color:var(--intro-ink);font:500 11px/1.4 FF Sans,Arial,sans-serif;cursor:pointer}.intro-skip>span{font-size:18px}.intro-tentacle{position:absolute;pointer-events:none;width:124%;right:-12%;height:clamp(220px,37vh,400px);height:clamp(220px,37svh,400px);bottom:-30px;transform:translate3d(24%,8%,0) rotate(3deg);transform-origin:100% 100%}.intro-tentacle-art{display:block;width:100%;height:100%;overflow:visible}.intro-arm-tip{transform-box:fill-box;transform-origin:90% 90%}.intro-fold{position:absolute;left:0;bottom:clamp(185px,28vh,290px);bottom:clamp(185px,28svh,290px);width:clamp(36px,6vw,72px);height:88px;opacity:0;background:linear-gradient(110deg,#bde8e1,#fff 86%);clip-path:polygon(0 0,100% 38%,100% 64%,0 100%);transform-origin:0 50%}.intro-grip-spark{position:absolute;pointer-events:none;left:5%;bottom:clamp(232px,34vh,350px);bottom:clamp(232px,34svh,350px);width:48px;height:48px;opacity:0}.intro-grip-spark>span{position:absolute;width:3px;height:15px;background:var(--intro-ink);border-radius:3px}.intro-grip-spark>span:nth-child(1){left:1px;top:18px;rotate:-68deg}.intro-grip-spark>span:nth-child(2){left:18px;top:0;rotate:-10deg}.intro-grip-spark>span:nth-child(3){left:36px;top:9px;rotate:45deg}html[data-ff-intro]:not([data-ff-intro=revealing]) .ff-hero *,html[data-ff-intro]:not([data-ff-intro=revealing]) .ff-hero:before,html[data-ff-intro]:not([data-ff-intro=revealing]) .hero-content h1>span:after,html[data-ff-intro]:not([data-ff-intro=revealing]) .native-marquee-track{animation-play-state:paused!important}@media(max-width:600px){.intro-logo{margin-bottom:28px}.intro-skip{right:23px;bottom:max(19px,env(safe-area-inset-bottom));gap:13px;padding-inline:13px;font-size:11px}.intro-tentacle{bottom:-20px}}@media(max-height:640px){.intro-center{top:40%}.intro-logo{width:52px;height:52px;margin-bottom:20px}.intro-wordmark{max-width:380px}.intro-slider{margin-top:26px}.intro-tentacle{height:190px;bottom:-36px}}@media(max-height:450px)and (orientation:landscape){.intro-center{top:44%}.intro-logo{width:40px;height:40px;margin-bottom:14px}.intro-wordmark{max-width:290px}.intro-slider{height:64px;margin-top:18px;margin-bottom:8px}.intro-slider-handle{height:50px;font-size:18px}.intro-tentacle{height:136px;bottom:-36px}}@media(prefers-reduced-motion:reduce){.ff-intro *,.ff-intro *:before,.ff-intro *:after{transition:none!important;animation:none!important}}
+
+
+/* Racing-lettering treatment applied to the EXISTING Fine Form vector wordmark.
+   Preserves the approved identity; no external font download or logo replacement. */
+.ff-intro .intro-wordmark-art{
+  transform:skewX(-11deg) scaleX(.92);
+  transform-origin:50% 50%;
+  overflow:visible;
+  backface-visibility:hidden;
+}
+.ff-intro .intro-wordmark{
+  overflow:visible;
+}
+.ff-intro .intro-wordmark:after{
+  content:"";display:block;
+  width:24%;max-width:112px;height:3px;
+  margin:15px 12% 0 auto;
+  border-radius:4px;
+  background:linear-gradient(90deg,transparent,#53c3b1 30%,#17806d);
+  transform:skewX(-22deg);
+}
+@media(max-width:600px){
+  .ff-intro .intro-wordmark-art{
+    transform:skewX(-10deg) scaleX(.87);
+  }
+  .ff-intro .intro-wordmark:after{
+    width:28%;height:2px;margin-top:11px;
+  }
+}
+@media(prefers-reduced-motion:reduce){
+  .ff-intro .intro-wordmark-art{transition:none!important}
+}

@@ -67,59 +67,60 @@ test('glassmorphism da barra inferior é permanente, independente da rolagem', (
 });
 
 
-test('ao rolar o dock vira círculo de vidro com ícone e retorna expandido', async () => {
+test('durante a rolagem o dock só desaparece por opacidade e volta inteiro', async () => {
  const {window,nav}=setup('home');
  Object.defineProperty(window,'scrollY',{configurable:true,writable:true,value:0});
- const compact=nav.querySelector('.ff-dock-compact');
- assert.ok(compact && compact.querySelector('svg'),'ícone acessível disponível');
- assert.equal(compact.hidden,true);
- assert.equal(nav.classList.contains('ff-dock-collapsed'),false);
+ assert.equal(nav.querySelectorAll('.ff-dock-link').length,5);
+ assert.equal(nav.querySelector('.ff-dock-compact'),null,'botão circular removido');
+ assert.equal(nav.classList.contains('ff-dock-scroll-hidden'),false);
  window.scrollY=120;window.dispatchEvent(new window.Event('scroll'));
- assert.equal(nav.classList.contains('ff-dock-collapsed'),true);
- assert.equal(compact.hidden,false);
- assert.equal(nav.querySelectorAll('.ff-dock-link').length,5,'links originais preservados');
- assert.equal(nav.querySelector('.ff-dock-link').tabIndex,-1,'links recolhidos não recebem foco');
- await new Promise(resolve=>window.setTimeout(resolve,120));
+ assert.ok(nav.classList.contains('ff-dock-scroll-hidden'));
+ assert.ok(!nav.classList.contains('ff-dock-collapsed'),'barra nunca encolhe');
+ assert.equal(nav.querySelector('.ff-dock-link').tabIndex,-1);
+ await new Promise(resolve=>window.setTimeout(resolve,100));
  window.scrollY=250;window.dispatchEvent(new window.Event('scroll'));
  await new Promise(resolve=>window.setTimeout(resolve,160));
- assert.equal(nav.classList.contains('ff-dock-collapsed'),true,'ainda rolando');
- await new Promise(resolve=>window.setTimeout(resolve,135));
- assert.equal(nav.classList.contains('ff-dock-collapsed'),false,'retorna quando a rolagem para');
- assert.equal(compact.hidden,true);
+ assert.ok(nav.classList.contains('ff-dock-scroll-hidden'),'ainda rolando');
+ await new Promise(resolve=>window.setTimeout(resolve,165));
+ assert.equal(nav.classList.contains('ff-dock-scroll-hidden'),false,'reaparece ao parar');
+ assert.equal(nav.querySelectorAll('.ff-dock-link').length,5);
  assert.equal(nav.querySelector('.ff-dock-link').tabIndex,0);
- const css=readFileSync(new URL('../dist/assets/studio.css',import.meta.url),'utf8');
- assert.match(css,/\.ff-dock\.ff-dock-collapsed\s*\{/);
- assert.match(css,/width:56px;\s*height:56px/);
- assert.match(css,/backdrop-filter:blur\(24px\) saturate\(175%\)/);
  window.close();
 });
-
-test('o círculo abre a navegação ao toque sem trocar os destinos', async () => {
- const {window,nav}=setup('booking');
- Object.defineProperty(window,'scrollY',{configurable:true,writable:true,value:0});
- window.scrollY=180;window.dispatchEvent(new window.Event('scroll'));
- const compact=nav.querySelector('.ff-dock-compact');
- assert.equal(compact.hidden,false);
- compact.click();
- assert.equal(nav.classList.contains('ff-dock-collapsed'),false);
- assert.equal(compact.hidden,true);
- assert.equal(nav.querySelector('[data-dock="quote"]').getAttribute('aria-current'),'page');
- await new Promise(resolve=>window.setTimeout(resolve,310));
- assert.equal(nav.classList.contains('ff-dock-collapsed'),false,'toque limpa o timer');
- window.close();
-});
-
-test('o dock combina com o header, menos transparente e com tamanho menor', () => {
+test('fade não altera dimensões nem acabamento Liquid Glass', () => {
  const css=readFileSync(new URL('../dist/assets/studio.css',import.meta.url),'utf8');
+ assert.match(css,/\.ff-dock\.ff-dock-scroll-hidden\s*\{/);
+ const fade=css.slice(css.indexOf('/* Fade discreto da barra inteira'));
+ assert.match(fade,/opacity:0/);
+ assert.match(fade,/visibility:hidden/);
+ assert.match(fade,/transition:opacity \.26s ease,visibility \.26s ease/);
+ assert.ok(!fade.includes('width:56px'),'nenhum tamanho compacto');
+ assert.ok(!css.includes('ff-dock-collapsed'),'classe de encolhimento removida');
+ assert.ok(!css.includes('ff-dock-compact'),'botão circular removido');
  assert.match(css,/Refinamento: mesmo acabamento do header/);
- assert.match(css,/width:min\(390px,calc\(100% - 36px\)\)/);
- assert.match(css,/height:72px/);
- assert.match(css,/background:rgba\(248,250,248,\.86\)/);
- assert.match(css,/width:56px;height:56px;min-width:56px/);
- assert.match(css,/width:54px;height:54px;min-width:54px/);
  assert.match(css,/backdrop-filter:blur\(24px\) saturate\(175%\)/);
 });
-
+test('tocar no segundo botão ativa Cuidados com animação imediatamente', () => {
+ const {window,nav}=setup('home');
+ const second=nav.querySelector('[data-dock="care"]');
+ assert.ok(second);
+ second.click();
+ assert.equal(nav.dataset.active,'care');
+ assert.equal(second.getAttribute('aria-current'),'location');
+ assert.ok(second.classList.contains('is-selected'));
+ assert.equal(nav.style.getPropertyValue('--dock-columns'),'1fr 2.3fr 1fr 1fr 1fr');
+ assert.equal(nav.querySelectorAll('[aria-current]').length,1);
+ window.close();
+});
+test('Cuidados recebe destaque mesmo quando a seção Care aparece antes no documento', () => {
+ const {window,nav,scrollTo}=setup('home');
+ window.document.querySelector('#care').getBoundingClientRect=()=>({top:200-1000,bottom:600-1000});
+ window.document.querySelector('#cuidados').getBoundingClientRect=()=>({top:900-1000,bottom:1800-1000});
+ scrollTo(1000);
+ assert.equal(nav.dataset.active,'care');
+ assert.equal(nav.querySelector('[aria-current]').dataset.dock,'care');
+ window.close();
+});
 test('dock segmentado mantém cinco rotas e abre cápsula animada somente na aba ativa', () => {
  const {window,nav,scrollTo}=setup();
  const links=[...nav.querySelectorAll('.ff-dock-link')];

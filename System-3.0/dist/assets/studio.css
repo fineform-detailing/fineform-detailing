@@ -423,83 +423,6 @@ body[data-design=kinetic] .ff-dock-indicator{
  body[data-design=kinetic] .ff-dock-indicator{background:#c3ece1}
 }
 
-/* Fine Form: navegação inferior que se recolhe em botão circular ao rolar.
-   Usa o vidro fosco suave anterior, sem filtros SVG nem refração de imagem. */
-body[data-design=kinetic] .ff-dock {
- transition:width .37s cubic-bezier(.22,1,.36,1),
-  height .37s cubic-bezier(.22,1,.36,1),
-  padding .37s cubic-bezier(.22,1,.36,1),
-  border-radius .37s cubic-bezier(.22,1,.36,1),
-  opacity .2s ease,visibility .2s ease;
-}
-body[data-design=kinetic] .ff-dock.ff-dock-collapsed {
- width:56px;
- height:56px;
- min-width:56px;
- padding:0;
- border-radius:50%;
- grid-template-columns:minmax(0,1fr);
- background:rgba(248,250,248,.86);
- border:1px solid rgba(255,255,255,.88);
- -webkit-backdrop-filter:blur(24px) saturate(175%);
- backdrop-filter:blur(24px) saturate(175%);
- box-shadow:0 12px 34px rgba(22,35,31,.13),inset 0 1px 0 rgba(255,255,255,.78);
- opacity:1;
- visibility:visible;
- pointer-events:auto;
- transform:translateX(-50%);
- overflow:hidden;
-}
-body[data-design=kinetic] .ff-dock.ff-dock-collapsed>.ff-dock-link,
-body[data-design=kinetic] .ff-dock.ff-dock-collapsed>.ff-dock-indicator {
- display:none!important;
-}
-.ff-dock .ff-dock-compact[hidden] {display:none!important}
-body[data-design=kinetic] .ff-dock .ff-dock-compact {
- display:grid;
- place-items:center;
- position:absolute;
- inset:0;
- width:100%;
- height:100%;
- padding:0;
- margin:0;
- border:0;
- border-radius:50%;
- background:transparent;
- color:#205f54;
- cursor:pointer;
- -webkit-tap-highlight-color:transparent;
- animation:ff-dock-expand-icon .23s ease both;
-}
-body[data-design=kinetic] .ff-dock .ff-dock-compact svg {
- width:22px;height:22px;stroke-width:1.8;
-}
-body[data-design=kinetic] .ff-dock .ff-dock-compact:focus-visible {
- outline:2px solid #176d5a;outline-offset:-5px;
-}
-@keyframes ff-dock-expand-icon {
- from {opacity:0;transform:scale(.83)}
- to {opacity:1;transform:scale(1)}
-}
-@media(max-width:359px) {
- body[data-design=kinetic] .ff-dock.ff-dock-collapsed {
-  width:54px;height:54px;min-width:54px;
- }
-}
-@media(prefers-reduced-motion:reduce) {
- body[data-design=kinetic] .ff-dock,
- body[data-design=kinetic] .ff-dock .ff-dock-compact {
-  transition:none;animation:none;
- }
-}
-@media(prefers-contrast:more),(prefers-reduced-transparency:reduce) {
- body[data-design=kinetic] .ff-dock.ff-dock-collapsed {
-  background:rgba(255,255,255,.98);border-color:#40574f;
-  -webkit-backdrop-filter:none;backdrop-filter:none;
- }
-}
-
 /* Entrada de texto, modal e loader têm prioridade sobre o dock recolhido. */
 body[data-design=kinetic] .ff-dock.ff-dock-keyboard,
 html[data-ff-intro] body[data-design=kinetic] .ff-dock,
@@ -507,8 +430,7 @@ body[data-design=kinetic]:has(dialog[open]) .ff-dock {
  opacity:0!important;visibility:hidden!important;pointer-events:none!important;
 }
 
-/* Refinamento: mesmo acabamento do header, mais legível e um pouco menor.
-   Mantém a animação que transforma o dock em um único círculo. */
+/* Refinamento: mesmo acabamento do header, sem reduzir durante a rolagem. */
 body[data-design=kinetic] .ff-dock {
  width:min(390px,calc(100% - 36px));
  height:72px;
@@ -523,34 +445,13 @@ body[data-design=kinetic] .ff-dock-indicator {
  left:8px;top:8px;
  width:calc((100% - 16px)/5);height:54px;
 }
-body[data-design=kinetic] .ff-dock .ff-dock-link {
- height:58px;
-}
-body[data-design=kinetic] .ff-dock-primary .ff-dock-icon {
- width:45px;height:45px;border-width:3px;
-}
-body[data-design=kinetic] .ff-dock.ff-dock-collapsed {
- width:56px;height:56px;min-width:56px;
- padding:0;
- background:rgba(248,250,248,.86);
-}
-@media(max-width:359px) {
- body[data-design=kinetic] .ff-dock {
-  width:calc(100% - 24px);
- }
- body[data-design=kinetic] .ff-dock.ff-dock-collapsed {
-  width:54px;height:54px;min-width:54px;
+body[data-design=kinetic] .ff-dock .ff-dock-link {height:58px}
+@media(prefers-contrast:more),(prefers-reduced-transparency:reduce){
+ body[data-design=kinetic] .ff-dock{
+  background:rgba(255,255,255,.98);border-color:#40574f;
+  -webkit-backdrop-filter:none;backdrop-filter:none;
  }
 }
-@media(prefers-contrast:more),(prefers-reduced-transparency:reduce) {
- body[data-design=kinetic] .ff-dock,
- body[data-design=kinetic] .ff-dock.ff-dock-collapsed{
-  background:rgba(255,255,255,.98);
-  border-color:#40574f;
-  backdrop-filter:none;-webkit-backdrop-filter:none;
- }
-}
-
 
 /* Fine Form Care — cards compactos, sem selos ou setas redundantes. */
 .care-section .care-showcase{max-width:980px;margin-inline:auto}
@@ -752,7 +653,7 @@ body[data-page=home] .closing-section{padding-top:0}
 
 /* Fine Form Liquid Glass segmented dock — referência: aba ativa em cápsula.
    A navegação nativa, o recolhimento no scroll, o loader e o teclado continuam funcionando. */
-body[data-design=kinetic] .ff-dock:not(.ff-dock-collapsed){
+body[data-design=kinetic] .ff-dock{
  width:min(426px,calc(100% - 28px));
  height:72px;
  padding:7px 9px;
@@ -773,13 +674,13 @@ body[data-design=kinetic] .ff-dock:not(.ff-dock-collapsed){
   border-radius .37s cubic-bezier(.22,1,.36,1),
   opacity .2s ease,visibility .2s ease;
 }
-body[data-design=kinetic] .ff-dock:not(.ff-dock-collapsed)::before{
+body[data-design=kinetic] .ff-dock::before{
  content:"";position:absolute;inset:1px;z-index:-1;pointer-events:none;
  border-radius:24px;
  background:linear-gradient(154deg,rgba(255,255,255,.35),rgba(255,255,255,0) 58%);
 }
 body[data-design=kinetic] .ff-dock-indicator{display:none!important}
-body[data-design=kinetic] .ff-dock:not(.ff-dock-collapsed)>.ff-dock-link{
+body[data-design=kinetic] .ff-dock>.ff-dock-link{
  position:relative;min-width:0;width:100%;height:54px;
  padding:0 5px;gap:0;
  flex-direction:row;align-items:center;justify-content:center;
@@ -810,7 +711,7 @@ body[data-design=kinetic] .ff-dock .ff-dock-label{
   margin .42s cubic-bezier(.22,1,.36,1),
   opacity .2s ease,transform .32s cubic-bezier(.22,1,.36,1);
 }
-body[data-design=kinetic] .ff-dock:not(.ff-dock-collapsed)>.ff-dock-link[aria-current]{
+body[data-design=kinetic] .ff-dock>.ff-dock-link[aria-current]{
  padding:0 10px;
  gap:0;
  color:#f8fbfa;
@@ -836,21 +737,21 @@ body[data-design=kinetic] .ff-dock .ff-dock-link:focus-visible{
  outline:2px solid #16836f;outline-offset:-2px;
 }
 @media(hover:hover) and (pointer:fine){
- body[data-design=kinetic] .ff-dock:not(.ff-dock-collapsed)>.ff-dock-link:not([aria-current]):hover{
+ body[data-design=kinetic] .ff-dock>.ff-dock-link:not([aria-current]):hover{
   background:rgba(83,195,177,.14);color:#124b42;
  }
- body[data-design=kinetic] .ff-dock:not(.ff-dock-collapsed)>.ff-dock-link[aria-current]:hover{
+ body[data-design=kinetic] .ff-dock>.ff-dock-link[aria-current]:hover{
   color:#fff;background:linear-gradient(150deg,#293839,#111719);
  }
 }
 @media(max-width:359px){
- body[data-design=kinetic] .ff-dock:not(.ff-dock-collapsed){
+ body[data-design=kinetic] .ff-dock{
   width:calc(100% - 18px);padding:6px;gap:0;height:66px;
  }
- body[data-design=kinetic] .ff-dock:not(.ff-dock-collapsed)>.ff-dock-link{
+ body[data-design=kinetic] .ff-dock>.ff-dock-link{
   height:50px;padding:0 3px;border-radius:17px;
  }
- body[data-design=kinetic] .ff-dock:not(.ff-dock-collapsed)>.ff-dock-link[aria-current]{
+ body[data-design=kinetic] .ff-dock>.ff-dock-link[aria-current]{
   padding:0 6px;
  }
  body[data-design=kinetic] .ff-dock .ff-dock-label{font-size:11px}
@@ -863,23 +764,39 @@ body[data-design=kinetic] .ff-dock .ff-dock-link:focus-visible{
  body[data-design=kinetic] .ff-dock .ff-dock-icon svg{width:20px;height:20px}
 }
 @media(prefers-reduced-motion:reduce){
- body[data-design=kinetic] .ff-dock:not(.ff-dock-collapsed),
+ body[data-design=kinetic] .ff-dock,
  body[data-design=kinetic] .ff-dock .ff-dock-link,
  body[data-design=kinetic] .ff-dock .ff-dock-label{
   transition:none!important;animation:none!important;
  }
 }
-body.motion-paused[data-design=kinetic] .ff-dock:not(.ff-dock-collapsed),
+body.motion-paused[data-design=kinetic] .ff-dock,
 body.motion-paused[data-design=kinetic] .ff-dock .ff-dock-link,
 body.motion-paused[data-design=kinetic] .ff-dock .ff-dock-label{
  transition:none!important;animation:none!important;
 }
 @media(prefers-contrast:more),(prefers-reduced-transparency:reduce){
- body[data-design=kinetic] .ff-dock:not(.ff-dock-collapsed){
+ body[data-design=kinetic] .ff-dock{
   background:#fff;border-color:#546c61;
   -webkit-backdrop-filter:none;backdrop-filter:none;
  }
  body[data-design=kinetic] .ff-dock .ff-dock-link[aria-current]{
   background:#101919;border-color:#101919;color:#fff;
  }
+}
+
+/* Fade discreto da barra inteira ao rolar — sem encolhimento. */
+body[data-design=kinetic] .ff-dock {
+ transition:opacity .26s ease,visibility .26s ease;
+}
+body[data-design=kinetic] .ff-dock.ff-dock-scroll-hidden {
+ opacity:0;
+ visibility:hidden;
+ pointer-events:none;
+}
+@media(prefers-reduced-motion:reduce){
+ body[data-design=kinetic] .ff-dock{transition:none!important}
+}
+body.motion-paused[data-design=kinetic] .ff-dock{
+ transition:none!important;
 }

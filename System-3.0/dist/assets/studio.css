@@ -274,3 +274,6 @@ html[data-ff-intro] .ff-dock,body:has(dialog[open]) .ff-dock,.ff-dock.ff-dock-ke
 @media(prefers-reduced-motion:reduce){.ff-dock,.ff-dock-indicator,.ff-dock .ff-dock-link,.ff-dock-primary .ff-dock-icon{transition:none}}
 body.motion-paused .ff-dock,body.motion-paused .ff-dock-indicator,body.motion-paused .ff-dock .ff-dock-link,body.motion-paused .ff-dock-primary .ff-dock-icon{transition:none}
 @media print{.ff-dock{display:none}body.has-ff-dock{padding-bottom:0}}
+
+/* Fine Form — no overlines preceding primary section headings. */
+.section-index,.closing-copy>.kicker{display:none!important}

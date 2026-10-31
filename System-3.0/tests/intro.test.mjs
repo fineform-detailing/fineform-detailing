@@ -82,11 +82,12 @@ test('a home exibe uma nova imagem e não possui as legendas removidas', async (
     assert.equal(doc.querySelectorAll('.section-index').length, 0);
     assert.equal(doc.querySelector('.hero-secondary'), null);
     assert.equal(doc.querySelector('.hero-assurance'), null);
-    assert.equal(doc.querySelector('.hero-image img').getAttribute('src'), 'assets/hero-detail-wash.jpg');
-    assert.ok(doc.querySelector('.hero-image img').getAttribute('srcset').includes('assets/hero-detail-wash-mobile.jpg 560w'));
-    assert.ok(!doc.querySelector('.hero-image img').getAttribute('src').includes('modern-mclaren'));
-    assert.equal(doc.querySelector('link[rel="preload"][as="image"]').getAttribute('href'), 'assets/hero-detail-wash.jpg');
-    assert.match(doc.querySelector('.hero-image img').getAttribute('alt'), /lavagem manual/);
+    assert.equal(doc.querySelector('.hero-image img').getAttribute('src'), 'assets/hero-post-cup.webp');
+    assert.equal(doc.querySelector('.hero-image figcaption'), null);
+    assert.equal(doc.querySelector('.velocity-band'), null);
+    assert.equal(doc.querySelector('link[rel="preload"][as="image"]').getAttribute('href'), 'assets/hero-post-cup.webp');
+    assert.match(doc.querySelector('.hero-image img').getAttribute('alt'), /copo medidor/i);
+    assert.match(doc.querySelector('#hero-title span').getAttribute('style'), /text-decoration:none/);
   } finally { dom.window.close(); }
   for (const page of ['atendimento', 'links', 'painel', 'acompanhar', 'assinatura', 'avaliar']) {
     assert.ok(!(await readFile('dist/' + page + '/index.html', 'utf8')).includes('intro-boot.js'));
@@ -142,8 +143,9 @@ test('foto da capa tem identidade própria e é servida localmente', async () =>
   const dom = new JSDOM(html);
   try {
     const src = dom.window.document.querySelector('.hero-image img').getAttribute('src');
-    assert.ok(src.startsWith('assets/hero-detail-wash'));
+    assert.ok(src.startsWith('assets/hero-post-cup'));
     assert.ok(!src.startsWith('http'));
+    assert.ok((await readFile('dist/' + src)).byteLength > 2000, 'imagem deve estar incluída nos assets locais');
     for (const galleryImage of ['modern-gt3.webp','modern-interior.webp','modern-ducati.webp','modern-mclaren.webp']) {
       assert.ok(!src.endsWith(galleryImage), 'capa não pode repetir fotos de outras seções');
     }

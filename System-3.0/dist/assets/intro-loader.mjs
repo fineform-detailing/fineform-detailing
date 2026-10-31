@@ -89,7 +89,7 @@
     const promise = new Promise(done => { resolve = done; });
     const inert = [...doc.querySelectorAll('body > header, body > main, body > footer, body > .skip-link')].map(el => ({el, inert: el.hasAttribute('inert')}));
     for (const entry of inert) entry.el.setAttribute('inert', '');
-    const run = { promise, resolve, inert, previous: doc.activeElement, raf: 0, watchdog: 0, exitTimer: 0, started: performance.now(), ready: false, finishing: false };
+    const run = { promise, resolve, inert, previous: doc.activeElement, raf: 0, watchdog: 0, exitTimer: 0, started: performance.now(), ready: false, finishing: false, progress: 0, finishStartedAt: null, finishFrom: 0 };
     active = run;
     shell.hidden = false;
     shell.classList.remove('is-finishing');
@@ -101,10 +101,26 @@
     const frame = now => {
       if (active !== run) return;
       const ms = Math.max(0, now - run.started);
-      const calculated = Math.min(96, Math.pow(Math.min(1, ms / 1700), .84) * 96);
-      const done = (run.ready && ms > 1350) || ms > 2800;
-      set(done ? 100 : calculated);
-      if (done && !run.finishing) {
+
+      // The waiting phase approaches 96%; starting the final phase never jumps to 100%.
+      if (run.finishStartedAt === null) {
+        const fraction = Math.min(1, ms / 2050);
+        run.progress = Math.max(run.progress, 96 * (1 - Math.pow(1 - fraction, 1.45)));
+        if ((run.ready && ms >= 1250) || ms >= 2900) {
+          run.finishStartedAt = now;
+          run.finishFrom = run.progress;
+        }
+      }
+
+      // Animate the remaining arc from the value actually displayed, including 76–99%.
+      if (run.finishStartedAt !== null) {
+        const fraction = Math.min(1, (now - run.finishStartedAt) / 740);
+        const eased = (1 - Math.cos(Math.PI * fraction)) / 2;
+        run.progress = run.finishFrom + (100 - run.finishFrom) * eased;
+      }
+      set(run.progress);
+
+      if (run.finishStartedAt !== null && now - run.finishStartedAt >= 740 && !run.finishing) {
         run.finishing = true;
         shell.classList.add('is-finishing');
         status.textContent = 'Tudo pronto';

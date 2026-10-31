@@ -83,7 +83,7 @@ body[data-page=home] .care-feature[data-active=false]{
 body[data-page=home] .care-photo{
  flex:0 0 auto;min-height:0;
  height:auto;aspect-ratio:1 / 1.10;
- position:relative;overflow:hidden;
+ position:relative;overflow:visible;
  border-radius:19px;
  background:#10544a;
  isolation:isolate;
@@ -91,7 +91,7 @@ body[data-page=home] .care-photo{
 body[data-page=home] .care-photo img{
  display:block;width:100%;height:100%;
  object-fit:cover;object-position:center 49%;
- filter:saturate(.86) contrast(1.03);
+ filter:saturate(.86) contrast(1.03);border-radius:19px;
 }
 body[data-page=home] .care-photo:after{
  content:"";position:absolute;inset:0;pointer-events:none;
@@ -107,13 +107,13 @@ body[data-page=home] .care-photo-number{
  font-size:10px;color:#fff;
 }
 body[data-page=home] .care-photo-arrow{
- position:absolute;z-index:2;bottom:16px;right:16px;
+ position:absolute;z-index:2;bottom:-21px;left:calc(50% - 22.5px);right:auto;
  display:grid;place-items:center;width:45px;height:45px;
  border:1px solid #ffffffce;border-radius:50%;
  background:#101514;color:#fff;transform:rotate(90deg);
 }
 body[data-page=home] .care-copy{
- padding:19px 12px 13px;
+ padding:34px 12px 13px;
  display:flex;flex:1;flex-direction:column;
  min-width:0;width:100%;max-width:none;
  background:#fff;
@@ -209,7 +209,7 @@ body[data-page=home] .care-section .section-footnote{
  }
  body[data-page=home] .care-feature{border-radius:24px;padding:9px}
  body[data-page=home] .care-photo{aspect-ratio:1/1.04}
- body[data-page=home] .care-copy{padding:17px 9px 12px}
+ body[data-page=home] .care-copy{padding:34px 9px 12px}
  body[data-page=home] .care-copy h3{font-size:23px}
  body[data-page=home] .care-controls{margin-top:5px}
  body[data-page=home] .care-section .section-footnote{padding:0 23px}

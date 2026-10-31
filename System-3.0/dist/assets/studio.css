@@ -483,3 +483,69 @@ body[data-design=kinetic] .ff-dock.ff-dock-scrolling{
  }
  body[data-design=kinetic] .ff-dock-indicator{background:#d0f2e9}
 }
+
+/* Fine Form: Liquid Glass optics. Adapted from stormaref/LiquidGlassSkill (MIT).
+ * Real edge displacement in Chromium; legible CSS frost everywhere else.
+ * Keep tint almost colorless: the hue belongs to the backdrop, not the glass.
+ * The previous scroll/dock behavior and approved loader are unchanged. */
+body[data-design=kinetic] .site-header.is-scrolled,
+body[data-design=kinetic] .ff-dock{
+ background:linear-gradient(175deg,rgba(255,255,255,.10),rgba(179,179,179,.07) 78%,rgba(255,255,255,.08));
+ border:1px solid rgba(255,255,255,.65);
+ box-shadow:
+  0 14px 32px rgba(24,40,36,.13),
+  0 3px 10px rgba(14,33,28,.08),
+  inset 0 1px 0 rgba(255,255,255,.60),
+  inset 0 0 0 1px rgba(255,255,255,.13),
+  inset 0 -1px 0 rgba(255,255,255,.08);
+ -webkit-backdrop-filter:blur(5px) saturate(155%);
+ backdrop-filter:blur(5px) saturate(155%);
+}
+body[data-design=kinetic] .site-header.is-scrolled::before,
+body[data-design=kinetic] .ff-dock::before{
+ content:"";position:absolute;inset:0;border-radius:inherit;
+ pointer-events:none;z-index:0;
+ background:
+  radial-gradient(ellipse 90% 65% at 12% -20%,rgba(255,255,255,.34),transparent 70%),
+  radial-gradient(ellipse 90% 65% at 88% 125%,rgba(83,195,177,.10),transparent 72%);
+ box-shadow:inset 0 2px 2px rgba(255,255,255,.49),
+  inset 1px 0 1px rgba(255,255,255,.28),
+  inset 0 -2px 2px rgba(77,113,104,.11);
+}
+body[data-design=kinetic] .site-header.is-scrolled>.ff-header-menu,
+body[data-design=kinetic] .site-header.is-scrolled>.ff-header-mark,
+body[data-design=kinetic] .ff-dock>.ff-dock-link{
+ position:relative;z-index:2;
+}
+body[data-design=kinetic] .ff-dock .ff-dock-indicator{
+ z-index:0;
+ background:linear-gradient(150deg,rgba(255,255,255,.29),rgba(83,195,177,.22) 65%,rgba(255,255,255,.17));
+ border:0;border-radius:28px;
+ box-shadow:inset 0 1px 1px rgba(255,255,255,.54);
+}
+body[data-design=kinetic] .ff-dock .ff-dock-primary .ff-dock-icon{
+ background:linear-gradient(145deg,#a3e9dd,#53c3b1 58%,#2da28e);
+ border-color:rgba(230,255,249,.83);
+ box-shadow:0 3px 10px rgba(31,117,99,.17),inset 0 1px 2px rgba(255,255,255,.45);
+}
+body[data-design=kinetic] .site-header.is-scrolled.ff-optical-active,
+body[data-design=kinetic] .ff-dock.ff-optical-active{
+ /* The JS only applies this class when the SVG refraction filter exists. */
+ -webkit-backdrop-filter:blur(5px) saturate(155%);
+}
+body[data-design=kinetic] .ff-dock.ff-dock-scrolling{
+ opacity:0;visibility:hidden;pointer-events:none;
+ transform:translate(-50%,18px) scale(.97);
+}
+@media(prefers-contrast:more),(prefers-reduced-transparency:reduce){
+ body[data-design=kinetic] .site-header.is-scrolled,
+ body[data-design=kinetic] .ff-dock{
+  background:rgba(250,252,251,.97);
+  border-color:#72827c;
+  -webkit-backdrop-filter:none!important;backdrop-filter:none!important;
+ }
+}
+@supports not ((-webkit-backdrop-filter:blur(1px)) or (backdrop-filter:blur(1px))){
+ body[data-design=kinetic] .site-header.is-scrolled,
+ body[data-design=kinetic] .ff-dock{background:rgba(250,252,251,.96)}
+}

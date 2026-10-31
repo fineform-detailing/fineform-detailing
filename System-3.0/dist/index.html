@@ -8,7 +8,18 @@
 <script src="config.js" defer></script><script type="module" src="assets/app.mjs"></script><script type="module" src="assets/experience.mjs"></script><script type="module" src="assets/studio-motion.mjs"></script><script type="module" src="assets/reviews.mjs"></script>
 <!-- ff:intro:head:start --><link rel="stylesheet" href="/assets/intro-loader.css"><script src="/assets/intro-boot.js"></script><script type="module" src="/assets/intro-loader.mjs"></script><!-- ff:intro:head:end --><link rel="stylesheet" href="/assets/compliance.css"><script type="module" src="/assets/privacy.mjs"></script></head><body data-design="kinetic" data-page="home" data-root="./"><!-- ff:intro:body:start --><div class="ff-intro" id="ff-intro" role="status" aria-label="Carregando Fine Form" aria-live="off" hidden>
   <div class="intro-sheet">
-    <img class="intro-logo" src="/assets/logo-original.png" width="48" height="48" alt="">
+    <svg class="intro-logo" viewBox="0 0 100 100" width="48" height="48" aria-hidden="true" focusable="false">
+      <defs>
+        <!-- Converts the existing white-backed logo into a transparent symbol. -->
+        <filter id="ff-comet-logo-invert" color-interpolation-filters="sRGB">
+          <feColorMatrix type="matrix" values="-1 0 0 0 1  0 -1 0 0 1  0 0 -1 0 1  0 0 0 1 0"></feColorMatrix>
+        </filter>
+        <mask id="ff-comet-logo-cutout" maskUnits="userSpaceOnUse" x="0" y="0" width="100" height="100" style="mask-type:luminance">
+          <image href="/assets/logo-original.png" width="100" height="100" filter="url(#ff-comet-logo-invert)"></image>
+        </mask>
+      </defs>
+      <rect x="0" y="0" width="100" height="100" fill="currentColor" mask="url(#ff-comet-logo-cutout)"></rect>
+    </svg>
     <div class="intro-wordmark">FINE FORM</div>
     <p class="intro-subtitle">ESTÉTICA AUTOMOTIVA</p>
     <div class="comet-dial" aria-label="Progresso do carregamento">
@@ -38,7 +49,6 @@
       </div>
     </div>
     <p class="intro-status" data-intro-status>Preparando a sua experiência</p>
-    <button class="intro-skip" type="button" data-intro-skip>Entrar direto ↗</button>
   </div>
 </div>
 <!-- ff:intro:body:end -->

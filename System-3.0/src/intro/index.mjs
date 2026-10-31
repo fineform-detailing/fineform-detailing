@@ -12,7 +12,6 @@
   const head = shell.querySelector('[data-comet-head]');
   const value = shell.querySelector('[data-comet-value]');
   const status = shell.querySelector('[data-intro-status]');
-  const skip = shell.querySelector('[data-intro-skip]');
   const parts = [...shell.querySelectorAll('[data-comet-trail]')];
   const R = 78, startAngle = 110, sweep = 320;
   const point = deg => [100 + Math.cos(deg * Math.PI / 180) * R, 100 + Math.sin(deg * Math.PI / 180) * R];
@@ -131,7 +130,6 @@
     return promise;
   }
   window.ffIntro = { skip: () => end('skipped'), replay: () => open('replay') };
-  skip.addEventListener('click', () => end('skipped'));
   doc.addEventListener('keydown', e => { if (active && e.key === 'Escape') end('skipped'); });
   doc.addEventListener('visibilitychange', () => { if (active && doc.hidden) end('hidden'); });
   window.addEventListener('pagehide', () => { if (active) end('pagehide'); });

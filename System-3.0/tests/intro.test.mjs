@@ -27,7 +27,11 @@ test('Comet Dial substitui o gesto antigo e tem semântica de carregamento', () 
     assert.ok(doc.querySelector('[data-comet-dial][role="progressbar"]'));
     assert.equal(doc.querySelectorAll('[data-comet-trail]').length, 12);
     assert.ok(doc.querySelector('[data-comet-value]'));
-    assert.ok(doc.querySelector('[data-intro-skip]'));
+    assert.equal(doc.querySelector('[data-intro-skip]'), null);
+    assert.equal(doc.querySelector('button.intro-skip'), null);
+    assert.equal(doc.querySelector('img.intro-logo'), null);
+    assert.ok(doc.querySelector('svg.intro-logo rect[mask="url(#ff-comet-logo-cutout)"]'));
+    assert.ok(doc.querySelector('svg.intro-logo mask image[href="/assets/logo-original.png"]'));
     assert.equal(doc.querySelector('[data-intro-slider]'), null);
     assert.equal(doc.querySelector('.intro-tentacle'), null);
     new Function(source);
@@ -43,13 +47,14 @@ function fixture() {
   return dom;
 }
 
-test('entrada direta cancela o carregamento e libera a página', () => {
+test('cancelamento interno continua liberando a página sem botão visível', () => {
   const dom = fixture();
   try {
     const { document: doc } = dom.window;
     assert.equal(doc.querySelector('main').hasAttribute('inert'), true);
     assert.equal(doc.querySelectorAll('[data-comet-ticks] line').length, 61);
-    doc.querySelector('[data-intro-skip]').click();
+    assert.equal(doc.querySelector('[data-intro-skip]'), null);
+    dom.window.ffIntro.skip();
     assert.equal(doc.querySelector('main').hasAttribute('inert'), false);
     assert.equal(doc.documentElement.hasAttribute('data-ff-intro'), false);
     assert.equal(doc.getElementById('ff-intro').hidden, true);
@@ -71,6 +76,9 @@ test('a home exibe uma nova imagem e não possui as legendas removidas', async (
   try {
     const doc = dom.window.document;
     assert.ok(doc.querySelector('#ff-intro [data-comet-dial]'));
+    assert.equal(doc.querySelector('#ff-intro [data-intro-skip]'), null);
+    assert.ok(doc.querySelector('#ff-intro svg.intro-logo mask'));
+    assert.equal(doc.querySelector('#ff-intro img.intro-logo'), null);
     assert.equal(doc.querySelectorAll('.section-index').length, 0);
     assert.equal(doc.querySelector('.hero-secondary'), null);
     assert.equal(doc.querySelector('.hero-assurance'), null);
@@ -121,7 +129,7 @@ test('Comet Dial avança continuamente do 76% até o 100%, sem saltos', async ()
       assert.ok(readings[i] - readings[i - 1] <= 3, 'o percentual não pode saltar entre quadros');
     }
   } finally {
-    if (!doc.getElementById('ff-intro').hidden) doc.querySelector('[data-intro-skip]').click();
+    if (!doc.getElementById('ff-intro').hidden) win.ffIntro.skip();
     win.close();
   }
 });

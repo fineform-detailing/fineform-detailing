@@ -4,8 +4,8 @@
 html:not([data-ff-intro]) .ff-intro{display:none!important}
 html[data-ff-intro] .ff-intro{display:flex!important}
 html[data-ff-intro],html[data-ff-intro] body{overflow:hidden}
-.ff-intro .intro-sheet{position:relative;width:100%;min-height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:42px 24px 74px;background:radial-gradient(ellipse at 50% 40%,#fff 0%,#f7f8f4 40%,var(--intro-paper) 80%)}
-.ff-intro .intro-logo{display:block;width:48px;height:48px;margin-bottom:20px;object-fit:contain}
+.ff-intro .intro-sheet{position:relative;width:100%;min-height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:42px 24px;background:radial-gradient(ellipse at 50% 40%,#fff 0%,#f7f8f4 40%,var(--intro-paper) 80%)}
+.ff-intro .intro-logo{display:block;width:48px;height:48px;margin-bottom:20px;color:var(--intro-ink)}
 .ff-intro .intro-wordmark{font-family:"FF Display","Barlow Condensed",Impact,sans-serif;font-size:clamp(35px,6vw,55px);line-height:1;letter-spacing:-.035em;font-weight:700}
 .ff-intro .intro-subtitle{margin:9px 0 23px;font-size:10px;font-weight:600;letter-spacing:.25em;color:#73817b}
 .ff-intro .comet-dial{--cd-size:clamp(206px,58vw,252px);width:var(--cd-size);height:var(--cd-size);position:relative;color:var(--intro-ink);user-select:none}
@@ -22,8 +22,6 @@ html[data-ff-intro],html[data-ff-intro] body{overflow:hidden}
 .ff-intro .comet-dial__value small{font-family:"FF Sans",Arial,sans-serif;font-size:.32em;font-weight:500;letter-spacing:0;color:#87918c;margin-left:2px}
 .ff-intro .comet-dial__center-label{margin-top:8px;color:#79847e;font-size:9px;font-weight:600;letter-spacing:.13em}
 .ff-intro .intro-status{margin:16px 0 0;min-height:24px;font-size:12px;color:#69766e;line-height:1.7;text-align:center}
-.ff-intro .intro-skip{position:absolute;bottom:max(25px,env(safe-area-inset-bottom));left:50%;transform:translateX(-50%);min-height:44px;padding:10px 20px;border:1px solid #b9c3bc;border-radius:50px;background:transparent;font:500 12px/1.2 "FF Sans",Arial,sans-serif;color:var(--intro-ink);white-space:nowrap;cursor:pointer}
-.ff-intro .intro-skip:focus-visible{outline:3px solid #268c7a;outline-offset:4px}
 .ff-intro.is-finishing .intro-sheet{opacity:0;transition:opacity 240ms ease-out}
-@media(max-height:620px){.ff-intro .intro-sheet{padding-top:18px;padding-bottom:65px}.ff-intro .intro-logo{width:34px;height:34px;margin-bottom:10px}.ff-intro .intro-subtitle{margin-bottom:8px}.ff-intro .comet-dial{--cd-size:min(42vh,195px)}}
+@media(max-height:620px){.ff-intro .intro-sheet{padding-top:18px;padding-bottom:18px}.ff-intro .intro-logo{width:34px;height:34px;margin-bottom:10px}.ff-intro .intro-subtitle{margin-bottom:8px}.ff-intro .comet-dial{--cd-size:min(42vh,195px)}}
 @media(prefers-reduced-motion:reduce){.ff-intro *{animation:none!important;transition:none!important}}

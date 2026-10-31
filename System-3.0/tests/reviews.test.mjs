@@ -191,39 +191,21 @@ test('formulário permite nota baixa, preserva comentário após falha e escapa 
   assert.equal(w.document.querySelector('.review-thanks img'),null);assert.match(w.document.querySelector('.review-thanks blockquote').textContent,/<img/);
  }finally{w.close();}
 });
-test('galeria nativa navega por botão, teclado e swipe, preserva foco e a pasta abre por toque',async()=>{
- const out=await build({entryPoints:['src/studio-motion.mjs'],bundle:true,format:'iife',outfile:'/tmp/fineform-motion-test.js',write:false});
- const dom=new JSDOM(await readFile('dist/index.html','utf8'),{url:origin,runScripts:'outside-only'}),w=dom.window;
- w.matchMedia=()=>({matches:false});
- try{
-  w.eval(out.outputFiles.find(f=>f.path.endsWith('.js'))?.text||out.outputFiles[0].text);
-  const gallery=w.document.getElementById('react-gallery'),first=gallery.querySelector('[data-card="0"]');
-  first.focus();first.click();assert.equal(gallery.querySelector('[data-card="1"]').getAttribute('tabindex'),'0');assert.equal(w.document.activeElement,gallery.querySelector('[data-card="1"]'));
-  gallery.dispatchEvent(new w.KeyboardEvent('keydown',{key:'ArrowRight',bubbles:true}));assert.match(gallery.querySelector('.explorer-counter').textContent,/Moto/);
-  gallery.querySelector('[data-dot="0"]').click();assert.match(gallery.querySelector('.explorer-counter').textContent,/Pintura/);
-  const event=(name,x,y)=>{const value=new w.Event(name,{bubbles:true});Object.assign(value,{clientX:x,clientY:y,pointerId:1});first.dispatchEvent(value);};
-  event('pointerdown',200,100);event('pointerup',100,105);assert.match(gallery.querySelector('.explorer-counter').textContent,/Interior/);
-  const folder=w.document.querySelector('.folder-float');folder.click();assert.equal(folder.getAttribute('aria-expanded'),'true');folder.dispatchEvent(new w.KeyboardEvent('keydown',{key:'Escape'}));assert.equal(folder.getAttribute('aria-expanded'),'false');
- }finally{w.close();}
-});
-test('arrastar acompanha o dedo, pausar cancela os efeitos e o gesto vertical mantém a foto atual',async()=>{
+test('animações restantes funcionam sem galeria e pasta removidas',async()=>{
  const out=await build({entryPoints:['src/studio-motion.mjs'],bundle:true,format:'iife',outfile:'/tmp/fineform-motion-test.js',write:false});
  const dom=new JSDOM(await readFile('dist/index.html','utf8'),{url:origin,runScripts:'outside-only',pretendToBeVisual:true}),w=dom.window;
- let enabled=true;const animations=[];w.ffMotion={enabled:()=>enabled};w.matchMedia=()=>({matches:false});
- w.Element.prototype.animate=function(){
-  let reject;const animation={cancelled:false,finished:new Promise((_,r)=>reject=r),cancel(){this.cancelled=true;reject(Error('cancelled'));}};animations.push(animation);return animation;
- };
- const point=(target,name,x,y)=>{const event=new w.Event(name,{bubbles:true});Object.assign(event,{pointerId:1,clientX:x,clientY:y});target.dispatchEvent(event);};
+ w.matchMedia=()=>({matches:false});
  try{
-  w.eval(out.outputFiles.find(f=>f.path.endsWith('.js')).text);
-  const gallery=w.document.getElementById('react-gallery'),first=gallery.querySelector('[data-card="0"]');
-  point(first,'pointerdown',200,100);point(first,'pointermove',140,104);await new Promise(r=>setTimeout(r,30));
-  assert.equal(first.classList.contains('is-dragging'),true);assert.equal(first.style.getPropertyValue('--drag-x'),'-60px');
-  point(first,'pointerup',120,105);assert.match(gallery.querySelector('.explorer-counter').textContent,/Interior/);assert.ok(animations.length>0);
-  enabled=false;w.dispatchEvent(new w.CustomEvent('ff:motion',{detail:{enabled:false}}));await Promise.resolve();
-  assert.ok(animations.every(a=>a.cancelled));assert.equal(gallery.querySelector('.is-dragging,.is-leaving'),null);
-  const count=animations.length;gallery.querySelector('[data-next]').click();assert.match(gallery.querySelector('.explorer-counter').textContent,/Moto/);assert.equal(animations.length,count);
-  enabled=true;const current=gallery.querySelector('[data-card="2"]');point(current,'pointerdown',100,100);point(current,'pointermove',103,170);await new Promise(r=>setTimeout(r,30));point(current,'pointercancel',103,170);
-  assert.match(gallery.querySelector('.explorer-counter').textContent,/Moto/);assert.equal(gallery.querySelector('.is-dragging'),null);assert.equal(current.style.getPropertyValue('--drag-x'),'');
- }finally{w.dispatchEvent(new w.Event('pagehide'));await Promise.resolve();w.close();}
+  assert.equal(w.document.querySelector('#react-gallery'),null,'galeria removida');
+  assert.equal(w.document.querySelector('#react-folder'),null,'pasta removida');
+  const ticker=w.document.querySelector('#react-velocity'),closing=w.document.querySelector('#react-closing .closing-panel');
+  assert.ok(ticker,'faixa animada preservada');
+  assert.ok(closing,'bloco final preservado');
+  w.eval(out.outputFiles.find(f=>f.path.endsWith('.js'))?.text||out.outputFiles[0].text);
+  assert.ok(w.document.querySelector('#react-velocity'),'faixa segue após executar JS');
+  assert.ok(closing.classList.contains('native-glow'),'efeito de encerramento segue ativo');
+ }finally{
+  w.dispatchEvent(new w.Event('pagehide'));
+  w.close();
+ }
 });

@@ -2,11 +2,23 @@
 **Data da análise:** 31/10/2026  
 **Escopo real:** pasta `System-3.0` do repositório Fine Form, Worker `fine-form-3-0`, seus bindings/metadados públicos e logs de build. **Não é** certificação jurídica, pentest, auditoria de acessibilidade completa ou inspeção de dados privados.
 
+### Atualização de contexto operacional — informação fornecida pela empresa
+
+**A Fine Form ainda não iniciou as operações.** Até esta atualização, não dispõe de CNPJ aberto, razão social constituída ou endereço comercial definido. **Não preencher nem publicar dados fictícios.** O site permite **enviar solicitações de orçamento/atendimento**, mas não transforma o envio em reserva, aceite de contrato ou pagamento: a análise e a decisão de aceitar ou recusar pertencem ao responsável, que recebe uma notificação e pode comunicar ao interessado a indisponibilidade por ainda não estar operando.
+
+Esta informação foi fornecida pela empresa, e o caráter **manual** da aceitação é consistente com `worker/quotes.mjs` e `docs/OPERACAO.md`; não foi feita aqui uma simulação de aceitação em produção. Dizer que «não é possível enviar pedido» seria impreciso: **enviar uma solicitação é possível; contratar/confirmar automaticamente, não**.
+
+**Conclusão jurídica delimitada:** a mera existência de uma página institucional de pré-lançamento não prova, sozinha, atividade comercial em funcionamento, mas o art. 2º do Decreto 7.962/2013 refere-se a sites utilizados para **oferta ou conclusão** de contrato. A publicação de catálogo, preços e formulário de solicitações pode caracterizar oferta, mesmo sem aprovação automática. O art. 30 do CDC também trata do caráter vinculante de informação/publicidade suficientemente precisa. A situação concreta exige verificar a comunicação comercial e validação por profissional habilitado; a recusa manual não constitui dispensa automática das exigências aplicáveis.
+
+**Controle recomendado:** manter os avisos de que pedidos não representam reserva, contratação nem pagamento; antes de iniciar atendimentos, verificar a identificação e o endereço efetivos do fornecedor e os requisitos de formalização da atividade. Caso se deseje efetivamente um site apenas de pré-lançamento, avaliar restringir a publicidade de serviços/preços ou a recepção de solicitações, **somente com autorização expressa e teste**, sem realizar alteração funcional nesta atualização. A LGPD continua pertinente aos dados de pessoas interessadas coletados no período de preparação, pois o controlador pode ser pessoa natural.
+
+Fontes: [Decreto 7.962/2013](https://www.planalto.gov.br/ccivil_03/_ato2011-2014/2013/decreto/d7962.htm), [CDC — arts. 30 e 31](https://www.planalto.gov.br/ccivil_03/leis/l8078compilado.htm) e [ANPD — controlador pessoa natural ou jurídica](https://www.gov.br/anpd/pt-br/canais_atendimento/cidadao-titular-de-dados/denuncia-peticao-de-titular-referente-lgpd).
+
 ## 1. Problemas identificados: descrição, gravidade e evidência
 
 | Severidade | Achado e impacto | Evidência | Situação |
 | --- | --- | --- | --- |
-| **Alto — sujeito a confirmação** | Identificação completa e endereço físico do fornecedor podem não estar publicados. A consulta ao D1 privado não foi realizada; não afirmar ausência nem inventar CNPJ/endereço. | `worker/business.mjs` tem defaults vazios e publicação condicionada; `docs/PRIVACIDADE-E-RISCOS.md` requer confirmação cadastral. | Preencher e confirmar em Painel → Dados; revisão jurídica do Decreto 7.962/2013. |
+| **Médio, com potencial alto se houver oferta ativa** | Empresa ainda não aberta e sem CNPJ, razão social ou endereço comercial definidos (conforme responsável). O site permite solicitações, mas a aceitação é exclusivamente manual. A necessidade e o momento de divulgação da identificação do fornecedor dependem da caracterização da oferta/contratação eletrônica; a recusa manual não gera isenção automática. | Declaração do responsável; `worker/business.mjs`, `worker/quotes.mjs`, `docs/OPERACAO.md`, Decreto 7.962/2013 art. 2º e CDC art. 30. D1 privado não consultado. | Registrar fase pré-operacional; manter comunicação de solicitação não vinculante quanto à confirmação; validar a oferta atual juridicamente e preencher dados reais quando definidos/necessários. Não inventar CNPJ nem endereço. |
 | **Médio** | Política operacional de retenção e descarte de D1, logs, backups e financeiro ainda depende de tabela de prazos, fundamentos e responsabilidades. | `dist/privacidade/index.html`, `migrations/`, `docs/OPERACAO.md`. | Não programar deleção automática sem decisão jurídica/financeira. |
 | **Médio** | Transferência internacional/contratos com Cloudflare e serviços de push não foram validados quanto às garantias contratuais e países envolvidos. | `wrangler.jsonc`, `worker/push.mjs`, `dist/privacidade/index.html`. | Analisar DPA, mecanismos ANPD e localização efetiva. |
 | **Médio** | Restrição `request.cf.country === 'BR'`, deliberada no projeto, bloqueia visitantes fora do Brasil e potencialmente crawlers de mecanismos de busca. | `worker/index.mjs`, `docs/SEGURANCA.md`. | Não alterada; depende de avaliação comercial e de risco. |
@@ -68,7 +80,7 @@ O site **não possui evidência de analytics/pixels de marketing nos arquivos re
 | CDC 8.078/1990 | Obrigatória nas relações de consumo | Oferta verdadeira, preços/condições claros, direito de informação e limites a cláusulas abusivas. |
 | Marco Civil 12.965/2014 | Obrigatória nos dispositivos pertinentes | Privacidade, segurança e obrigações de guarda de registros segundo enquadramento do provedor. |
 | LBI 13.146/2015 | Obrigatória segundo aplicação legal concreta | Acessibilidade da informação e dos canais digitais nos termos da legislação. |
-| Decreto 7.962/2013 | Condicional à oferta/contratação no comércio eletrônico e ao caso real | Identificação do fornecedor, contato, endereço físico/eletrônico e condições transparentes; revisar com profissional habilitado. |
+| Decreto 7.962/2013 | Condicional à utilização do site para **oferta ou conclusão** de contrato de consumo | O fato de aceitar ou recusar manualmente não afasta automaticamente a norma se já houver oferta. Fase pré-operacional e publicidade efetiva exigem avaliação concreta; não publicar identificadores inexistentes. |
 | Res. ANPD 2/2022 | Condicional a enquadramento comprovado como pequeno porte | Algumas flexibilizações, **sem isenção geral** da LGPD. |
 | Res. ANPD 19/2024 | Condicional a transferências internacionais efetivas | Definir mecanismo válido e obrigações de transparência. |
 | Guia de cookies ANPD | Referência orientativa | Diferenciar tecnologias necessárias, não criar consentimento falso. |
@@ -96,7 +108,7 @@ Fontes oficiais: [LGPD](https://www.planalto.gov.br/ccivil_03/_ato2015-2018/2018
 
 ## 8. Pendências e decisões empresariais
 
-1. Confirmar e preencher razão social/identificação aplicável, CNPJ se houver e endereço físico real em **Painel → Dados**. Não inventar campos.
+1. **Fase pré-operacional confirmada:** ainda não há CNPJ, razão social constituída ou endereço comercial. Não inventar ou preencher campos com informações inexistentes. Antes da efetiva abertura e/ou da oferta/contratação abrangida pelo Decreto 7.962/2013, avaliar com profissional habilitado a formalização e identificação adequada do fornecedor; quando houver dados reais, informar em **Painel → Dados**. Enquanto isso, deixar inequívoco que as solicitações não são aceites, agendamentos ou cobranças automáticas e avaliar a apresentação de preços/ofertas durante a preparação.
 2. Validar tabela de retenção, obrigações financeiras e backups; estabelecer procedimento de direitos dos titulares e resposta a incidentes.
 3. Rever DPA/fornecedores e transferência internacional, inclusive notificações push.
 4. Conferir branch protection, GitHub Actions, Dependabot, token scopes, MFA e Cloudflare WAF.

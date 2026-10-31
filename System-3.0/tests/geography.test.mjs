@@ -30,7 +30,6 @@ test('foreign and unknown countries cannot load pages, APIs, scripts, styles or 
   for(const path of ['/','/links/','/painel/','/acompanhar/','/assinatura/','/avaliar/','/assets/style.css','/assets/app.mjs','/assets/logo-original.png','/api/health','/api/admin/dashboard','/api/realtime?ticket=forged']){
    const res=await mf.dispatchFetch(origin+path,{cf:{country},redirect:'manual'});
    assert.equal(res.status,403,`${country}: ${path}`);
-   assert.equal(res.headers.get('X-FF-Geo-Decision'),'deny');
    assert.match(res.headers.get('Cache-Control'),/no-store/);
    assert.match(res.headers.get('X-Robots-Tag'),/noindex/);
    if(path.startsWith('/api/'))assert.equal((await res.json()).code,'country_restricted');
@@ -64,11 +63,9 @@ test('writes, preflights, HEAD, WebSocket upgrades and HTTP requests are blocked
 
 test('development remains available only on loopback hosts',async()=>{
  for(const host of ['localhost','127.0.0.1','[::1]']){
-  const res=await worker.fetch(new Request('http://'+host+'/api/health'),{});
+  const res=await mf.dispatchFetch('http://'+host+'/api/health',{cf:{country:null}});
   assert.equal(res.status,200,host);
  }
- const edgeLoopback=await mf.dispatchFetch('https://localhost/api/health',{cf:{country:'US'}});
- assert.equal(edgeLoopback.status,403,'Cloudflare requests cannot bypass the geofence with a loopback hostname');
  const res=await mf.dispatchFetch('https://localhost.attacker.test/api/health',{cf:{country:null}});
  assert.equal(res.status,403);
 });

@@ -1,24 +1,35 @@
-<div class="ff-intro" id="ff-intro" role="dialog" aria-modal="true" aria-label="Abertura da Fine Form" hidden>
-  <div class="intro-sheet" data-intro-sheet>
-    <div class="intro-center" data-intro-center>
-      <svg class="intro-logo" viewBox="0 0 100 100" width="64" height="64" aria-hidden="true" focusable="false">
-        <defs>
-          <filter id="intro-logo-invert" color-interpolation-filters="sRGB"><feColorMatrix type="matrix" values="-1 0 0 0 1  0 -1 0 0 1  0 0 -1 0 1  0 0 0 1 0"/></filter>
-          <mask id="intro-logo-cutout" maskUnits="userSpaceOnUse" x="0" y="0" width="100" height="100" style="mask-type:luminance"><image href="/assets/logo-original.png" width="100" height="100" filter="url(#intro-logo-invert)"/></mask>
-        </defs>
-        <rect width="100" height="100" fill="currentColor" mask="url(#intro-logo-cutout)"/>
+<div class="ff-intro" id="ff-intro" role="status" aria-label="Carregando Fine Form" aria-live="off" hidden>
+  <div class="intro-sheet">
+    <img class="intro-logo" src="/assets/logo-original.png" width="48" height="48" alt="">
+    <div class="intro-wordmark">FINE FORM</div>
+    <p class="intro-subtitle">ESTÉTICA AUTOMOTIVA</p>
+    <div class="comet-dial" aria-label="Progresso do carregamento">
+      <svg class="comet-dial__ring" viewBox="0 0 200 200" data-comet-dial role="progressbar" aria-label="Carregamento" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+        <g class="comet-dial__ticks" data-comet-ticks aria-hidden="true"></g>
+        <path class="comet-dial__track" data-comet-track></path>
+        <path class="comet-dial__lit" data-comet-lit></path>
+        <g class="comet-dial__comet" aria-hidden="true">
+          <path data-comet-trail="0" opacity="0"></path>
+          <path data-comet-trail="1" opacity="0"></path>
+          <path data-comet-trail="2" opacity="0"></path>
+          <path data-comet-trail="3" opacity="0"></path>
+          <path data-comet-trail="4" opacity="0"></path>
+          <path data-comet-trail="5" opacity="0"></path>
+          <path data-comet-trail="6" opacity="0"></path>
+          <path data-comet-trail="7" opacity="0"></path>
+          <path data-comet-trail="8" opacity="0"></path>
+          <path data-comet-trail="9" opacity="0"></path>
+          <path data-comet-trail="10" opacity="0"></path>
+          <path data-comet-trail="11" opacity="0"></path>
+        </g>
+        <circle class="comet-dial__head" data-comet-head r="7"></circle>
       </svg>
-      <div class="intro-wordmark">{{WORDMARK_SVG}}</div>
-      <div class="intro-slider" data-intro-slider>
-        <span class="intro-slider-fill" data-intro-fill aria-hidden="true"></span>
-        <span class="intro-slider-arrow" aria-hidden="true">→</span>
-        <button class="intro-slider-handle" type="button" data-intro-handle aria-label="Entrar na Fine Form" aria-describedby="intro-instruction"><span>Começar</span><span class="intro-handle-grip" aria-hidden="true"><i></i><i></i></span></button>
+      <div class="comet-dial__readout" aria-hidden="true">
+        <span class="comet-dial__value"><span data-comet-value>0</span><small>%</small></span>
+        <span class="comet-dial__center-label">FINE FORM</span>
       </div>
-      <p class="intro-status" id="intro-instruction" role="status" aria-live="polite" data-intro-label>Arraste para a direita</p>
     </div>
-    <div class="intro-fold" aria-hidden="true"></div>
-    <div class="intro-tentacle" data-intro-tentacle>{{TENTACLE_SVG}}</div>
-    <div class="intro-grip-spark" aria-hidden="true"><span></span><span></span><span></span></div>
-    <button class="intro-skip" type="button" data-intro-skip>Entrar direto <span aria-hidden="true">↗</span></button>
+    <p class="intro-status" data-intro-status>Preparando a sua experiência</p>
+    <button class="intro-skip" type="button" data-intro-skip>Entrar direto ↗</button>
   </div>
 </div>

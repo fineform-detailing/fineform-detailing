@@ -82,11 +82,11 @@ test('a home exibe uma nova imagem e não possui as legendas removidas', async (
     assert.equal(doc.querySelectorAll('.section-index').length, 0);
     assert.equal(doc.querySelector('.hero-secondary'), null);
     assert.equal(doc.querySelector('.hero-assurance'), null);
-    assert.equal(doc.querySelector('.hero-image img').getAttribute('src'), 'assets/hero-post-cup.webp');
+    assert.equal(doc.querySelector('.hero-image img').getAttribute('src'), 'assets/hero-fineform-original.webp');
     assert.equal(doc.querySelector('.hero-image figcaption'), null);
     assert.ok(doc.querySelector('.velocity-band #react-velocity'), 'a animação da faixa é mantida');
     assert.equal(doc.querySelector('.manifesto'), null, 'o trecho Cada detalhe merece é removido');
-    assert.equal(doc.querySelector('link[rel="preload"][as="image"]').getAttribute('href'), 'assets/hero-post-cup.webp');
+    assert.equal(doc.querySelector('link[rel="preload"][as="image"]').getAttribute('href'), 'assets/hero-fineform-original.webp');
     assert.match(doc.querySelector('.hero-image img').getAttribute('alt'), /copo medidor/i);
     assert.match(doc.querySelector('#hero-title span').getAttribute('style'), /text-decoration:none/);
   } finally { dom.window.close(); }

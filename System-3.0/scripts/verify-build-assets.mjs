@@ -2,7 +2,7 @@ import assert from 'node:assert/strict';
 import {readFile, stat} from 'node:fs/promises';
 
 const html = await readFile('dist/index.html', 'utf8');
-const photo = 'hero-post-cup.webp';
+const photo = 'hero-fineform-original.webp';
 const image = await readFile('dist/assets/' + photo);
 const size = await stat('dist/assets/' + photo);
 assert.ok(size.size > 2000 && size.size < 6_000_000, 'imagem da capa precisa existir localmente');

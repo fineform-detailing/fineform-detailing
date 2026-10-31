@@ -83,7 +83,7 @@ test('a home exibe uma nova imagem e não possui as legendas removidas', async (
     assert.equal(doc.querySelector('.hero-secondary'), null);
     assert.equal(doc.querySelector('.hero-assurance'), null);
     assert.equal(doc.querySelector('.hero-image img').getAttribute('src'), 'assets/hero-detail-wash.jpg');
-    assert.match(doc.querySelector('.hero-image img').getAttribute('srcset'), /hero-detail-wash-mobile\\.jpg/);
+    assert.ok(doc.querySelector('.hero-image img').getAttribute('srcset').includes('assets/hero-detail-wash-mobile.jpg 560w'));
     assert.ok(!doc.querySelector('.hero-image img').getAttribute('src').includes('modern-mclaren'));
     assert.equal(doc.querySelector('link[rel="preload"][as="image"]').getAttribute('href'), 'assets/hero-detail-wash.jpg');
     assert.match(doc.querySelector('.hero-image img').getAttribute('alt'), /lavagem manual/);

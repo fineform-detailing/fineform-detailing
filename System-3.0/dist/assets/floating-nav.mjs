@@ -33,7 +33,7 @@ export function mountFloatingNav({root = './', window = globalThis.window} = {})
     link.className = 'ff-dock-link' + (key === 'quote' ? ' ff-dock-primary' : '');
     link.href = href;
     link.dataset.dock = key;
-    if (key === 'quote') link.setAttribute('aria-label', 'Preparar meu orçamento');
+    link.setAttribute('aria-label', label === 'Orçar' ? 'Orçar atendimento' : label);
     link.innerHTML = `<span class="ff-dock-icon">${icon(glyph)}</span><span class="ff-dock-label">${label}</span>`;
     nav.append(link);
     return link;
@@ -45,8 +45,14 @@ export function mountFloatingNav({root = './', window = globalThis.window} = {})
     if (key === active) return;
     active = key;
     const index = items.findIndex(item => item[0] === key);
+    // A aba ativa ganha espaço para o rótulo; as outras permanecem só com ícone.
+    // O CSS interpola as cinco colunas, criando a cápsula deslizante da referência.
+    nav.dataset.active = index >= 0 ? key : '';
+    nav.style.setProperty('--dock-columns', items.map((_, i) => i === index ? '2.3fr' : '1fr').join(' '));
     links.forEach((link, i) => {
-      if (i === index) link.setAttribute('aria-current', page === 'home' ? 'location' : 'page');
+      const selected = i === index;
+      link.classList.toggle('is-selected', selected);
+      if (selected) link.setAttribute('aria-current', page === 'home' ? 'location' : 'page');
       else link.removeAttribute('aria-current');
     });
     indicator.hidden = index < 0 || key === 'quote';

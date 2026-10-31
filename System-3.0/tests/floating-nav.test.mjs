@@ -119,3 +119,43 @@ test('o dock combina com o header, menos transparente e com tamanho menor', () =
  assert.match(css,/width:54px;height:54px;min-width:54px/);
  assert.match(css,/backdrop-filter:blur\(24px\) saturate\(175%\)/);
 });
+
+test('dock segmentado mantém cinco rotas e abre cápsula animada somente na aba ativa', () => {
+ const {window,nav,scrollTo}=setup();
+ const links=[...nav.querySelectorAll('.ff-dock-link')];
+ assert.equal(links.length,5);
+ assert.deepEqual(links.map(x=>x.dataset.dock),['home','care','quote','plans','orders']);
+ assert.ok(links.every(x=>x.querySelector('.ff-dock-icon svg')&&x.querySelector('.ff-dock-label')));
+ assert.ok(links.every(x=>x.hasAttribute('aria-label')),'acessível mesmo com texto visualmente recolhido');
+ assert.equal(nav.querySelectorAll('.ff-dock-link[aria-current]').length,1);
+ assert.equal(nav.querySelector('[aria-current]').dataset.dock,'home');
+ assert.equal(nav.dataset.active,'home');
+ assert.equal(nav.style.getPropertyValue('--dock-columns'),'2.3fr 1fr 1fr 1fr 1fr');
+ scrollTo(1000);
+ assert.equal(nav.dataset.active,'care');
+ assert.equal(nav.querySelector('[aria-current]').dataset.dock,'care');
+ assert.equal(nav.style.getPropertyValue('--dock-columns'),'1fr 2.3fr 1fr 1fr 1fr');
+ scrollTo(2300);
+ assert.equal(nav.dataset.active,'plans');
+ assert.equal(nav.querySelector('[aria-current]').dataset.dock,'plans');
+ assert.equal(nav.style.getPropertyValue('--dock-columns'),'1fr 1fr 1fr 2.3fr 1fr');
+ const css=readFileSync(new URL('../dist/assets/studio.css',import.meta.url),'utf8');
+ const segment=css.slice(css.indexOf('/* Fine Form Liquid Glass segmented dock'));
+ assert.ok(segment.startsWith('/* Fine Form Liquid Glass segmented dock'));
+ for(const feature of ['grid-template-columns:var(--dock-columns','backdrop-filter:blur(24px) saturate(175%)','ff-dock-pill-appear','@media(prefers-reduced-motion:reduce)','@media(max-width:359px)']){
+  assert.ok(segment.includes(feature),'visual esperado: '+feature);
+ }
+ window.close();
+});
+test('aba Orçar apresenta a mesma cápsula escura e continua ligada ao orçamento', () => {
+ const {window,nav}=setup('booking');
+ const quote=nav.querySelector('[data-dock="quote"]');
+ assert.equal(quote.getAttribute('aria-current'),'page');
+ assert.ok(quote.classList.contains('is-selected'));
+ assert.equal(nav.dataset.active,'quote');
+ assert.equal(nav.style.getPropertyValue('--dock-columns'),'1fr 1fr 2.3fr 1fr 1fr');
+ assert.equal(quote.getAttribute('aria-label'),'Orçar atendimento');
+ assert.equal(quote.href,'https://fineform.test/atendimento/#conteudo');
+ assert.equal(nav.querySelectorAll('.ff-dock-link[aria-current]').length,1);
+ window.close();
+});

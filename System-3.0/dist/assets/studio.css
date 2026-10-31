@@ -748,3 +748,138 @@ body[data-page=home] .closing-section{padding-top:0}
  body[data-page=home] .faq-section{padding-top:34px;padding-bottom:48px;gap:22px}
  body[data-page=home] .faq-section .faq-list summary{padding:18px 0;line-height:1.5}
 }
+
+
+/* Fine Form Liquid Glass segmented dock — referência: aba ativa em cápsula.
+   A navegação nativa, o recolhimento no scroll, o loader e o teclado continuam funcionando. */
+body[data-design=kinetic] .ff-dock:not(.ff-dock-collapsed){
+ width:min(426px,calc(100% - 28px));
+ height:72px;
+ padding:7px 9px;
+ display:grid;
+ grid-template-columns:var(--dock-columns,1fr 1fr 1fr 1fr 1fr);
+ align-items:center;
+ gap:2px;
+ border:1px solid rgba(255,255,255,.88);
+ border-radius:25px;
+ background:rgba(248,250,248,.86);
+ -webkit-backdrop-filter:blur(24px) saturate(175%);
+ backdrop-filter:blur(24px) saturate(175%);
+ box-shadow:0 12px 34px rgba(22,35,31,.13),inset 0 1px 0 rgba(255,255,255,.9);
+ transition:grid-template-columns .46s cubic-bezier(.22,1,.36,1),
+  width .37s cubic-bezier(.22,1,.36,1),
+  height .37s cubic-bezier(.22,1,.36,1),
+  padding .37s cubic-bezier(.22,1,.36,1),
+  border-radius .37s cubic-bezier(.22,1,.36,1),
+  opacity .2s ease,visibility .2s ease;
+}
+body[data-design=kinetic] .ff-dock:not(.ff-dock-collapsed)::before{
+ content:"";position:absolute;inset:1px;z-index:-1;pointer-events:none;
+ border-radius:24px;
+ background:linear-gradient(154deg,rgba(255,255,255,.35),rgba(255,255,255,0) 58%);
+}
+body[data-design=kinetic] .ff-dock-indicator{display:none!important}
+body[data-design=kinetic] .ff-dock:not(.ff-dock-collapsed)>.ff-dock-link{
+ position:relative;min-width:0;width:100%;height:54px;
+ padding:0 5px;gap:0;
+ flex-direction:row;align-items:center;justify-content:center;
+ border:1px solid transparent;border-radius:19px;
+ color:#202925;background:transparent;
+ transform:none;
+ font:600 12px/1.2 'FF Sans',Arial,sans-serif;
+ white-space:nowrap;overflow:hidden;
+ transition:background-color .28s ease,color .28s ease,
+  border-color .28s ease,box-shadow .28s ease,transform .28s ease;
+}
+body[data-design=kinetic] .ff-dock .ff-dock-link .ff-dock-icon,
+body[data-design=kinetic] .ff-dock .ff-dock-primary .ff-dock-icon{
+ flex:0 0 24px;width:24px;height:24px;
+ display:grid;place-items:center;border:0;border-radius:0;
+ background:transparent;box-shadow:none;
+ transform:none;transition:transform .28s cubic-bezier(.22,1,.36,1);
+}
+body[data-design=kinetic] .ff-dock .ff-dock-icon svg,
+body[data-design=kinetic] .ff-dock .ff-dock-primary .ff-dock-icon svg{
+ width:23px;height:23px;stroke-width:1.8;
+}
+body[data-design=kinetic] .ff-dock .ff-dock-label{
+ display:block;max-width:0;opacity:0;overflow:hidden;
+ margin:0;transform:translateX(-4px);
+ font-size:12px;letter-spacing:-.01em;
+ transition:max-width .42s cubic-bezier(.22,1,.36,1),
+  margin .42s cubic-bezier(.22,1,.36,1),
+  opacity .2s ease,transform .32s cubic-bezier(.22,1,.36,1);
+}
+body[data-design=kinetic] .ff-dock:not(.ff-dock-collapsed)>.ff-dock-link[aria-current]{
+ padding:0 10px;
+ gap:0;
+ color:#f8fbfa;
+ background:linear-gradient(150deg,#22292a,#111719);
+ border-color:rgba(255,255,255,.13);
+ box-shadow:0 5px 12px rgba(15,27,26,.2),inset 0 1px 0 rgba(255,255,255,.11);
+ animation:ff-dock-pill-appear .32s cubic-bezier(.2,.8,.2,1) both;
+}
+body[data-design=kinetic] .ff-dock .ff-dock-link[aria-current] .ff-dock-icon{
+ background:transparent;border:0;box-shadow:none;color:#f8fbfa;
+}
+body[data-design=kinetic] .ff-dock .ff-dock-link[aria-current] .ff-dock-label{
+ max-width:76px;margin-left:8px;opacity:1;transform:translateX(0);
+}
+@keyframes ff-dock-pill-appear{
+ 0%{transform:scale(.94)}
+ 100%{transform:scale(1)}
+}
+body[data-design=kinetic] .ff-dock .ff-dock-link:active .ff-dock-icon{
+ transform:scale(.86);
+}
+body[data-design=kinetic] .ff-dock .ff-dock-link:focus-visible{
+ outline:2px solid #16836f;outline-offset:-2px;
+}
+@media(hover:hover) and (pointer:fine){
+ body[data-design=kinetic] .ff-dock:not(.ff-dock-collapsed)>.ff-dock-link:not([aria-current]):hover{
+  background:rgba(83,195,177,.14);color:#124b42;
+ }
+ body[data-design=kinetic] .ff-dock:not(.ff-dock-collapsed)>.ff-dock-link[aria-current]:hover{
+  color:#fff;background:linear-gradient(150deg,#293839,#111719);
+ }
+}
+@media(max-width:359px){
+ body[data-design=kinetic] .ff-dock:not(.ff-dock-collapsed){
+  width:calc(100% - 18px);padding:6px;gap:0;height:66px;
+ }
+ body[data-design=kinetic] .ff-dock:not(.ff-dock-collapsed)>.ff-dock-link{
+  height:50px;padding:0 3px;border-radius:17px;
+ }
+ body[data-design=kinetic] .ff-dock:not(.ff-dock-collapsed)>.ff-dock-link[aria-current]{
+  padding:0 6px;
+ }
+ body[data-design=kinetic] .ff-dock .ff-dock-label{font-size:11px}
+ body[data-design=kinetic] .ff-dock .ff-dock-link[aria-current] .ff-dock-label{
+  margin-left:4px;max-width:64px;
+ }
+ body[data-design=kinetic] .ff-dock .ff-dock-link .ff-dock-icon{
+  flex-basis:21px;width:21px;height:21px;
+ }
+ body[data-design=kinetic] .ff-dock .ff-dock-icon svg{width:20px;height:20px}
+}
+@media(prefers-reduced-motion:reduce){
+ body[data-design=kinetic] .ff-dock:not(.ff-dock-collapsed),
+ body[data-design=kinetic] .ff-dock .ff-dock-link,
+ body[data-design=kinetic] .ff-dock .ff-dock-label{
+  transition:none!important;animation:none!important;
+ }
+}
+body.motion-paused[data-design=kinetic] .ff-dock:not(.ff-dock-collapsed),
+body.motion-paused[data-design=kinetic] .ff-dock .ff-dock-link,
+body.motion-paused[data-design=kinetic] .ff-dock .ff-dock-label{
+ transition:none!important;animation:none!important;
+}
+@media(prefers-contrast:more),(prefers-reduced-transparency:reduce){
+ body[data-design=kinetic] .ff-dock:not(.ff-dock-collapsed){
+  background:#fff;border-color:#546c61;
+  -webkit-backdrop-filter:none;backdrop-filter:none;
+ }
+ body[data-design=kinetic] .ff-dock .ff-dock-link[aria-current]{
+  background:#101919;border-color:#101919;color:#fff;
+ }
+}

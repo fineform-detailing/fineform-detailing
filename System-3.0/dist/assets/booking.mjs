@@ -48,28 +48,6 @@ function persist(){if(!remember)return;try{localStorage.setItem(key,JSON.stringi
 function tidy(){state.treatments=normalizeTreatments(state);state.extras=normalizeExtras(state);persist();}
 function icon(type){return type==='car'?'<svg viewBox="0 0 100 50" aria-hidden="true"><path d="M9 32 13 22 26 18 37 9 64 9 80 20 91 24 93 36H8Z M28 18H76 M39 10 34 18 M61 10 67 18 M12 25H23 M83 27H91"/><circle cx="27" cy="36" r="8"/><circle cx="76" cy="36" r="8"/><circle cx="27" cy="36" r="3"/><circle cx="76" cy="36" r="3"/></svg>':'<svg viewBox="0 0 100 50" aria-hidden="true"><circle cx="23" cy="35" r="11"/><circle cx="79" cy="35" r="11"/><path d="m23 35 16-22h13l13 8-20 14H23l26-1-10-18 M52 13 61 8 72 8 79 35 M70 8 69 3H60 M28 12h19 M36 18 49 22 64 20"/></svg>';}
 function heading(title,lead){return '<h2 class="wizard-title" tabindex="-1">'+title+'</h2><p class="wizard-lead">'+lead+'</p>';}
-const bookingBrief={
- essential:'Lavagem externa, rodas, vidros e limpeza leve do interior.',
- premium:'Lavagem Essencial, frestas, proteção interna e cera.',
- extra:'Higienização profunda, exterior e vidros. Sem polimento.',
- fullClean:'Higienização de bancos e interior, com secagem combinada.',
- polishLight:'Realça brilho e ameniza marcas leves da pintura.',
- polishPremium:'Corte, refino e lustro conforme avaliação da pintura.',
- coating:'Proteção cerâmica na pintura após preparo técnico.',
- motoPremium:'Lavagem estética e acabamento compatível para sua moto.',
- careEssential:'1 Premium e 1 Essencial por mês.',
- careFrequent:'1 Premium e 3 Essenciais por mês.',
- careMoto:'2 lavagens Moto Premium por mês.',
- exteriorPlastic:'Limpeza e revitalização de plásticos externos.',
- plasticCoating:'Cerâmica em plásticos externos, com cura. Em motos, não aplicar em pneus, freios, banco, manoplas ou pedaleiras.',
- leather:'Limpeza e condicionamento do couro, sem reparos.',
- fabric:'Higienização do tecido, com secagem combinada.',
- wheelIron:'Descontaminação ferrosa das rodas acessíveis.',
- paintIron:'Descontaminação ferrosa da pintura, sem polimento.',
- glassCare:'Limpeza e proteção dos vidros; marcas removíveis.',
- motoPolish:'Realce de uma peça elegível, após avaliação.'
-};
-const shortFor=item=>bookingBrief[item.id]||item.description;
 function choice({value,title,description,selected,action='service',extra=''}){return '<button type="button" class="choice-card '+(selected?'selected':'')+'" data-action="'+action+'" data-value="'+value+'" aria-pressed="'+selected+'"><h3>'+title+'</h3><p>'+description+'</p>'+extra+'</button>';}
 function quoteBlock(selection=state){
  const quote=quoteFor(selection);
@@ -87,13 +65,13 @@ function stepCare(){
  let html=heading('Escolha o cuidado certo.','Compare os serviços e selecione o que deseja melhorar.');
  html+='<div class="mode-tabs" role="group" aria-label="Modalidade de atendimento">'+[['single','Um atendimento'],['plan','Care mensal'],['guidance','Quero orientação']].map(([v,l])=>'<button type="button" class="'+(state.mode===v?'active':'')+'" data-action="mode" data-value="'+v+'" aria-pressed="'+(state.mode===v)+'">'+l+'</button>').join('')+'</div>';
  if(state.mode==='single'){
-  const serviceChoice=s=>choice({value:s.id,title:s.label,description:shortFor(s),selected:state.service===s.id,extra:'<strong class="booking-choice-price">'+money(s.price)+'</strong>'});
+  const serviceChoice=s=>choice({value:s.id,title:s.label,description:s.description,selected:state.service===s.id,extra:'<strong class="booking-choice-price">'+money(s.price)+'</strong>'});
   const vehicleServices=services.filter(s=>s.vehicle===state.vehicle&&s.id!=='polishMedium');
   html+='<div class="choice-stack" role="group" aria-label="Cuidado principal">'+vehicleServices.filter(s=>s.class!=='Classe C').map(serviceChoice).join('')+'</div>';
   const treatments=vehicleServices.filter(s=>s.class==='Classe C');
   if(treatments.length)html+='<section class="booking-treatments" aria-label="Higienização, polimentos e vitrificação"><h3>Higienização, polimentos e vitrificação</h3><div class="choice-stack" role="group" aria-label="Tratamento principal">'+treatments.map(serviceChoice).join('')+'</div></section>';
  }
- if(state.mode==='plan')html+='<div class="choice-stack" role="group" aria-label="Plano mensal">'+plans.filter(p=>p.vehicle===state.vehicle).map(p=>choice({value:p.id,title:p.name,description:shortFor(p),selected:state.plan===p.id,action:'plan',extra:'<strong class="booking-choice-price">'+money(p.price)+'<span>/mês</span></strong>'})).join('')+'</div><p class="booking-inline-notice">O Care é ativado após conferência e cadastro presencial da placa.</p>';
+ if(state.mode==='plan')html+='<div class="choice-stack" role="group" aria-label="Plano mensal">'+plans.filter(p=>p.vehicle===state.vehicle).map(p=>choice({value:p.id,title:p.name,description:p.description,selected:state.plan===p.id,action:'plan',extra:'<strong class="booking-choice-price">'+money(p.price)+'<span>/mês</span></strong>'})).join('')+'</div><p class="booking-inline-notice">O Care é ativado após conferência e cadastro presencial da placa.</p>';
  if(state.mode==='guidance')html+='<p class="booking-inline-notice">Indique o que merece atenção; a recomendação final depende da avaliação.</p>';
  html+='<fieldset class="fieldset-clean" style="margin-top:26px"><legend class="field-label legend">O que é importante para você? <small>(opcional)</small></legend><div class="goals">'+goals.filter(g=>state.vehicle==='car'||g!=='Interior').map(g=>'<button class="goal-button '+(state.goals.includes(g)?'selected':'')+'" type="button" data-action="goal" data-value="'+g+'" aria-pressed="'+state.goals.includes(g)+'">'+g+'</button>').join('')+'</div></fieldset>';
  return html;
@@ -102,10 +80,10 @@ function stepDetails(){
  const included=includedFor(state);
  let html=heading('Cada superfície importa.','Adicione apenas o que faz sentido para o seu veículo.');
  if(state.mode==='plan')html+='';
- html+='<div>'+compatibleExtras(state.vehicle).map(e=>{const replaced=e.id==='exteriorPlastic'&&state.extras.includes('plasticCoating');const inc=included.includes(e.id);return '<label class="extra-choice '+(inc?'included':'')+'"><input type="checkbox" name="extra" value="'+e.id+'" '+(!replaced&&(inc||state.extras.includes(e.id))?'checked ':'')+(inc||replaced?'disabled ':'')+'><span><b>'+e.label+'</b><small>'+shortFor(e)+'</small>'+(replaced?'<span class="included-badge">SUBSTITUÍDO PELA VITRIFICAÇÃO</span>':inc?'<span class="included-badge">JÁ INCLUÍDO · QUANDO COMPATÍVEL</span>':'<span class="option-price">'+money(extraPriceFor(e,state))+(extraPriceFor(e,state)!==extraPrice(e,state.vehicle)?' · complemento':'')+'</span>')+'</span></label>';}).join('')+'</div>';
+ html+='<div>'+compatibleExtras(state.vehicle).map(e=>{const replaced=e.id==='exteriorPlastic'&&state.extras.includes('plasticCoating');const inc=included.includes(e.id);return '<label class="extra-choice '+(inc?'included':'')+'"><input type="checkbox" name="extra" value="'+e.id+'" '+(!replaced&&(inc||state.extras.includes(e.id))?'checked ':'')+(inc||replaced?'disabled ':'')+'><span><b>'+e.label+'</b><small>'+e.description+'</small>'+(replaced?'<span class="included-badge">SUBSTITUÍDO PELA VITRIFICAÇÃO</span>':inc?'<span class="included-badge">JÁ INCLUÍDO · QUANDO COMPATÍVEL</span>':'<span class="option-price">'+money(extraPriceFor(e,state))+(extraPriceFor(e,state)!==extraPrice(e,state.vehicle)?' · complemento':'')+'</span>')+'</span></label>';}).join('')+'</div>';
  if(state.vehicle==='car'){
   const available=availableTreatments(state);
-  if(available.length)html+='<section class="booking-treatments" aria-label="Tratamentos adicionais de pintura"><h3>Acrescente um tratamento de pintura</h3><fieldset class="fieldset-clean" style="margin-top:30px"><legend class="field-label legend">Tratamentos para combinar <small>(opcional)</small></legend>'+available.map(s=>{const price=treatmentPrice(s.id,state);return '<label class="extra-choice"><input type="checkbox" name="treatment" value="'+s.id+'" '+(state.treatments.includes(s.id)?'checked':'')+'><span><b>'+s.label+'</b><small>'+shortFor(s)+'</small><span class="option-price">'+money(price)+(price!==s.price?' · complemento':'')+'</span></span></label>';}).join('')+'</fieldset></section>';
+  if(available.length)html+='<section class="booking-treatments" aria-label="Tratamentos adicionais de pintura"><h3>Acrescente um tratamento de pintura</h3><fieldset class="fieldset-clean" style="margin-top:30px"><legend class="field-label legend">Tratamentos para combinar <small>(opcional)</small></legend>'+available.map(s=>{const price=treatmentPrice(s.id,state);return '<label class="extra-choice"><input type="checkbox" name="treatment" value="'+s.id+'" '+(state.treatments.includes(s.id)?'checked':'')+'><span><b>'+s.label+'</b><small>'+s.description+'</small><span class="option-price">'+money(price)+(price!==s.price?' · complemento':'')+'</span></span></label>';}).join('')+'</fieldset></section>';
   if(hasCoating(state))html+='<p class="booking-inline-notice">A vitrificação substitui a cera. A cura e a entrega serão confirmadas na avaliação.</p>';
  }
  const s=findService(baseFor(state));if(s?.notice)html+='<p class="booking-inline-notice">'+s.notice+'</p>';

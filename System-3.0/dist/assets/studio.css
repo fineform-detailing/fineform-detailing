@@ -1290,3 +1290,45 @@ body[data-page=booking] .privacy-note{
  body[data-page=home] .hours-panel dl>div{align-items:start}
  body[data-page=home] .hours-panel dt{font-size:12px}
 }
+
+
+/* Care Moto recebe o destaque editorial. Sem faixas nem iluminação artificial. */
+body[data-page=home] #service-grid .service-row.care-moto-featured{
+ background:#171b1a;border:1px solid #171b1a;box-shadow:none;
+}
+body[data-page=home] #service-grid .care-moto-featured .menu-row-copy h3,
+body[data-page=home] #service-grid .care-moto-featured .menu-row-price strong{color:#fff}
+body[data-page=home] #service-grid .care-moto-featured .menu-row-copy p{color:#d0d8d2}
+body[data-page=home] #service-grid .care-moto-featured .menu-row-price small{color:#c2d0c8}
+body[data-page=home] #service-grid .care-moto-featured .service-open>b{
+ background:#fff;border-color:#fff;color:#171b1a;
+}
+
+/* Todos os tratamentos visíveis, sem acordeão e sem alertas em caixas verdes. */
+body[data-page=booking] .booking-panel .booking-treatments{
+ border:0;margin-top:24px;padding:0;background:transparent;
+}
+body[data-page=booking] .booking-panel .booking-treatments>h3{
+ margin:0 0 15px;padding:0;font-size:19px;line-height:1.35;
+ font-weight:650;color:#1b241e;
+}
+body[data-page=booking] .booking-panel .booking-treatments .fieldset-clean{margin-top:16px!important}
+body[data-page=booking] .booking-panel .booking-treatments .choice-stack{margin-top:0}
+body[data-page=booking] .booking-panel .booking-inline-notice{
+ margin:15px 0 7px;padding:0;border:0;background:transparent;
+ color:#59645d;font-size:12px;line-height:1.6;
+}
+body[data-page=booking] .booking-panel .option-price{
+ display:block;margin-top:10px;color:#1d2721;font-weight:700;
+}
+body[data-page=booking] .booking-panel .included-badge{color:#43574a}
+body[data-page=booking] .booking-panel .result-tools{
+ margin:20px 0 0;padding:0;border:0;
+}
+body[data-page=booking] .booking-panel .result-tools>h3{
+ margin:0 0 12px;font-size:18px;font-weight:650;color:#161d18;
+}
+body[data-page=booking] .booking-panel .result-tools .result-actions{margin:0}
+body[data-page=booking] .booking-panel .quote-box{
+ background:#f8f8f6;border-color:#e5e7e0;
+}

@@ -1383,3 +1383,161 @@ body[data-page=booking] .booking-panel .privacy-note a{text-decoration:underline
  body[data-page=booking] .booking-panel .extra-choice{padding:13px!important}
  body[data-page=booking] .booking-panel .quote-total strong{font-size:22px}
 }
+
+/* Fine Form — cards de serviços inspirados no menu editorial.
+   Somente preto, branco e cinza: nenhuma foto, elemento azul ou ornamento. */
+body[data-page=home] .menu-section #service-grid{
+ display:grid;grid-template-columns:repeat(3,minmax(0,1fr));
+ gap:18px;align-items:stretch;
+}
+body[data-page=home] .menu-section #service-grid .service-row{
+ display:flex;flex-direction:column;align-items:center;justify-content:space-between;
+ gap:0;min-height:275px;min-width:0;
+ padding:28px 22px 23px;
+ border:1px solid #e5e5e5;border-radius:28px;
+ background:#fff;color:#111;text-align:center;
+ box-shadow:0 12px 26px rgba(0,0,0,.055);
+ overflow:hidden;
+}
+body[data-page=home] .menu-section #service-grid .menu-number,
+body[data-page=home] .menu-section #service-grid .menu-row-price small,
+body[data-page=home] .menu-section #service-grid .service-positioning{
+ display:none;
+}
+body[data-page=home] .menu-section #service-grid .menu-row-copy{
+ display:block;flex:1;align-self:stretch;min-width:0;
+ grid-column:auto;grid-row:auto;
+}
+body[data-page=home] .menu-section #service-grid .menu-row-copy h3{
+ margin:0 0 13px;
+ font-size:clamp(23px,2.4vw,29px);
+ font-weight:700;line-height:1.15;
+ letter-spacing:-.045em;color:#111;
+}
+body[data-page=home] .menu-section #service-grid .menu-row-copy p:not(.service-positioning){
+ font-size:13px;line-height:1.55;letter-spacing:0;
+ color:#5e5e5e;margin:0 auto 18px;max-width:34ch;
+}
+body[data-page=home] .menu-section #service-grid .menu-row-price{
+ grid-column:auto;grid-row:auto;text-align:center;
+ align-self:center;margin:0 0 12px;
+}
+body[data-page=home] .menu-section #service-grid .menu-row-price strong{
+ color:#111;font-size:21px;line-height:1.25;letter-spacing:-.035em;font-weight:750;
+}
+body[data-page=home] .menu-section #service-grid .service-open{
+ display:inline-flex;align-items:center;justify-content:center;
+ align-self:center;grid-column:auto;grid-row:auto;
+ padding:8px 12px 8px 17px;gap:11px;
+ min-height:42px;max-width:100%;
+ border:0;border-radius:99px;background:#f4f4f4;color:#111;
+ font-size:12px;font-weight:600;text-decoration:none;white-space:normal;
+}
+body[data-page=home] .menu-section #service-grid .service-open>span{display:inline}
+body[data-page=home] .menu-section #service-grid .service-open>b{
+ display:grid;place-items:center;width:28px;height:28px;min-width:28px;
+ border:0;border-radius:50%;background:#111;color:#fff;
+ font-size:17px;line-height:1;transform:none;
+}
+body[data-page=home] .menu-section #service-grid .service-open:hover>b{
+ background:#363636;border-color:#363636;transform:none;
+}
+body[data-page=home] .menu-section #service-grid .service-row.service-featured{
+ background:#131313;color:#fff;border-color:#131313;
+ box-shadow:0 13px 28px rgba(0,0,0,.13);
+}
+body[data-page=home] .menu-section #service-grid .service-row.service-featured .menu-row-copy h3,
+body[data-page=home] .menu-section #service-grid .service-row.service-featured .menu-row-price strong{
+ color:#fff;
+}
+body[data-page=home] .menu-section #service-grid .service-row.service-featured .menu-row-copy p:not(.service-positioning){
+ color:#d4d4d4;
+}
+body[data-page=home] .menu-section #service-grid .service-row.service-featured .service-open{
+ background:#303030;color:#fff;
+}
+body[data-page=home] .menu-section #service-grid .service-row.service-featured .service-open>b{
+ color:#111;background:#fff;border-color:#fff;
+}
+body[data-page=home] .menu-section #service-grid .service-row.service-featured .service-open:hover>b{
+ background:#e7e7e7;border-color:#e7e7e7;
+}
+@media(max-width:900px){
+ body[data-page=home] .menu-section #service-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+}
+@media(max-width:620px){
+ body[data-page=home] .menu-section #service-grid{grid-template-columns:1fr;gap:12px}
+ body[data-page=home] .menu-section #service-grid .service-row{min-height:0;padding:22px 21px;border-radius:24px}
+ body[data-page=home] .menu-section #service-grid .menu-row-copy h3{font-size:23px;margin-bottom:9px}
+ body[data-page=home] .menu-section #service-grid .menu-row-copy p:not(.service-positioning){
+  font-size:12.5px;line-height:1.52;margin-bottom:14px;max-width:38ch;
+ }
+ body[data-page=home] .menu-section #service-grid .menu-row-price{margin-bottom:10px}
+ body[data-page=home] .menu-section #service-grid .menu-row-price strong{font-size:19px}
+ body[data-page=home] .menu-section #service-grid .service-open{min-height:40px}
+}
+
+/* Orçamento: o mesmo sistema de cards, descrições completas com tipografia menor. */
+body[data-page=booking] .booking-panel .choice-stack{
+ display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;
+ align-items:stretch;
+}
+body[data-page=booking] .booking-panel .choice-stack .choice-card{
+ display:flex;flex-direction:column;align-items:center;text-align:center;
+ justify-content:flex-start;min-width:0;min-height:182px;
+ padding:22px 19px!important;
+ border:1px solid #e4e4e4!important;border-radius:24px!important;
+ background:#fff!important;color:#111;
+ box-shadow:0 8px 22px rgba(0,0,0,.045);
+}
+body[data-page=booking] .booking-panel .choice-stack .choice-card h3{
+ margin:0;color:#111;font-size:20px!important;
+ font-weight:700;line-height:1.22!important;
+}
+body[data-page=booking] .booking-panel .choice-stack .choice-card p{
+ flex:1;max-width:37ch;margin:10px auto 14px!important;
+ font-size:12.5px!important;line-height:1.56!important;color:#626262;
+}
+body[data-page=booking] .booking-panel .choice-stack .choice-card .booking-choice-price{
+ display:block;margin-top:auto!important;font-size:17px!important;
+ font-weight:700;color:#111;line-height:1.24;
+}
+body[data-page=booking] .booking-panel .choice-stack .choice-card.selected{
+ background:#161616!important;color:#fff;border-color:#161616!important;
+ box-shadow:0 10px 24px rgba(0,0,0,.12);
+}
+body[data-page=booking] .booking-panel .choice-stack .choice-card.selected h3,
+body[data-page=booking] .booking-panel .choice-stack .choice-card.selected .booking-choice-price{color:#fff}
+body[data-page=booking] .booking-panel .choice-stack .choice-card.selected p{color:#dadada}
+body[data-page=booking] .booking-panel .choice-stack .choice-card.selected .booking-choice-price span{color:#d2d2d2}
+body[data-page=booking] .booking-panel .choice-stack .choice-card:hover{border-color:#555!important}
+body[data-page=booking] .booking-panel .choice-stack .choice-card:focus-visible{
+ outline:3px solid #111;outline-offset:3px;
+}
+body[data-page=booking] .booking-panel .extra-choice{
+ border:1px solid #e5e5e5!important;
+ border-radius:21px!important;background:#fff!important;
+ color:#111;
+}
+body[data-page=booking] .booking-panel .extra-choice input[type=checkbox]{accent-color:#111}
+body[data-page=booking] .booking-panel .extra-choice b{color:#111}
+body[data-page=booking] .booking-panel .extra-choice small{
+ color:#656565;font-size:12px!important;line-height:1.56!important;
+}
+body[data-page=booking] .booking-panel .extra-choice .option-price{
+ font-size:16px!important;color:#111!important;
+}
+body[data-page=booking] .booking-panel .extra-choice.included{background:#f5f5f5!important}
+body[data-page=booking] .booking-panel .booking-treatments>h3{color:#111}
+@media(max-width:760px){
+ body[data-page=booking] .booking-panel .choice-stack{grid-template-columns:1fr;gap:11px}
+ body[data-page=booking] .booking-panel .choice-stack .choice-card{
+  min-height:0;padding:20px 18px!important;border-radius:22px!important;
+ }
+ body[data-page=booking] .booking-panel .choice-stack .choice-card h3{font-size:19px!important}
+ body[data-page=booking] .booking-panel .choice-stack .choice-card p{
+  max-width:39ch;font-size:12.5px!important;line-height:1.55!important;
+  margin:8px auto 12px!important;
+ }
+ body[data-page=booking] .booking-panel .choice-stack .choice-card .booking-choice-price{font-size:17px!important}
+}

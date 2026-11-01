@@ -22,7 +22,7 @@ test('Care compacto exibe descrição, preço e economia sem legendas e setas ex
   assert.equal(host.querySelectorAll('[data-plan-index]').length,3);
   assert.equal(host.querySelectorAll('.care-facts div').length,3,'apenas a economia de cada plano');
   for(const item of host.querySelectorAll('.care-facts')){
-   assert.match(item.textContent,/Economia mensal/);
+   assert.match(item.textContent,/Economia no plano/);
    assert.doesNotMatch(item.textContent,/Visitas|atendimentos/);
   }
   for(const selector of ['.care-photo > span','.care-kind','.care-agreement','.care-dot','.care-arrow','[data-plan-step]']){

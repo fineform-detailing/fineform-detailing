@@ -1,4 +1,5 @@
 import {mountCustomerNotice} from './customer-notifications.mjs';
+import {startQuoteJourney,buildDigitalReceipt,downloadDigitalReceipt} from './quote-journey.mjs';
 import {api,submissionToken,trackingUrl,saveBookmark,copyText,clearPendingSubmission} from './system.mjs';
 import {preferredContact} from './contacts.mjs';
 import {PRIVACY_VERSION,DRAFT_TTL,readDraft} from './privacy-storage.mjs';
@@ -165,9 +166,10 @@ form.addEventListener('submit',async event=>{
   if(!/^(?:55)?\d{10,11}$/.test(state.phone.replace(/\D/g,'')))return error('Informe seu WhatsApp com DDD.','phone');
   if(!state.ack)return error('Confirme que o pedido depende de uma conversa com Mateus.','ack');
   tidy();sending=true;form.inert=true;$('#reset-draft').disabled=true;$('#next-step').disabled=true;$('#next-step').textContent='Enviando…';
-  try{const payload={...state,privacyVersion:PRIVACY_VERSION,website:content.querySelector('[name="website"]')?.value||''};const token=submissionToken(payload);const {quote}=await api('/api/quotes',{method:'POST',body:{...payload,submissionToken:token}});saveBookmark(quote.id,token,quote.reference,{remember:state.rememberLink});showResult(quote,token);clearPendingSubmission();}
-  catch(e){error(e.message);}
-  finally{sending=false;form.inert=false;$('#reset-draft').disabled=false;$('#next-step').disabled=false;$('#next-step').innerHTML='Enviar solicitação de orçamento <span>↗</span>';}
+  const journey=startQuoteJourney();
+  try{const payload={...state,privacyVersion:PRIVACY_VERSION,website:content.querySelector('[name="website"]')?.value||''};const token=submissionToken(payload);const {quote}=await api('/api/quotes',{method:'POST',body:{...payload,submissionToken:token}});saveBookmark(quote.id,token,quote.reference,{remember:state.rememberLink});showResult(quote,token);clearPendingSubmission();journey.complete(quote,$('#ff-digital-receipt'));}
+  catch(e){error(e.message);journey.fail(e.message,()=>form.requestSubmit());}
+  finally{sending=false;form.inert=false;$('#reset-draft').disabled=false;$('#next-step').disabled=false;$('#next-step').innerHTML='Enviar pedido <span>↗</span>';}
   return;
  }
  step++;render(true);
@@ -187,10 +189,22 @@ function download(text){const blob=new Blob([text],{type:'text/markdown;charset=
 function showResult(quote,token){
  updateProgress(true);try{localStorage.removeItem(key);}catch{}remember=false;$('#remember-draft').checked=false;document.querySelector('.save-draft').hidden=true;$('#draft-status').hidden=true;
  const link=trackingUrl(quote.id,token),summary=createSummary(quote.selection)+'\n\n*Pedido '+quote.reference+'*\nAcompanhar: '+link;form.hidden=true;const result=$('#summary-result');result.hidden=false;
- result.innerHTML='<div class="result-mark" aria-hidden="true">↗</div><h2 class="wizard-title" tabindex="-1">Pedido enviado.<br>Próximo passo: conversar.</h2><p class="wizard-lead">Seu pedido foi registrado para avaliação. Acompanhe o retorno pelo link privado; a data será confirmada diretamente.</p>'+'<section class="system-card receipt"><strong>'+esc(quote.reference)+'</strong><a class="tracking-link" href="'+esc(link)+'">'+esc(link)+'</a><div class="system-actions"><a class="button orange" href="'+esc(link)+'">Acompanhar pedido ↗</a><button class="button outline" id="copy-tracking" type="button">Copiar link</button></div><p class="system-muted">Este link é privado. Receber a solicitação não confirma o atendimento. Serviço, data e horário dependem da confirmação de Mateus.</p></section><div id="booking-customer-notice"></div>'+quoteBlock(quote.selection)+'<section class="result-tools" aria-label="Compartilhar seu resumo"><h3>Seu resumo, pronto para compartilhar</h3><pre class="summary-pre"></pre><div class="result-actions"><button class="button outline primary-send" type="button" id="send-whatsapp">'+esc(preferredContact(window.FINE_FORM_CONFIG||{}).label)+' <span>↗</span></button><button class="button outline" type="button" id="send-email">Enviar por e-mail <span>↗</span></button><button class="button outline" type="button" id="copy-summary">Copiar resumo <span>⧉</span></button><button class="button outline" type="button" id="download-summary">Baixar .md <span>↓</span></button><button class="text-link" type="button" id="share-summary">Compartilhar ↗</button><button class="text-link" type="button" id="edit-summary">Preparar outro pedido</button></div></section><p class="result-message">Sua solicitação está no painel. O site não faz cobranças nem reserva horários automaticamente. Você pode abrir o WhatsApp para conversar ou compartilhar o resumo.</p>';
+ result.innerHTML=buildDigitalReceipt(quote,link)+
+  '<div class="ff-receipt-actions"><button class="button outline" id="copy-tracking" type="button">Copiar link</button><button class="button outline" id="download-receipt" type="button">Baixar comprovante</button><button class="button outline" id="print-receipt" type="button">Imprimir / salvar PDF</button></div>'+
+  '<div id="booking-customer-notice"></div>'+
+  '<section class="result-tools" aria-label="Compartilhar sua solicitação"><h3>Compartilhar os detalhes</h3><pre class="summary-pre"></pre><div class="result-actions">'+
+  '<button class="button outline primary-send" type="button" id="send-whatsapp">'+esc(preferredContact(window.FINE_FORM_CONFIG||{}).label)+' <span>↗</span></button>'+
+  '<button class="button outline" type="button" id="send-email">Enviar por e-mail <span>↗</span></button>'+
+  '<button class="button outline" type="button" id="copy-summary">Copiar resumo <span>⧉</span></button>'+
+  '<button class="button outline" type="button" id="download-summary">Baixar resumo .md <span>↓</span></button>'+
+  '<button class="text-link" type="button" id="share-summary">Compartilhar solicitação ↗</button>'+
+  '<button class="text-link" type="button" id="edit-summary">Preparar outro pedido</button></div></section>'+
+  '<p class="result-message">O atendimento será confirmado após análise e conversa. Não há cobrança nem reserva automática.</p>';
  mountCustomerNotice(document.getElementById('booking-customer-notice'),quote,token).catch(()=>{});
  $('.summary-pre').textContent=summary;
  $('#copy-tracking').addEventListener('click',()=>copyText(link).then(()=>window.ff?.toast('Link copiado.')).catch(e=>window.ff?.toast(e.message)));
+ $('#download-receipt').addEventListener('click',()=>downloadDigitalReceipt(quote,link));
+ $('#print-receipt').addEventListener('click',()=>window.print());
  $('#send-whatsapp').addEventListener('click',()=>window.ff?.contact(summary));
  $('#send-email').addEventListener('click',()=>window.ff?.emailContact(summary));
  $('#copy-summary').addEventListener('click',()=>copy(summary));
@@ -201,7 +215,7 @@ function showResult(quote,token){
   try{await navigator.share({title:'Meu cuidado — Fine Form',text:summary});}
   catch(e){if(e.name!=='AbortError')window.ff?.toast('Não foi possível compartilhar. Você pode copiar ou baixar o resumo.');}
  });
- result.querySelector('h2').focus({preventScroll:true});result.scrollIntoView({behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth',block:'start'});
+ /* A pasta anima a continuidade até o comprovante, sem interromper a confirmação real. */
 }
 window.addEventListener('ff:saved-data-cleared',()=>{remember=false;$('#remember-draft').checked=false;});
 render();

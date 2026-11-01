@@ -1,0 +1,174 @@
+/* Fine Form - pasta digital, transformação em comprovante, movimento respeitoso. */
+.ff-journey{
+ position:fixed;inset:0;z-index:2147483000;
+ display:grid;place-items:center;overflow:auto;
+ padding:calc(22px + env(safe-area-inset-top)) 18px calc(22px + env(safe-area-inset-bottom));
+ background:rgba(244,244,241,.92);backdrop-filter:blur(14px);
+ -webkit-backdrop-filter:blur(14px);
+ animation:ff-journey-arrive .28s ease both;
+}
+.ff-journey.is-handoff{opacity:0;pointer-events:none;transition:opacity .27s ease}
+.ff-journey-surface{width:min(100%,440px);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:21px}
+.ff-journey-visual{
+ position:relative;width:min(100%,400px);height:315px;
+ perspective:1100px;transform-style:preserve-3d;
+ display:grid;place-items:center;
+}
+.ff-folder{position:relative;width:min(78vw,305px);height:214px;
+ transform-style:preserve-3d;filter:drop-shadow(0 30px 19px rgba(15,15,15,.18));
+ animation:ff-folder-arrive .7s cubic-bezier(.17,.85,.29,1.07) both;
+}
+.ff-folder-back{position:absolute;inset:9% 0 11%;
+ background:linear-gradient(150deg,#333 0%,#171717 60%,#101010 100%);
+ border:1px solid #444;border-radius:21px 21px 18px 18px;
+ transform:translateZ(-9px)}
+.ff-folder-back:before{content:"";position:absolute;top:-14px;left:11%;width:40%;height:23px;
+ border-radius:11px 12px 0 0;background:#333;z-index:-1}
+.ff-folder-papers{position:absolute;inset:0;transform-style:preserve-3d;z-index:2}
+.ff-folder-paper{position:absolute;left:13%;right:13%;top:10%;height:78%;
+ border:1px solid #e8e9e4;border-radius:12px;background:#f6f6f3;
+ box-shadow:0 6px 13px #0002;display:flex;flex-direction:column;gap:9px;
+ padding:14px 17px;opacity:0;
+ transform-origin:50% 100%;
+ --shift:calc((var(--i) - 2)*11px);
+ animation:ff-paper-file 1.05s cubic-bezier(.21,.85,.24,1) calc(var(--i)*.16s + .3s) both;
+}
+.ff-paper-head{font:600 12px/1.3 Arial,sans-serif;color:#242424}
+.ff-folder-paper i{display:block;width:89%;height:5px;border-radius:8px;background:#dedfdd}
+.ff-folder-paper i:nth-of-type(2){width:64%}
+.ff-folder-paper i:nth-of-type(3){width:73%}
+.ff-folder-front{position:absolute;left:0;right:0;bottom:0;height:74%;z-index:3;
+ display:flex;align-items:flex-end;justify-content:flex-start;
+ padding:24px 24px 24px;background:linear-gradient(155deg,#343434,#171717 62%,#0f0f0f);
+ border:1px solid #494949;border-radius:13px 13px 23px 23px;
+ box-shadow:inset 0 1px 1px #fff2;transform-origin:50% 100%;transform:translateZ(18px) rotateX(-6deg);
+ transition:transform .65s cubic-bezier(.24,.9,.3,1),filter .5s;
+}
+.ff-folder-front:before{content:"";position:absolute;top:-29px;left:0;right:0;height:43px;
+ border-radius:60% 50% 0 0 / 65% 60% 0 0;
+ background:linear-gradient(125deg,#404040,#232323);
+ clip-path:polygon(0 0,25% 0,39% 80%,100% 80%,100% 100%,0 100%)}
+.ff-folder-label{position:relative;display:grid;grid-template-columns:33px auto;column-gap:12px;align-items:center;z-index:2}
+.ff-folder-label img{grid-row:1/3;display:block;width:33px;height:33px;filter:brightness(0) invert(1)}
+.ff-folder-label strong{font:700 18px/1.1 Arial,sans-serif;letter-spacing:-.03em;color:#fff}
+.ff-folder-label small{font:500 9px/1.3 Arial,sans-serif;letter-spacing:.12em;color:#d1d1ce}
+.ff-folder-accent{position:absolute;inset:auto 14px 6px;z-index:4;height:2px;border-radius:99px;
+ background:#53c3b1;opacity:0;transform:scaleX(0);transform-origin:left center}
+.ff-journey.is-packed .ff-folder{animation:ff-folder-settle .38s cubic-bezier(.22,1.25,.36,1) both}
+.ff-journey.is-packed .ff-folder-front{transform:translateZ(19px) rotateX(0)}
+.ff-journey.is-packed .ff-folder-accent{animation:ff-folder-trace .92s ease .16s both}
+.ff-journey-message{
+ min-height:25px;text-align:center;font:500 13px/1.5 Arial,sans-serif;
+ letter-spacing:.012em;color:#424845;
+}
+.ff-journey-indicator{height:2px;width:94px;border-radius:20px;background:#dce1dd;overflow:hidden}
+.ff-journey-indicator span{display:block;width:35%;height:100%;background:#53c3b1;border-radius:inherit;animation:ff-indicator 1.25s ease-in-out infinite alternate}
+.ff-journey-confirm{position:absolute;top:16px;right:calc(50% - 160px);z-index:6;
+ display:grid;place-items:center;width:46px;height:46px;border-radius:50%;color:#111;
+ background:#53c3b1;box-shadow:0 9px 22px #0002;font:700 23px/1 Arial,sans-serif;
+ transform:scale(.2) rotate(-30deg);opacity:0}
+.ff-journey-ticket{
+ position:absolute;z-index:7;left:50%;top:50%;width:min(86vw,325px);min-height:224px;
+ background:#fff;border:1px solid #e2e3e0;border-radius:22px;
+ box-shadow:0 20px 50px #0002;opacity:0;
+ transform:translate(-50%,12%) scale(.32) rotateX(-15deg);transform-origin:center center;
+ padding:28px 26px;color:#171717;
+}
+.ff-ticket-mark{font:700 11px Arial,sans-serif;letter-spacing:.11em}
+.ff-ticket-title{margin-top:25px;font:700 23px/1.2 Arial,sans-serif;letter-spacing:-.05em}
+.ff-ticket-reference{margin-top:15px;font:500 13px Arial,sans-serif;color:#5b6460}
+.ff-ticket-rule{height:1px;margin:17px 0;background:#e5e5e5}
+.ff-ticket-line{height:7px;width:82%;margin-top:8px;border-radius:8px;background:#e9ebe9}
+.ff-ticket-line.short{width:49%}
+.ff-journey.is-complete .ff-folder{animation:ff-folder-depart .8s cubic-bezier(.2,.7,.3,1) both}
+.ff-journey.is-complete .ff-journey-confirm{animation:ff-confirm-pop .48s cubic-bezier(.2,1.4,.3,1) both}
+.ff-journey.is-complete .ff-journey-ticket{animation:ff-ticket-emerge .9s cubic-bezier(.18,.8,.25,1) both}
+.ff-journey.is-complete .ff-journey-indicator{opacity:0}
+.ff-journey-error{
+ width:min(100%,370px);text-align:center;border:1px solid #dcdcdc;background:#fff;
+ padding:18px;border-radius:18px;box-shadow:0 12px 25px #0001;
+}
+.ff-journey-error[hidden]{display:none}
+.ff-journey-error p{font-size:13px;line-height:1.5;margin:0 0 14px;color:#303030}
+.ff-journey-error-actions{display:flex;justify-content:center;gap:10px;flex-wrap:wrap}
+.ff-journey-error-actions button{min-height:44px;border:1px solid #222;border-radius:999px;
+ font:600 12px Arial,sans-serif;padding:11px 15px;background:#141414;color:#fff;cursor:pointer}
+.ff-journey-error-actions button+button{background:#fff;color:#171717}
+.ff-journey.is-error .ff-folder{opacity:.4;filter:grayscale(1)}
+.ff-journey.is-error .ff-journey-indicator{display:none}
+
+/* Documento: dados reais retornados pela API, sem código de barras fictício. */
+body[data-page=booking] .ff-digital-receipt{
+ width:100%;max-width:620px;margin:6px auto 20px;
+ padding:0;background:#fff;border:1px solid #e1e3df;border-radius:25px;
+ color:#181a19;overflow:hidden;box-shadow:0 12px 30px rgba(0,0,0,.055);
+}
+.ff-receipt-brand{display:flex;align-items:center;gap:12px;padding:27px 26px 10px}
+.ff-receipt-brand img{width:36px;height:36px;object-fit:contain}
+.ff-receipt-brand>span{font-size:17px;font-weight:800;letter-spacing:-.04em;line-height:1.1}
+.ff-receipt-brand small{display:block;font-size:8px;font-weight:650;letter-spacing:.12em;margin-top:3px;color:#737873}
+.ff-receipt-hero{padding:26px 26px 30px;text-align:center}
+.ff-receipt-check{display:grid;place-items:center;margin:0 auto 16px;width:43px;height:43px;
+ background:#111;color:#fff;border-radius:50%;font-size:22px;font-weight:700}
+.ff-receipt-hero .wizard-title{font-size:clamp(26px,5vw,34px)!important;line-height:1.1!important;margin:0 auto 10px!important}
+.ff-receipt-hero>p{max-width:39ch;margin:0 auto;color:#666d68;font-size:13px;line-height:1.6}
+.ff-receipt-meta{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));
+ margin:0 26px;border-top:1px dashed #d5d9d5;border-bottom:1px dashed #d5d9d5;
+ padding:17px 0;gap:17px}
+.ff-receipt-field:last-child{grid-column:1/-1}
+.ff-receipt-meta dt,.ff-receipt-content dt{font-size:11px;color:#7a817c;margin:0}
+.ff-receipt-meta dd{margin:5px 0 0;font-size:13px;color:#1a201c;font-weight:700;overflow-wrap:anywhere}
+.ff-receipt-status-dot{display:inline-block;width:7px;height:7px;border-radius:50%;background:#53c3b1;margin-right:4px}
+.ff-receipt-content{padding:21px 26px 16px}
+.ff-receipt-content h3{font-size:18px!important;margin:0 0 11px!important;font-weight:700;letter-spacing:-.035em;color:#1b1b1b}
+.ff-receipt-content dl{margin:0}
+.ff-receipt-content dl>div{padding:12px 0;border-bottom:1px solid #edeeeb}
+.ff-receipt-content dd{margin:5px 0 0;font-size:13px;line-height:1.5;color:#292f2c;overflow-wrap:anywhere}
+.ff-receipt-amount{display:flex;justify-content:space-between;align-items:baseline;gap:9px;
+ margin:20px 0 0;font-size:12px}
+.ff-receipt-amount strong{font-size:23px;font-weight:760;white-space:nowrap;color:#131313}
+.ff-receipt-bottom{border-top:1px solid #e6e6e4;padding:17px 26px 25px}
+.ff-receipt-bottom p{margin:0 0 15px;font-size:11px;line-height:1.6;color:#777e77}
+.ff-receipt-bottom .tracking-link{display:flex;align-items:center;justify-content:space-between;
+ gap:12px;min-height:49px;text-decoration:none;border-radius:999px;
+ background:#131313;color:#fff;padding:13px 19px;font-weight:650;font-size:13px;
+ overflow-wrap:anywhere}
+.ff-receipt-bottom .tracking-link span{font-size:17px}
+body[data-page=booking] .ff-receipt-actions{display:flex;flex-wrap:wrap;gap:9px;margin:15px 0 20px}
+body[data-page=booking] .ff-receipt-actions .button{font-size:12px!important;min-height:43px;flex:1 1 150px}
+body[data-page=booking] #summary-result .result-tools{margin-top:22px}
+body[data-page=booking] #summary-result .result-tools .summary-pre{max-height:200px;overflow:auto}
+@keyframes ff-journey-arrive{from{opacity:0;backdrop-filter:blur(0)}to{opacity:1;backdrop-filter:blur(14px)}}
+@keyframes ff-folder-arrive{from{opacity:0;transform:translate3d(0,48px,0) scale(.87) rotateX(8deg)}to{opacity:1;transform:translate3d(0,0,0) scale(1) rotateX(0)}}
+@keyframes ff-paper-file{0%{opacity:0;transform:translate3d(var(--shift),-115px,80px) rotateZ(-9deg) rotateX(16deg) scale(.94)}22%{opacity:1}78%{opacity:1;transform:translate3d(calc(var(--shift)/3),-23px,20px) rotateZ(3deg) scale(1.02)}100%{opacity:1;transform:translate3d(0,10px,4px) rotateZ(0) rotateX(0) scale(1)}}
+@keyframes ff-folder-settle{0%{transform:scale(1)}40%{transform:translateY(5px) scale(.973, .954)}100%{transform:scale(1)}}
+@keyframes ff-folder-trace{0%{opacity:0;transform:scaleX(0)}40%{opacity:.75;transform:scaleX(1)}100%{opacity:0;transform:scaleX(1)}}
+@keyframes ff-indicator{from{transform:translateX(-25%)}to{transform:translateX(220%)}}
+@keyframes ff-confirm-pop{0%{opacity:0;transform:scale(.25) rotate(-25deg)}55%{opacity:1;transform:scale(1.12) rotate(7deg)}100%{opacity:1;transform:scale(1)}}
+@keyframes ff-folder-depart{0%{opacity:1;transform:scale(1)}45%{opacity:1;transform:translateY(34px) scale(.87)}100%{opacity:0;transform:translateY(95px) scale(.65)}}
+@keyframes ff-ticket-emerge{0%{opacity:0;transform:translate(-50%,12%) scale(.33) rotateX(-18deg)}34%{opacity:1;transform:translate(-50%,-36%) scale(.58) rotateX(-8deg)}100%{opacity:1;transform:translate(-50%,-48%) scale(1) rotateX(0deg)}}
+@media(max-width:420px){
+ .ff-journey-visual{height:270px}
+ .ff-folder{width:min(74vw,290px);height:200px}
+ .ff-journey-confirm{right:4%}
+ body[data-page=booking] .ff-receipt-brand{padding:23px 19px 5px}
+ body[data-page=booking] .ff-receipt-hero{padding:22px 19px 27px}
+ body[data-page=booking] .ff-receipt-meta{margin:0 19px}
+ body[data-page=booking] .ff-receipt-content{padding:20px 19px}
+ body[data-page=booking] .ff-receipt-bottom{padding:17px 19px 21px}
+ .ff-receipt-amount strong{font-size:20px}
+}
+@media(prefers-reduced-motion:reduce){
+ .ff-journey,.ff-journey *,body[data-page=booking] .ff-digital-receipt{
+  animation:none!important;transition:none!important;transform:none!important;
+ }
+ .ff-journey .ff-folder-paper{opacity:1}
+ .ff-journey.is-complete .ff-journey-ticket{opacity:1}
+}
+@media print{
+ .site-header,.site-footer,.booking-aside,.result-tools,.result-message,
+ .booking-panel>.wizard-top,.booking-panel>.progress-track,.booking-panel>.wizard-status,
+ .ff-receipt-actions,.ff-journey,#booking-customer-notice{display:none!important}
+ body[data-page=booking] .booking-panel{box-shadow:none;padding:0;border:none}
+ body[data-page=booking] .ff-digital-receipt{box-shadow:none;border:1px solid #ccc;max-width:100%}
+}

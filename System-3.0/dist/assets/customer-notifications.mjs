@@ -7,11 +7,11 @@ export async function mountCustomerNotice(host,q,token){
  if(!host)return;
  if(q.status==='completed'){
   const url=trackingUrl(q.id,token,'avaliar');
-  host.innerHTML='<section class="system-card review-invitation"><p class="kicker">VEÍCULO ENTREGUE / SUA EXPERIÊNCIA</p><h2>Seu cuidado ficou em boa forma?</h2><p>Sua opinião ajuda a Fine Form a melhorar e outros clientes a escolher.</p><a class="button orange" href="'+e(url)+'">Deixar minha avaliação <span aria-hidden="true">↗</span></a></section>';
+  host.innerHTML='<section class="system-card review-invitation"><h2>Como foi receber seu veículo?</h2><p>Conte o que você gostou e o que pode ser aprimorado. Sua avaliação ajuda quem está escolhendo a Fine Form.</p><a class="button orange" href="'+e(url)+'">Deixar minha avaliação <span aria-hidden="true">↗</span></a></section>';
   return;
  }
  if(['declined','cancelled'].includes(q.status))return;
- host.innerHTML='<section class="system-card customer-notice"><h2>Um aviso depois da entrega.</h2><p>Ative neste aparelho para receber um convite para avaliar quando seu veículo for retirado.</p><p class="system-muted" role="status">Verificando notificações…</p><button type="button" class="button outline" disabled>Ativar convite de avaliação</button></section>';
+ host.innerHTML='<section class="system-card customer-notice"><h2>Avalie depois da entrega</h2><p>Se desejar, permita um aviso neste aparelho quando sua avaliação estiver disponível.</p><p class="system-muted" role="status">Verificando notificações…</p><button type="button" class="button outline" disabled>Ativar convite de avaliação</button></section>';
  const status=host.querySelector('[role=status]'),button=host.querySelector('button');
  if(!supported()){
   button.hidden=true;

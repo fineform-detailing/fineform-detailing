@@ -16,7 +16,7 @@ test('catálogo conserva preços, detalhes e ações sem legendas redundantes no
  const menu=script.slice(script.indexOf('function renderMenu('),script.indexOf("$$('[data-menu-vehicle]').forEach"));
  assert.ok(menu.includes('data-service='));
  assert.ok(menu.includes('data-extra='));
- assert.ok(menu.includes('data-all-details'));
+ assert.ok(menu.includes('data-extra="motoPolish"'),'Polimento Premium da moto tem card próprio');
  assert.ok(menu.includes('data-plan-index')===false);
  assert.ok(menu.includes("money(s.price)"));
  assert.ok(menu.includes("money(extraPrice(x,vehicle))"));
@@ -25,7 +25,7 @@ test('catálogo conserva preços, detalhes e ações sem legendas redundantes no
  assert.ok(menu.includes('escape(x.description)'),'cuidados por área preservam descrição');
  assert.ok(menu.includes("findService('fullClean').description"),'higienização preserva descrição');
  assert.ok(menu.includes('Duas lavagens Moto Premium por mês'),'Care Moto mantém explicação');
- assert.ok(menu.includes('Plásticos, rodas e pintura: tratamentos específicos'),'cuidados de moto preservados');
+ assert.ok(menu.includes('Polimento Premium para motos'),'Polimento Premium da moto aparece no catálogo principal');
  assert.ok(script.includes('function openExtra(id)'));
  assert.ok(script.includes('escape(item.description)'));
  assert.ok(script.includes('serviceDetails(s)'));

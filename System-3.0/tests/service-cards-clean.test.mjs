@@ -12,7 +12,7 @@ test('catálogo conserva preços, detalhes e ações sem legendas redundantes no
  ]);
  const doc=new JSDOM(html).window.document;
  const subtitle=doc.querySelector('#cuidados .menu-heading > p');
- assert.equal(subtitle?.textContent,'Veja o que está incluído em cada serviço.');
+ assert.equal(subtitle?.textContent,'Compare opções, conheça as etapas e escolha com confiança.');
  const menu=script.slice(script.indexOf('function renderMenu('),script.indexOf("$$('[data-menu-vehicle]').forEach"));
  assert.ok(menu.includes('data-service='));
  assert.ok(menu.includes('data-extra='));
@@ -24,8 +24,8 @@ test('catálogo conserva preços, detalhes e ações sem legendas redundantes no
  assert.ok(menu.includes('escape(s.description)'),'cards de lavagem preservam descrição');
  assert.ok(menu.includes('escape(x.description)'),'cuidados por área preservam descrição');
  assert.ok(menu.includes("findService('fullClean').description"),'higienização preserva descrição');
- assert.ok(menu.includes('Duas visitas Moto Premium por mês'),'Care Moto mantém explicação');
- assert.ok(menu.includes('Revitalização ou vitrificação dos plásticos externos'),'cuidados de moto preservados');
+ assert.ok(menu.includes('Duas lavagens Moto Premium por mês'),'Care Moto mantém explicação');
+ assert.ok(menu.includes('Plásticos, rodas e pintura: tratamentos específicos'),'cuidados de moto preservados');
  assert.ok(script.includes('function openExtra(id)'));
  assert.ok(script.includes('escape(item.description)'));
  assert.ok(script.includes('serviceDetails(s)'));

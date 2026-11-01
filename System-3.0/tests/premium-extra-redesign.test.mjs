@@ -4,13 +4,15 @@ import {readFile} from 'node:fs/promises';
 import {findService,availableTreatments,normalizeTreatments,quoteFor,treatmentPrice,createSummary} from '../dist/assets/catalog.mjs';
 
 const state={vehicle:'car',mode:'single',service:'extra',extras:[],treatments:[]};
-test('Premium é o único serviço em destaque e Extra fica sem polimento',async()=>{
+test('Care Moto recebe destaque e Extra continua sem polimento',async()=>{
  const [js,css,html]=await Promise.all([
   readFile('dist/assets/app.mjs','utf8'),
   readFile('dist/assets/studio.css','utf8'),
   readFile('dist/index.html','utf8')
  ]);
- assert.ok(js.includes("(id==='premium'?'service-featured':'')"));
+ assert.ok(js.includes("(vehicle==='moto'&&id==='motoPremium'?'service-featured':'')"));
+ assert.ok(js.includes('service-featured care-moto-featured'));
+ assert.ok(!js.includes("(id==='premium'?'service-featured':'')"));
  assert.ok(!js.includes("(id==='extra'?'service-complete':'')"));
  assert.ok(css.includes('.service-row.service-featured'));
  assert.ok(css.includes('background:#171b1a'));

@@ -18,7 +18,7 @@ test('WhatsApp informado recebe o resumo completo; e-mail continua disponível c
 });
 test('o resumo vai inteiro no corpo, sem transformar caracteres em cabeçalhos',()=>{
  const text='# Fine Form\nNome: João & Maria\nVeículo: Porsche 911\nA confirmar? Sim';
- const url=new URL(emailMessage(config,text));assert.equal(url.pathname,'fineformcare@gmail.com');assert.equal(url.searchParams.get('subject'),'Meu próximo cuidado — Fine Form');assert.equal(url.searchParams.get('body'),text.replace(/\n/g,'\r\n'));assert.equal(url.searchParams.size,2);
+ const url=new URL(emailMessage(config,text));assert.equal(url.pathname,'fineformcare@gmail.com');assert.equal(url.searchParams.get('subject'),'Solicitação de cuidado automotivo | Fine Form');assert.equal(url.searchParams.get('body'),text.replace(/\n/g,'\r\n'));assert.equal(url.searchParams.size,2);
 });
 test('o e-mail é o contato disponível; WhatsApp só assume prioridade quando configurado',()=>{
  assert.equal(preferredContact(config).kind,'email');assert.equal(preferredContact({...config,whatsapp:'55 11 99999-8888'}).kind,'whatsapp');assert.equal(preferredContact({}).kind,'unavailable');assert.equal(emailMessage({email:'evil@example.com?cc=another@example.com'},'x'),'');assert.deepEqual(socialContacts({instagram:'javascript:alert(1)',tiktok:'https://tiktok.com.other.example/@x'}),[]);

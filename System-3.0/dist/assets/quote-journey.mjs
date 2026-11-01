@@ -29,11 +29,11 @@ export function buildDigitalReceipt(quote,link){
  const total=quote.budget?.hasBase&&Number.isFinite(Number(quote.budget.total))?'<div class="ff-receipt-amount"><span>Orçamento apresentado</span><strong>'+esc(money(Number(quote.budget.total)))+'</strong></div>':'';
  return '<article class="ff-digital-receipt receipt" id="ff-digital-receipt" aria-label="Comprovante digital de solicitação">'+
   '<div class="ff-receipt-brand"><img src="../assets/logo-transparent.svg" width="42" height="42" alt="Símbolo Fine Form"><span>FINE FORM<small>ESTÉTICA AUTOMOTIVA</small></span></div>'+
-  '<div class="ff-receipt-hero"><span class="ff-receipt-check" aria-hidden="true">✓</span><h2 class="ff-receipt-title wizard-title" tabindex="-1">Solicitação recebida.</h2><p>Recebemos os dados do seu veículo. Vamos analisar o pedido antes de confirmar o atendimento.</p></div>'+
+  '<div class="ff-receipt-hero"><span class="ff-receipt-check" aria-hidden="true">✓</span><h2 class="ff-receipt-title wizard-title" tabindex="-1">Solicitação recebida.</h2><p>Sua solicitação foi recebida. Vamos analisar os dados do veículo antes de confirmar o atendimento.</p></div>'+
   '<dl class="ff-receipt-meta">'+ref+date+'<div class="ff-receipt-field"><dt>Status</dt><dd><span class="ff-receipt-status-dot"></span> Solicitação recebida</dd></div></dl>'+
   '<div class="ff-receipt-content"><h3>Resumo da solicitação</h3><dl>'+rows+'</dl>'+total+'</div>'+
   '<div class="ff-receipt-bottom"><p>Guarde seu acesso privado. O envio não reserva horário nem confirma a execução.</p>'+
-  '<a class="tracking-link" href="'+esc(link)+'">Acompanhar solicitação <span aria-hidden="true">↗</span></a></div>'+
+  '<a class="tracking-link" href="'+esc(link)+'">Acompanhar pedido <span aria-hidden="true">↗</span></a></div>'+
  '</article>';
 }
 export function downloadDigitalReceipt(quote,link){
@@ -61,7 +61,7 @@ export function startQuoteJourney(){
   '<div class="ff-folder-front"><div class="ff-folder-label"><img src="../assets/logo-transparent.svg" width="36" height="36" alt=""><strong>FINE FORM</strong><small>SEU ORÇAMENTO</small></div></div>'+
   '<div class="ff-folder-accent"></div></div>'+
   '<div class="ff-journey-confirm"><span>✓</span></div>'+
-  '<div class="ff-journey-ticket"><div class="ff-ticket-mark">FINE FORM</div><div class="ff-ticket-title">Solicitação recebida.</div><div class="ff-ticket-reference"></div><div class="ff-ticket-rule"></div><div class="ff-ticket-line"></div><div class="ff-ticket-line short"></div></div>'+
+  '<div class="ff-journey-ticket"><div class="ff-ticket-mark">FINE FORM</div><div class="ff-ticket-title"></div><div class="ff-ticket-reference"></div><div class="ff-ticket-rule"></div><div class="ff-ticket-line"></div><div class="ff-ticket-line short"></div></div>'+
   '</div><div class="ff-journey-message">Organizando sua solicitação...</div>'+
   '<div class="ff-journey-indicator" aria-hidden="true"><span></span></div>'+
   '<div class="ff-journey-error" hidden><p role="alert"></p><div class="ff-journey-error-actions"><button type="button" data-journey-retry>Tentar novamente</button><button type="button" data-journey-back>Revisar pedido</button></div></div></div>';
@@ -81,6 +81,7 @@ export function startQuoteJourney(){
    stage.classList.add('is-complete','is-packed');stage.setAttribute('aria-label','Solicitação recebida');
    message.textContent='Solicitação recebida.';
    stage.querySelector('.ff-ticket-reference').textContent=quote.reference||'';
+   stage.querySelector('.ff-ticket-title').textContent='Solicitação recebida.';
    const done=()=>{remove();receipt?.querySelector?.('h2')?.focus?.({preventScroll:true});};
    if(reduced()){done();return;}
    after(()=>{receipt?.scrollIntoView?.({behavior:'auto',block:'start'});stage.classList.add('is-handoff');},800);

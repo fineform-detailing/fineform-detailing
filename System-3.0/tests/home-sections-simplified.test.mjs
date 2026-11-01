@@ -34,9 +34,9 @@ test('horários são apresentados sozinhos e FAQ mantém primeira, segunda e úl
  for(const removed of ['É comigo','que você fala','Prefiro e-mail','Conversar no WhatsApp'])assert.ok(!sec.textContent.includes(removed));
  const questions=[...doc.querySelectorAll('#duvidas .faq-list>details>summary')].map(x=>x.textContent.replace('+','').trim());
  assert.deepEqual(questions,[
-  'Escolher um horário confirma minha reserva?',
-  'Quanto tempo leva o serviço?',
-  'Como funciona o Care mensal?'
+  'Posso escolher a data pelo site?',
+  'Quando meu veículo fica pronto?',
+  'O que está incluído no Fine Form Care?'
  ]);
  const links=await readFile('dist/links/index.html','utf8');
  const app=await readFile('dist/assets/app.mjs','utf8');

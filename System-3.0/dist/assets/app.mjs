@@ -71,12 +71,12 @@ function serviceDetails(service){
 }
 function openService(id){
  const s=findService(id);if(!s)return;
- showDialog('<p class="eyebrow dark">'+'O QUE ESTÁ INCLUÍDO / '+(s.vehicle==='moto'?'MOTOS':'CARROS')+'</p><h2 id="dialog-title">'+s.label+'</h2><p>'+s.description+'</p>'+serviceDetails(s)+'<a class="button dark-button" href="'+root+'atendimento/?vehicle='+s.vehicle+'&service='+s.id+'">Tenho interesse <span>↗</span></a>');
+ showDialog('<p class="eyebrow dark">'+'ETAPAS DO CUIDADO / '+(s.vehicle==='moto'?'MOTOS':'CARROS')+'</p><h2 id="dialog-title">'+s.label+'</h2><p>'+s.description+'</p>'+serviceDetails(s)+'<a class="button dark-button" href="'+root+'atendimento/?vehicle='+s.vehicle+'&service='+s.id+'">Solicitar este cuidado <span>↗</span></a>');
 }
 function openExtra(id){
  const item=extras.find(extra=>extra.id===id&&(extra.vehicle==='both'||extra.vehicle===menuVehicle));
  if(!item)return;
- showDialog('<p class="eyebrow dark">O QUE ESTÁ INCLUÍDO / '+(menuVehicle==='moto'?'MOTOS':'CARROS')+'</p><h2 id="dialog-title">'+escape(item.label)+'</h2><p>'+escape(item.description)+'</p><a class="button dark-button" href="'+root+'atendimento/?mode=guidance">Conversar sobre este cuidado <span aria-hidden="true">↗</span></a>');
+ showDialog('<p class="eyebrow dark">DETALHES DO TRATAMENTO / '+(menuVehicle==='moto'?'MOTOS':'CARROS')+'</p><h2 id="dialog-title">'+escape(item.label)+'</h2><p>'+escape(item.description)+'</p><a class="button dark-button" href="'+root+'atendimento/?mode=guidance">Conversar sobre este cuidado <span aria-hidden="true">↗</span></a>');
 }
 let menuVehicle='car',menuAnimation=null;
 const menuMotionAllowed=()=>window.ffMotion?.enabled?.()??!matchMedia('(prefers-reduced-motion: reduce)').matches;

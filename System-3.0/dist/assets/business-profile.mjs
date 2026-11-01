@@ -29,5 +29,5 @@ export function publicBusinessDetails(data){
 export function locationMessage(quote){
  const location=quote.location;
  if(!location?.address)return '';
- return 'Olá, '+quote.name+'! Aqui é Mateus, da Fine Form.\nPedido '+quote.reference+'\nLocal de atendimento: '+location.address+(location.arrivalNote?'\nComo chegar: '+location.arrivalNote:'')+(safeMapUrl(location.mapsUrl)?'\nMapa: '+safeMapUrl(location.mapsUrl):'')+'\nA data, o horário e as condições do serviço precisam estar confirmados comigo antes do deslocamento.';
+ return 'Olá, '+quote.name+'! Aqui é Mateus, da Fine Form.\nSeguem as orientações de chegada para o pedido '+quote.reference+'.\nLocal: '+location.address+(location.arrivalNote?'\nComo chegar: '+location.arrivalNote:'')+(safeMapUrl(location.mapsUrl)?'\nMapa: '+safeMapUrl(location.mapsUrl):'')+'\nAntes de sair, confirme comigo a data, o horário e as condições do atendimento.';
 }

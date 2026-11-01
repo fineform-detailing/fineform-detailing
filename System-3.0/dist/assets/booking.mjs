@@ -48,6 +48,28 @@ function persist(){if(!remember)return;try{localStorage.setItem(key,JSON.stringi
 function tidy(){state.treatments=normalizeTreatments(state);state.extras=normalizeExtras(state);persist();}
 function icon(type){return type==='car'?'<svg viewBox="0 0 100 50" aria-hidden="true"><path d="M9 32 13 22 26 18 37 9 64 9 80 20 91 24 93 36H8Z M28 18H76 M39 10 34 18 M61 10 67 18 M12 25H23 M83 27H91"/><circle cx="27" cy="36" r="8"/><circle cx="76" cy="36" r="8"/><circle cx="27" cy="36" r="3"/><circle cx="76" cy="36" r="3"/></svg>':'<svg viewBox="0 0 100 50" aria-hidden="true"><circle cx="23" cy="35" r="11"/><circle cx="79" cy="35" r="11"/><path d="m23 35 16-22h13l13 8-20 14H23l26-1-10-18 M52 13 61 8 72 8 79 35 M70 8 69 3H60 M28 12h19 M36 18 49 22 64 20"/></svg>';}
 function heading(title,lead){return '<h2 class="wizard-title" tabindex="-1">'+title+'</h2><p class="wizard-lead">'+lead+'</p>';}
+const bookingBrief={
+ essential:'Lavagem externa, rodas, vidros e limpeza leve do interior.',
+ premium:'Lavagem Essencial, frestas, proteção interna e cera.',
+ extra:'Higienização profunda, exterior e vidros. Sem polimento.',
+ fullClean:'Higienização de bancos e interior, com secagem combinada.',
+ polishLight:'Realça brilho e ameniza marcas leves da pintura.',
+ polishPremium:'Corte, refino e lustro conforme avaliação da pintura.',
+ coating:'Proteção cerâmica na pintura após preparo técnico.',
+ motoPremium:'Lavagem estética e acabamento compatível para sua moto.',
+ careEssential:'1 Premium e 1 Essencial por mês.',
+ careFrequent:'1 Premium e 3 Essenciais por mês.',
+ careMoto:'2 lavagens Moto Premium por mês.',
+ exteriorPlastic:'Limpeza e revitalização de plásticos externos.',
+ plasticCoating:'Cerâmica em plásticos externos, com cura. Em motos, não aplicar em pneus, freios, banco, manoplas ou pedaleiras.',
+ leather:'Limpeza e condicionamento do couro, sem reparos.',
+ fabric:'Higienização do tecido, com secagem combinada.',
+ wheelIron:'Descontaminação ferrosa das rodas acessíveis.',
+ paintIron:'Descontaminação ferrosa da pintura, sem polimento.',
+ glassCare:'Limpeza e proteção dos vidros; marcas removíveis.',
+ motoPolish:'Realce de uma peça elegível, após avaliação.'
+};
+const shortFor=item=>bookingBrief[item.id]||item.description;
 function choice({value,title,description,selected,action='service',extra=''}){return '<button type="button" class="choice-card '+(selected?'selected':'')+'" data-action="'+action+'" data-value="'+value+'" aria-pressed="'+selected+'"><h3>'+title+'</h3><p>'+description+'</p>'+extra+'</button>';}
 function quoteBlock(selection=state){
  const quote=quoteFor(selection);
@@ -57,7 +79,7 @@ function quoteBlock(selection=state){
  const label=quote.recurring?(quote.additional?'Total deste pedido':'Total mensal'):quote.hasBase?'Total do atendimento':'Subtotal dos cuidados escolhidos';
  const planNote=quote.recurring&&quote.additional?'<p>Mensalidade: '+money(quote.recurring)+'/mês. Adicionais nesta visita: '+money(quote.additional)+'. Nas próximas mensalidades, o plano continua '+money(quote.recurring)+'.</p>':'';
  const guidance=!quote.hasBase?'<p>O orçamento completo será definido após escolher o cuidado principal com Mateus.</p>':'';
- return '<aside class="quote-box" aria-label="Seu orçamento"><h3>Prévia do orçamento</h3><dl>'+details+credit+'</dl><div class="quote-total"><span>'+label+'</span><strong>'+money(quote.total)+'</strong></div>'+planNote+guidance+'<p class="quote-note">Valores para as etapas selecionadas. Data e execução confirmadas pessoalmente.</p></aside>';
+ return '<aside class="quote-box" aria-label="Seu orçamento"><h3>Prévia do orçamento</h3><dl>'+details+credit+'</dl><div class="quote-total"><span>'+label+'</span><strong>'+money(quote.total)+'</strong></div>'+planNote+guidance+'<p class="quote-note">Valor estimado. Confirmação após avaliação.</p></aside>';
 }
 function stepVehicle(){return heading('Seu veículo, nosso ponto de partida.','Conte qual carro ou moto vai receber o cuidado.')+'<div class="vehicle-options" role="group" aria-label="Tipo de veículo">'+['car','moto'].map(type=>'<button class="choice-card '+(state.vehicle===type?'selected':'')+'" type="button" data-action="vehicle" data-value="'+type+'" aria-pressed="'+(state.vehicle===type)+'"><span class="choice-icon">'+icon(type)+'</span><h3>'+(type==='car'?'Meu carro':'Minha moto')+'</h3></button>').join('')+'</div><label class="field"><span>Qual é a marca e o modelo? *</span><input name="model" autocomplete="off" maxlength="80" placeholder="'+(state.vehicle==='car'?'Ex.: Honda Civic 2020':'Ex.: Honda CB 500 2022')+'" value="'+esc(state.model)+'" required><small>O ano é opcional. A placa será cadastrada por Mateus quando o veículo chegar.</small></label>';
 }
@@ -65,13 +87,13 @@ function stepCare(){
  let html=heading('Escolha o cuidado certo.','Compare os serviços e selecione o que deseja melhorar.');
  html+='<div class="mode-tabs" role="group" aria-label="Modalidade de atendimento">'+[['single','Um atendimento'],['plan','Care mensal'],['guidance','Quero orientação']].map(([v,l])=>'<button type="button" class="'+(state.mode===v?'active':'')+'" data-action="mode" data-value="'+v+'" aria-pressed="'+(state.mode===v)+'">'+l+'</button>').join('')+'</div>';
  if(state.mode==='single'){
-  const serviceChoice=s=>choice({value:s.id,title:s.label,description:s.description,selected:state.service===s.id,extra:'<small>'+money(s.price)+'</small>'});
+  const serviceChoice=s=>choice({value:s.id,title:s.label,description:shortFor(s),selected:state.service===s.id,extra:'<strong class="booking-choice-price">'+money(s.price)+'</strong>'});
   const vehicleServices=services.filter(s=>s.vehicle===state.vehicle&&s.id!=='polishMedium');
   html+='<div class="choice-stack" role="group" aria-label="Cuidado principal">'+vehicleServices.filter(s=>s.class!=='Classe C').map(serviceChoice).join('')+'</div>';
   const treatments=vehicleServices.filter(s=>s.class==='Classe C');
   if(treatments.length)html+='<section class="booking-treatments" aria-label="Higienização, polimentos e vitrificação"><h3>Higienização, polimentos e vitrificação</h3><div class="choice-stack" role="group" aria-label="Tratamento principal">'+treatments.map(serviceChoice).join('')+'</div></section>';
  }
- if(state.mode==='plan')html+='<div class="choice-stack" role="group" aria-label="Plano mensal">'+plans.filter(p=>p.vehicle===state.vehicle).map(p=>choice({value:p.id,title:p.name,description:p.description,selected:state.plan===p.id,action:'plan',extra:'<small>'+money(p.price)+'/mês'+'</small>'})).join('')+'</div><p class="booking-inline-notice">O Care é ativado após conferência e cadastro presencial da placa.</p>';
+ if(state.mode==='plan')html+='<div class="choice-stack" role="group" aria-label="Plano mensal">'+plans.filter(p=>p.vehicle===state.vehicle).map(p=>choice({value:p.id,title:p.name,description:shortFor(p),selected:state.plan===p.id,action:'plan',extra:'<strong class="booking-choice-price">'+money(p.price)+'<span>/mês</span></strong>'})).join('')+'</div><p class="booking-inline-notice">O Care é ativado após conferência e cadastro presencial da placa.</p>';
  if(state.mode==='guidance')html+='<p class="booking-inline-notice">Indique o que merece atenção; a recomendação final depende da avaliação.</p>';
  html+='<fieldset class="fieldset-clean" style="margin-top:26px"><legend class="field-label legend">O que é importante para você? <small>(opcional)</small></legend><div class="goals">'+goals.filter(g=>state.vehicle==='car'||g!=='Interior').map(g=>'<button class="goal-button '+(state.goals.includes(g)?'selected':'')+'" type="button" data-action="goal" data-value="'+g+'" aria-pressed="'+state.goals.includes(g)+'">'+g+'</button>').join('')+'</div></fieldset>';
  return html;
@@ -80,10 +102,10 @@ function stepDetails(){
  const included=includedFor(state);
  let html=heading('Cada superfície importa.','Adicione apenas o que faz sentido para o seu veículo.');
  if(state.mode==='plan')html+='';
- html+='<div>'+compatibleExtras(state.vehicle).map(e=>{const replaced=e.id==='exteriorPlastic'&&state.extras.includes('plasticCoating');const inc=included.includes(e.id);return '<label class="extra-choice '+(inc?'included':'')+'"><input type="checkbox" name="extra" value="'+e.id+'" '+(!replaced&&(inc||state.extras.includes(e.id))?'checked ':'')+(inc||replaced?'disabled ':'')+'><span><b>'+e.label+'</b><small>'+e.description+'</small>'+(replaced?'<span class="included-badge">SUBSTITUÍDO PELA VITRIFICAÇÃO</span>':inc?'<span class="included-badge">JÁ INCLUÍDO · QUANDO COMPATÍVEL</span>':'<span class="option-price">'+money(extraPriceFor(e,state))+(extraPriceFor(e,state)!==extraPrice(e,state.vehicle)?' · complemento':'')+'</span>')+'</span></label>';}).join('')+'</div>';
+ html+='<div>'+compatibleExtras(state.vehicle).map(e=>{const replaced=e.id==='exteriorPlastic'&&state.extras.includes('plasticCoating');const inc=included.includes(e.id);return '<label class="extra-choice '+(inc?'included':'')+'"><input type="checkbox" name="extra" value="'+e.id+'" '+(!replaced&&(inc||state.extras.includes(e.id))?'checked ':'')+(inc||replaced?'disabled ':'')+'><span><b>'+e.label+'</b><small>'+shortFor(e)+'</small>'+(replaced?'<span class="included-badge">SUBSTITUÍDO PELA VITRIFICAÇÃO</span>':inc?'<span class="included-badge">JÁ INCLUÍDO · QUANDO COMPATÍVEL</span>':'<span class="option-price">'+money(extraPriceFor(e,state))+(extraPriceFor(e,state)!==extraPrice(e,state.vehicle)?' · complemento':'')+'</span>')+'</span></label>';}).join('')+'</div>';
  if(state.vehicle==='car'){
   const available=availableTreatments(state);
-  if(available.length)html+='<section class="booking-treatments" aria-label="Tratamentos adicionais de pintura"><h3>Acrescente um tratamento de pintura</h3><fieldset class="fieldset-clean" style="margin-top:30px"><legend class="field-label legend">Tratamentos para combinar <small>(opcional)</small></legend>'+available.map(s=>{const price=treatmentPrice(s.id,state);return '<label class="extra-choice"><input type="checkbox" name="treatment" value="'+s.id+'" '+(state.treatments.includes(s.id)?'checked':'')+'><span><b>'+s.label+'</b><small>'+s.description+'</small><span class="option-price">'+money(price)+(price!==s.price?' · complemento':'')+'</span></span></label>';}).join('')+'</fieldset></section>';
+  if(available.length)html+='<section class="booking-treatments" aria-label="Tratamentos adicionais de pintura"><h3>Acrescente um tratamento de pintura</h3><fieldset class="fieldset-clean" style="margin-top:30px"><legend class="field-label legend">Tratamentos para combinar <small>(opcional)</small></legend>'+available.map(s=>{const price=treatmentPrice(s.id,state);return '<label class="extra-choice"><input type="checkbox" name="treatment" value="'+s.id+'" '+(state.treatments.includes(s.id)?'checked':'')+'><span><b>'+s.label+'</b><small>'+shortFor(s)+'</small><span class="option-price">'+money(price)+(price!==s.price?' · complemento':'')+'</span></span></label>';}).join('')+'</fieldset></section>';
   if(hasCoating(state))html+='<p class="booking-inline-notice">A vitrificação substitui a cera. A cura e a entrega serão confirmadas na avaliação.</p>';
  }
  const s=findService(baseFor(state));if(s?.notice)html+='<p class="booking-inline-notice">'+s.notice+'</p>';
@@ -91,7 +113,7 @@ function stepDetails(){
 }
 function stepPreference(){
  let html=heading('Qual dia funciona melhor?','Sugira uma data e horário. A agenda será confirmada pessoalmente.');
- html+='<p class="booking-inline-notice">Data e horário são preferências; a confirmação depende da agenda.</p><label class="field"><span>Data de preferência</span><input name="date" type="date" min="'+todaySP()+'" value="'+esc(state.date)+'"></label>';
+ html+='<label class="field"><span>Data de preferência</span><input name="date" type="date" min="'+todaySP()+'" value="'+esc(state.date)+'"></label>';
  html+='<label class="field"><span>Horário de preferência</span><select name="time" '+(!validDate(state.date)?'disabled':'')+'><option value="">Prefiro combinar o horário</option>'+timesFor(state.date).map(t=>'<option value="'+t+'" '+(t===state.time?'selected':'')+'>'+t+'</option>').join('')+'</select></label>';
  html+='<label class="check-line"><input type="checkbox" name="flexibleDate" '+(state.flexibleDate?'checked':'')+'><span>Tenho flexibilidade ou prefiro combinar a data pela conversa.</span></label><div class="hours-note"><span>Segunda a sábado · 9h às 17h30</span><span>Domingo · 9h às 12h</span><span>Atendemos feriados, mediante combinação.</span></div>';
  return html;
@@ -100,9 +122,9 @@ function interest(){return state.mode==='plan'?findPlan(state.plan)?.name||'Care
 function stepContact(){
  let html=heading('Seu pedido, do seu jeito.','Confira os dados, envie o pedido e acompanhe pelo link privado.');
  html+='<dl class="review-list"><div><dt>VEÍCULO<button type="button" class="review-edit" data-review-step="0" aria-label="Editar veículo">Editar</button></dt><dd>'+esc(state.model)+' · '+(state.vehicle==='car'?'Carro':'Moto')+'</dd></div><div><dt>INTERESSE<button type="button" class="review-edit" data-review-step="1" aria-label="Editar cuidado">Editar</button></dt><dd>'+esc(interest())+'</dd></div><div><dt>PREFERÊNCIA<button type="button" class="review-edit" data-review-step="3" aria-label="Editar data e horário">Editar</button></dt><dd>'+(state.date?esc(state.date.split('-').reverse().join('/')):'Data a combinar')+' · '+(state.time?esc(state.time):'Horário a combinar')+'</dd></div><div><dt>CUIDADOS ADICIONAIS<button type="button" class="review-edit" data-review-step="2" aria-label="Editar adicionais">Editar</button></dt><dd>'+esc([...normalizeExtras(state).map(id=>extras.find(x=>x.id===id).label),...normalizeTreatments(state).map(id=>findService(id).label)].join(', ')||'Vamos definir pela conversa')+'</dd></div></dl>';
- html+='<label class="field"><span>Como podemos chamar você? *</span><input name="name" autocomplete="given-name" maxlength="80" value="'+esc(state.name)+'" placeholder="Seu nome" required></label><label class="field"><span>Seu WhatsApp com DDD *</span><input name="phone" type="tel" inputmode="tel" autocomplete="tel" maxlength="20" value="'+esc(state.phone)+'" placeholder="(11) 99999-9999" required><small>Usado por Mateus para combinar o atendimento.</small></label><label class="field"><span>Quer contar mais alguma coisa?</span><textarea name="notes" maxlength="600" placeholder="Ex.: manchas no banco, marcas na pintura, uma viagem chegando…">'+esc(state.notes)+'</textarea><small>Até 600 caracteres. Não envie documentos, dados sensíveis ou dados de terceiros. Fotos podem ser combinadas diretamente na conversa.</small></label><label class="check-line"><input type="checkbox" name="ack" '+(state.ack?'checked':'')+' required><span>Entendo que envio uma solicitação de orçamento, sujeita à aceitação de Mateus, sem reserva ou cobrança automática. Li as informações de privacidade e atendimento abaixo.</span></label>';
- html+='<p class="privacy-inline">Nome, telefone, veículo e escolhas serão usados pela Fine Form para responder ao pedido e organizar o atendimento. Isso não autoriza publicidade. <a href="../privacidade/">Privacidade</a> · <a href="../termos/">Termos</a> · <a href="../cancelamento-e-reembolso/">Cancelamento e reembolso</a>.</p><label class="check-line"><input type="checkbox" name="rememberLink" '+(state.rememberLink?'checked':'')+'><span>Guardar o link privado deste pedido neste aparelho por até 90 dias (opcional). Evite em aparelhos compartilhados.</span></label>';
- html+='<p class="request-disclosure">'+REQUEST_NOTICE+' O local será combinado antes da confirmação do atendimento.</p>';
+ html+='<label class="field"><span>Como podemos chamar você? *</span><input name="name" autocomplete="given-name" maxlength="80" value="'+esc(state.name)+'" placeholder="Seu nome" required></label><label class="field"><span>Seu WhatsApp com DDD *</span><input name="phone" type="tel" inputmode="tel" autocomplete="tel" maxlength="20" value="'+esc(state.phone)+'" placeholder="(11) 99999-9999" required><small>Usado por Mateus para combinar o atendimento.</small></label><label class="field"><span>Quer contar mais alguma coisa?</span><textarea name="notes" maxlength="600" placeholder="Ex.: manchas no banco, marcas na pintura, uma viagem chegando…">'+esc(state.notes)+'</textarea><small>Até 600 caracteres. Não envie documentos, dados sensíveis ou dados de terceiros. Fotos podem ser combinadas diretamente na conversa.</small></label><label class="check-line"><input type="checkbox" name="ack" '+(state.ack?'checked':'')+' required><span>Entendo que este é um pedido de orçamento, sem reserva ou cobrança automática.</span></label>';
+ html+='<label class="check-line"><input type="checkbox" name="rememberLink" '+(state.rememberLink?'checked':'')+'><span>Salvar o link privado neste aparelho por até 90 dias (opcional).</span></label>';
+ html+='<p class="request-disclosure">Data, local e execução serão confirmados antes do atendimento.</p>';
  html+='<label class="sr-honeypot" aria-hidden="true">Website<input name="website" tabindex="-1" autocomplete="off"></label>';
  return html;
 }
@@ -119,7 +141,7 @@ $('#step-nav').addEventListener('click',event=>{const button=event.target.closes
 function render(focus=false){
  content.innerHTML=renderers[step]()+ (step>=1?quoteBlock():'');$('#step-count').textContent='ETAPA 0'+(step+1)+' / 05';
  updateProgress();persist();
- $('#previous-step').hidden=step===0;$('#next-step').innerHTML=step===4?'Enviar solicitação de orçamento <span>↗</span>':(step===2?'Continuar para data <span>→</span>':step===3?'Revisar pedido <span>→</span>':'Continuar <span>→</span>');
+ $('#previous-step').hidden=step===0;$('#next-step').innerHTML=step===4?'Enviar pedido <span>↗</span>':(step===2?'Continuar para data <span>→</span>':step===3?'Revisar pedido <span>→</span>':'Continuar <span>→</span>');
  $('#form-error').textContent='';
  if(focus){content.querySelector('h2').focus({preventScroll:true});if(innerWidth<760)document.querySelector('.booking-panel').scrollIntoView({behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth',block:'start'});}
 }

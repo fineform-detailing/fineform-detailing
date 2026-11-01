@@ -371,6 +371,8 @@ test('rascunho incompleto não pula veículo e erro fica associado ao campo',asy
  submit(w,'care-form');const model=w.document.querySelector('[name="model"]');
  assert.equal(model.getAttribute('aria-invalid'),'true');assert.equal(model.getAttribute('aria-describedby'),'form-error');assert.equal(w.document.activeElement,model);
  input(w,'model','Civic');assert.equal(model.hasAttribute('aria-invalid'),false);submit(w,'care-form');
- assert.equal(w.document.querySelector('.booking-treatments').tagName,'DETAILS');
- assert.equal(w.document.querySelector('.booking-treatments').open,false);closeWindow(w);
+ assert.equal(w.document.querySelector('.booking-treatments').tagName,'SECTION');
+ assert.equal(w.document.querySelector('.booking-treatments summary'),null);
+ assert.ok(w.document.querySelector('.booking-treatments .choice-stack'));
+ assert.ok(w.document.querySelector('.booking-treatments [data-action="service"][data-value="polishPremium"]'));closeWindow(w);
 });

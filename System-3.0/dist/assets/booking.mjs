@@ -179,7 +179,7 @@ $('#remember-draft').addEventListener('change',e=>{remember=e.target.checked;if(
 $('#reset-draft').addEventListener('click',()=>{
  if(!confirm('Recomeçar e apagar o rascunho deste aparelho?'))return;
  state=defaults();step=0;remember=false;$('#remember-draft').checked=false;try{localStorage.removeItem(key);}catch{}
- $('#summary-result').hidden=true;form.hidden=false;render(true);window.ff?.toast('Rascunho apagado. Vamos começar novamente.');
+ document.body.classList.remove('is-booking-complete');$('#summary-result').hidden=true;form.hidden=false;render(true);window.ff?.toast('Rascunho apagado. Vamos começar novamente.');
 });
 async function copy(text){
  try{if(!navigator.clipboard)throw Error('clipboard unavailable');await navigator.clipboard.writeText(text);window.ff?.toast('Resumo copiado. Você pode colar na conversa.');}
@@ -187,10 +187,11 @@ async function copy(text){
 }
 function download(text){const blob=new Blob([text],{type:'text/markdown;charset=utf-8'});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download='fine-form-meu-cuidado.md';document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);window.ff?.toast('Download solicitado. Seu pedido permanece no painel de Mateus.');}
 function showResult(quote,token){
+ document.body.classList.add('is-booking-complete');
  updateProgress(true);try{localStorage.removeItem(key);}catch{}remember=false;$('#remember-draft').checked=false;document.querySelector('.save-draft').hidden=true;$('#draft-status').hidden=true;
  const link=trackingUrl(quote.id,token),summary=createSummary(quote.selection)+'\n\n*Pedido '+quote.reference+'*\nAcompanhar: '+link;form.hidden=true;const result=$('#summary-result');result.hidden=false;
  result.innerHTML=buildDigitalReceipt(quote,link)+
-  '<div class="ff-receipt-actions"><button class="button outline" id="copy-tracking" type="button">Copiar link</button><button class="button outline" id="download-receipt" type="button">Baixar comprovante</button><button class="button outline" id="print-receipt" type="button">Imprimir / salvar PDF</button></div>'+
+  '<div class="ff-receipt-actions"><button class="button outline" id="copy-tracking" type="button">Copiar link</button><button class="button outline" id="download-receipt" type="button">Baixar comprovante</button><button class="button outline" id="print-receipt" type="button">Salvar PDF</button></div>'+
   '<div id="booking-customer-notice"></div>'+
   '<section class="result-tools" aria-label="Compartilhar sua solicitação"><h3>Compartilhar os detalhes</h3><pre class="summary-pre"></pre><div class="result-actions">'+
   '<button class="button outline primary-send" type="button" id="send-whatsapp">'+esc(preferredContact(window.FINE_FORM_CONFIG||{}).label)+' <span>↗</span></button>'+
@@ -209,7 +210,7 @@ function showResult(quote,token){
  $('#send-email').addEventListener('click',()=>window.ff?.emailContact(summary));
  $('#copy-summary').addEventListener('click',()=>copy(summary));
  $('#download-summary').addEventListener('click',()=>download(summary));
- $('#edit-summary').addEventListener('click',()=>{result.hidden=true;form.hidden=false;document.querySelector('.save-draft').hidden=false;state=defaults();step=0;try{sessionStorage.removeItem('ff-pending-submission');}catch{}render(true);});
+ $('#edit-summary').addEventListener('click',()=>{document.body.classList.remove('is-booking-complete');result.hidden=true;form.hidden=false;document.querySelector('.save-draft').hidden=false;state=defaults();step=0;try{sessionStorage.removeItem('ff-pending-submission');}catch{}render(true);});
  $('#share-summary').addEventListener('click',async()=>{
   if(!navigator.share){download(summary);return;}
   try{await navigator.share({title:'Meu cuidado — Fine Form',text:summary});}

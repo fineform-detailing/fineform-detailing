@@ -30,6 +30,7 @@ export function buildDigitalReceipt(quote,link){
  return '<article class="ff-digital-receipt receipt" id="ff-digital-receipt" aria-label="Comprovante digital de solicitação">'+
   '<div class="ff-receipt-brand"><img src="../assets/logo-transparent.svg" width="42" height="42" alt="Símbolo Fine Form"><span>FINE FORM<small>ESTÉTICA AUTOMOTIVA</small></span></div>'+
   '<div class="ff-receipt-hero"><span class="ff-receipt-check" aria-hidden="true">✓</span><h2 class="ff-receipt-title wizard-title" tabindex="-1">Solicitação recebida.</h2><p>Sua solicitação foi recebida. Vamos analisar os dados do veículo antes de confirmar o atendimento.</p></div>'+
+  '<div class="ff-receipt-perforation" aria-hidden="true"></div>'+
   '<dl class="ff-receipt-meta">'+ref+date+'<div class="ff-receipt-field"><dt>Status</dt><dd><span class="ff-receipt-status-dot"></span> Solicitação recebida</dd></div></dl>'+
   '<div class="ff-receipt-content"><h3>Resumo da solicitação</h3><dl>'+rows+'</dl>'+total+'</div>'+
   '<div class="ff-receipt-bottom"><p>Guarde seu acesso privado. O envio não reserva horário nem confirma a execução.</p>'+
@@ -66,26 +67,39 @@ export function startQuoteJourney(){
   '<div class="ff-journey-indicator" aria-hidden="true"><span></span></div>'+
   '<div class="ff-journey-error" hidden><p role="alert"></p><div class="ff-journey-error-actions"><button type="button" data-journey-retry>Tentar novamente</button><button type="button" data-journey-back>Revisar pedido</button></div></div></div>';
  document.body.append(stage);
+ const begunAt=Date.now(),presentationMs=5100;
  const timeoutIds=[],after=(fn,ms)=>{const t=setTimeout(fn,ms);timeoutIds.push(t);};
+ let confirmed=false;
  const message=stage.querySelector('.ff-journey-message');
  let closed=false;
  const clear=()=>{timeoutIds.forEach(clearTimeout);timeoutIds.length=0;};
  const remove=()=>{if(closed)return;closed=true;clear();stage.remove();};
  if(!reduced()){
-  after(()=>{if(!closed){stage.classList.add('is-packed');message.textContent='Finalizando seu orçamento...';}},1700);
+  after(()=>{if(!closed)message.textContent=confirmed?'Preparando seu comprovante...':'Organizando os documentos...';},1800);
+  after(()=>{if(!closed){stage.classList.add('is-packed');message.textContent=confirmed?'Preparando seu comprovante...':'Finalizando o envio...';}},4650);
  }else{stage.classList.add('is-packed');message.textContent='Enviando sua solicitação...';}
  return {
   complete(quote,receipt){
    if(closed)return;
-   clear();
-   stage.classList.add('is-complete','is-packed');stage.setAttribute('aria-label','Solicitação recebida');
-   message.textContent='Solicitação recebida.';
-   stage.querySelector('.ff-ticket-reference').textContent=quote.reference||'';
-   stage.querySelector('.ff-ticket-title').textContent='Solicitação recebida.';
-   const done=()=>{remove();receipt?.querySelector?.('h2')?.focus?.({preventScroll:true});};
-   if(reduced()){done();return;}
-   after(()=>{receipt?.scrollIntoView?.({behavior:'auto',block:'start'});stage.classList.add('is-handoff');},800);
-   after(done,1080);
+   confirmed=true;
+   message.textContent='Preparando seu comprovante...';
+   const present=()=>{
+    if(closed)return;
+    clear();
+    stage.classList.add('is-complete','is-packed');
+    stage.setAttribute('aria-label','Solicitação recebida');
+    message.textContent='Solicitação recebida.';
+    stage.querySelector('.ff-ticket-reference').textContent=quote.reference||'';
+    stage.querySelector('.ff-ticket-title').textContent='Solicitação recebida.';
+    const done=()=>{remove();receipt?.querySelector?.('h2')?.focus?.({preventScroll:true});};
+    if(reduced()){done();return;}
+    after(()=>{receipt?.scrollIntoView?.({behavior:'auto',block:'start'});stage.classList.add('is-handoff');},820);
+    after(done,1120);
+   };
+   if(reduced()){present();return;}
+   // A duração é apenas apresentação visual. O POST já foi concluído; nunca
+   // exibimos confirmação antes da resposta real nem alteramos o tempo da API.
+   after(present,Math.max(0,presentationMs-(Date.now()-begunAt)));
   },
   fail(messageText,retry){
    if(closed)return;

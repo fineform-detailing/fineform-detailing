@@ -1,0 +1,154 @@
+/* Fine Form — comprovante como ticket digital, sem código de barras fictício. */
+body[data-page=booking] .ff-digital-receipt{
+ position:relative;
+ width:100%;max-width:660px;
+ margin:0 auto 6px!important;
+ background:#fff!important;border:1px solid #e8e7e3!important;
+ border-radius:27px!important;
+ box-shadow:0 16px 45px rgba(15,15,15,.07)!important;
+ overflow:hidden;scroll-margin-top:110px;
+}
+body[data-page=booking] .ff-receipt-brand{
+ display:flex;flex-direction:column;justify-content:center;align-items:center;
+ gap:10px;text-align:center;padding:32px 22px 4px!important;
+}
+body[data-page=booking] .ff-receipt-brand img{
+ width:45px;height:45px;object-fit:contain;filter:none;
+}
+body[data-page=booking] .ff-receipt-brand>span{
+ font-size:17px;line-height:1.1;font-weight:800;letter-spacing:.045em;
+ color:#101010;
+}
+body[data-page=booking] .ff-receipt-brand small{
+ font-size:9px;font-weight:550;letter-spacing:.15em;
+ color:#8a8c88;margin-top:6px;
+}
+body[data-page=booking] .ff-receipt-hero{
+ padding:18px 24px 28px!important;text-align:center;
+}
+body[data-page=booking] .ff-receipt-check{
+ width:42px;height:42px;margin:0 auto 13px;
+ border-radius:50%;background:#121212;color:#fff;
+ font-size:23px;box-shadow:none;
+}
+body[data-page=booking] .ff-receipt-hero .wizard-title{
+ font-size:clamp(25px,5.4vw,34px)!important;
+ font-weight:720!important;letter-spacing:-.055em!important;
+ line-height:1.1!important;color:#121212!important;
+ margin:0 0 11px!important;
+}
+body[data-page=booking] .ff-receipt-hero p{
+ color:#747875;font-size:12.5px!important;line-height:1.6!important;
+ max-width:35ch;margin:0 auto;
+}
+body[data-page=booking] .ff-receipt-perforation{
+ position:relative;height:28px;margin:0;
+ background:repeating-linear-gradient(90deg,#d1d2cf 0 6px,transparent 6px 12px) center/100% 1px no-repeat;
+}
+body[data-page=booking] .ff-receipt-perforation:before,
+body[data-page=booking] .ff-receipt-perforation:after{
+ content:"";position:absolute;top:50%;width:27px;height:27px;
+ background:#fdfcf9;border-radius:50%;
+ border:1px solid #e8e7e3;
+ transform:translateY(-50%);z-index:1;
+}
+body[data-page=booking] .ff-receipt-perforation:before{left:-14px}
+body[data-page=booking] .ff-receipt-perforation:after{right:-14px}
+body[data-page=booking] .ff-receipt-meta{
+ display:grid;grid-template-columns:repeat(2,minmax(0,1fr));
+ gap:18px 13px;
+ margin:0 24px!important;
+ padding:12px 0 25px!important;
+ border:0!important;border-bottom:1px solid #ececea!important;
+}
+body[data-page=booking] .ff-receipt-field:last-child{grid-column:1/-1}
+body[data-page=booking] .ff-receipt-meta dt,
+body[data-page=booking] .ff-receipt-content dt{
+ font-size:10px!important;line-height:1.4!important;
+ color:#7b7d79!important;letter-spacing:.07em;
+ text-transform:uppercase;
+}
+body[data-page=booking] .ff-receipt-meta dd{
+ margin:7px 0 0;font-size:13px!important;line-height:1.45;
+ color:#151515;font-weight:720;overflow-wrap:anywhere;
+}
+body[data-page=booking] .ff-receipt-status-dot{background:#53C3B1}
+body[data-page=booking] .ff-receipt-content{padding:24px 24px 16px!important}
+body[data-page=booking] .ff-receipt-content h3{
+ font-size:17px!important;line-height:1.3;font-weight:700!important;
+ letter-spacing:-.045em;color:#121212!important;
+ margin:0 0 10px!important;
+}
+body[data-page=booking] .ff-receipt-content dl{margin:0}
+body[data-page=booking] .ff-receipt-content dl>div{
+ display:grid;grid-template-columns:minmax(90px,36%) minmax(0,1fr);
+ gap:9px;padding:13px 0;
+ border-bottom:1px solid #f0f0ee!important;
+}
+body[data-page=booking] .ff-receipt-content dd{
+ margin:0!important;color:#272927!important;
+ font-size:12.5px!important;line-height:1.5!important;
+ text-align:right;overflow-wrap:anywhere;
+}
+body[data-page=booking] .ff-receipt-amount{
+ display:flex;align-items:baseline;justify-content:space-between;
+ gap:14px;border:0;margin:21px 0 0;
+ color:#717672;font-size:12px;
+}
+body[data-page=booking] .ff-receipt-amount strong{
+ font-size:23px!important;line-height:1.2;color:#141414!important;
+ font-weight:740;white-space:nowrap;
+}
+body[data-page=booking] .ff-receipt-bottom{
+ padding:18px 24px 27px!important;
+ border-top:1px solid #ececea!important;
+}
+body[data-page=booking] .ff-receipt-bottom p{
+ color:#888c87;font-size:11px!important;
+ line-height:1.6!important;margin:0 0 16px;
+}
+body[data-page=booking] .ff-receipt-bottom .tracking-link,
+body[data-page=booking] .ff-receipt-bottom .tracking-link:visited{
+ min-height:52px;display:flex;align-items:center;
+ gap:12px;justify-content:space-between;
+ border-radius:14px!important;
+ padding:14px 20px!important;
+ background:#101010!important;color:#fff!important;
+ border:1px solid #101010!important;
+ box-shadow:none!important;
+ font-size:13px!important;font-weight:720!important;
+ line-height:1.3;text-decoration:none;
+ transition:transform .18s ease,background .18s ease,box-shadow .18s ease;
+}
+body[data-page=booking] .ff-receipt-bottom .tracking-link:hover{
+ background:#272727!important;
+ box-shadow:0 6px 16px #0002!important;
+}
+body[data-page=booking] .ff-receipt-bottom .tracking-link span{color:#fff!important}
+body[data-page=booking] #summary-result{
+ display:block;max-width:100%;
+}
+body[data-page=booking] #summary-result[hidden]{display:none!important}
+@media(max-width:430px){
+ body[data-page=booking] .ff-receipt-brand{padding:25px 18px 4px!important}
+ body[data-page=booking] .ff-receipt-hero{padding:16px 18px 25px!important}
+ body[data-page=booking] .ff-receipt-meta{margin:0 18px!important}
+ body[data-page=booking] .ff-receipt-content{padding:22px 18px 13px!important}
+ body[data-page=booking] .ff-receipt-bottom{padding:17px 18px 22px!important}
+ body[data-page=booking] .ff-receipt-content dl>div{grid-template-columns:minmax(75px,35%) minmax(0,1fr)}
+}
+@media print{
+ body[data-page=booking] .ff-receipt-perforation:before,
+ body[data-page=booking] .ff-receipt-perforation:after{background:#fff}
+ body[data-page=booking] .ff-digital-receipt{box-shadow:none!important}
+ body[data-page=booking] .ff-receipt-bottom .tracking-link{color:#111!important;background:#fff!important;border:1px solid #111!important}
+ body[data-page=booking] .ff-receipt-bottom .tracking-link span{color:#111!important}
+}
+/* Papéis entram em sequência visível antes do fechamento da pasta. */
+.ff-journey .ff-folder-paper{
+ animation-duration:1s;
+ animation-delay:calc(var(--i)*.82s + .35s);
+}
+@media(prefers-reduced-motion:reduce){
+ .ff-journey .ff-folder-paper{animation:none!important}
+}

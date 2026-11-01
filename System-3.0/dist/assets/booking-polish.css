@@ -1,0 +1,252 @@
+/* Fine Form | clean quote journey and ticket, November 2026 */
+body[data-page=booking]{
+ --ff-ivory:#EFEEE8;--ff-ink:#0F0F0F;--ff-muted:#686c69;
+ background:#fdfcf9!important;color:var(--ff-ink);
+}
+body[data-page=booking] .booking-layout{
+ margin:clamp(92px,9vw,118px) auto 46px!important;
+ gap:clamp(20px,3vw,35px)!important;
+ background:transparent!important;border:0!important;box-shadow:none!important;
+}
+body[data-page=booking] .booking-aside{
+ border:0!important;box-shadow:none!important;
+ background:transparent!important;
+ padding:8px 4px!important;
+}
+body[data-page=booking] .booking-aside .back-link{
+ display:inline-flex;align-items:center;min-height:44px;
+ font-size:13px;line-height:1.3;font-weight:600;color:#343735;
+ text-decoration:none;transition:color .2s ease,transform .2s ease;
+}
+body[data-page=booking] .booking-aside .back-link:hover{
+ color:#080808;transform:translateX(-3px);
+}
+body[data-page=booking] .booking-aside h1{
+ font-size:clamp(30px,3.1vw,43px)!important;
+ line-height:1.13!important;letter-spacing:-.05em!important;
+ color:#111!important;margin:17px 0 9px!important;
+}
+body[data-page=booking] .booking-aside .booking-intro{
+ color:#6f7370!important;font-size:13px!important;
+ line-height:1.55!important;max-width:40ch;
+}
+body[data-page=booking] .booking-aside .aside-note{display:none!important}
+body[data-page=booking] .booking-aside .step-nav{gap:4px!important}
+body[data-page=booking] .step-nav li>button{
+ border:0!important;border-radius:13px!important;
+ color:#666b68!important;transition:background .18s ease,transform .18s ease,color .18s ease;
+}
+body[data-page=booking] .step-nav li.active>button{
+ background:#111!important;color:#fff!important;
+ box-shadow:0 8px 20px rgba(0,0,0,.085);
+}
+body[data-page=booking] .step-nav li.done>button{color:#555!important}
+body[data-page=booking] .step-nav li:not(.active)>button:hover{
+ background:#ecece7!important;transform:translateY(-1px);
+}
+body[data-page=booking] .booking-panel{
+ border:0!important;border-radius:0!important;
+ background:transparent!important;box-shadow:none!important;
+ padding:10px 4px 38px!important;overflow:visible;
+}
+body[data-page=booking] .wizard-top{
+ color:#737773!important;
+ font-size:11px;letter-spacing:.08em;
+ margin-bottom:8px!important;
+}
+body[data-page=booking] .wizard-top .quiet-button{
+ font-size:13px;color:#474b48;min-height:42px;
+}
+body[data-page=booking] .progress-track{
+ height:2px!important;background:#e8e8e4!important;
+ border-radius:20px!important;margin:6px 0 16px!important;
+}
+body[data-page=booking] #wizard-progress{background:#161616!important}
+body[data-page=booking] .wizard-status{
+ color:#767b77!important;font-size:12px!important;
+ margin:8px 0 18px!important;line-height:1.55!important;
+}
+body[data-page=booking] .wizard-title{color:#121212!important}
+body[data-page=booking] .wizard-lead{color:#777d78!important}
+body[data-page=booking] .review-list{
+ background:#fff!important;
+ border:1px solid #e9e8e4!important;
+ border-radius:22px!important;
+ padding:10px 20px!important;
+ margin:20px 0 24px!important;
+ box-shadow:0 9px 28px rgba(0,0,0,.028);
+}
+body[data-page=booking] .review-list>div{
+ border:0!important;border-bottom:1px solid #f1f0ed!important;
+ padding:15px 0!important;background:transparent!important;
+}
+body[data-page=booking] .review-list>div:last-child{border:0!important}
+body[data-page=booking] .review-list dt{
+ color:#777b77!important;letter-spacing:.065em!important;font-size:10px!important;
+}
+body[data-page=booking] .review-list dd{
+ color:#171717!important;font-size:13px!important;
+ line-height:1.5!important;margin-top:6px!important;
+ overflow-wrap:anywhere;
+}
+body[data-page=booking] .review-edit{
+ background:#f5f5f2!important;color:#171717!important;
+ border:1px solid #e8e8e4!important;border-radius:30px!important;
+ text-decoration:none!important;font-size:12px!important;
+ padding:7px 13px!important;
+}
+body[data-page=booking] .review-edit:hover{background:#e9e9e5!important}
+body[data-page=booking] .field{margin:0 0 19px!important}
+body[data-page=booking] .field>span{
+ display:block;color:#242724!important;
+ font-size:14px!important;margin-bottom:8px!important;
+}
+body[data-page=booking] .field :is(input,select,textarea){
+ background:#fff!important;color:#161616!important;
+ border:1px solid #d9dad5!important;
+ border-radius:17px!important;
+ box-shadow:0 2px 8px rgba(0,0,0,.018)!important;
+ font-family:inherit;font-size:16px!important;
+ line-height:1.5;min-height:50px;
+ padding:14px 17px!important;
+ transition:border-color .22s ease,box-shadow .22s ease,background .22s ease;
+}
+body[data-page=booking] .field :is(input,select,textarea):focus{
+ border-color:#141414!important;outline:none!important;
+ box-shadow:0 0 0 3px rgba(83,195,177,.16)!important;
+}
+body[data-page=booking] .field :is(input,select,textarea)::placeholder{color:#9ba09a}
+body[data-page=booking] .field textarea{min-height:112px!important}
+body[data-page=booking] .field small{color:#858985;font-size:11px!important;line-height:1.45!important}
+body[data-page=booking] .check-line{
+ background:transparent!important;color:#545954!important;
+ border:0!important;border-radius:0!important;
+ font-size:12px!important;line-height:1.5!important;gap:13px!important;
+}
+body[data-page=booking] :is(.check-line,.save-draft,.extra-choice) input[type=checkbox]{
+ accent-color:#171717!important;
+}
+body[data-page=booking] .mode-tabs button.selected,
+body[data-page=booking] .goal-button.active{background:#171717!important;color:#fff!important;border-color:#171717!important}
+body[data-page=booking] :is(.review-list,.hours-note,.quote-box,.choice-card,.extra-choice){
+ transition:transform .2s ease,box-shadow .2s ease,border-color .2s ease;
+}
+@media(hover:hover){
+ body[data-page=booking] .choice-card:hover,
+ body[data-page=booking] .extra-choice:hover{
+  transform:translateY(-2px);
+  box-shadow:0 9px 20px rgba(0,0,0,.065)!important;
+ }
+}
+body[data-page=booking] :is(button,a):active{transform:scale(.985)}
+body[data-page=booking] :is(button,a):focus-visible{
+ outline:3px solid #53C3B1!important;outline-offset:3px!important;
+}
+
+/* Completion: previous five-step navigator is over; keep only the back link above the ticket. */
+body[data-page=booking].is-booking-complete .booking-layout{
+ display:flex!important;flex-direction:column!important;
+ width:min(660px,calc(100% - 44px))!important;
+ gap:8px!important;
+ margin-top:clamp(96px,9vw,120px)!important;
+}
+body[data-page=booking].is-booking-complete .booking-aside{
+ position:static!important;width:100%!important;padding:0!important;
+}
+body[data-page=booking].is-booking-complete .booking-aside :is(h1,.booking-intro,.step-nav,.aside-note){
+ display:none!important;
+}
+body[data-page=booking].is-booking-complete .booking-aside .back-link{
+ display:inline-flex!important;margin:0 0 3px!important;
+}
+body[data-page=booking].is-booking-complete .booking-panel{
+ width:100%!important;max-width:none!important;padding:0 0 40px!important;
+}
+body[data-page=booking].is-booking-complete .booking-panel :is(.wizard-top,.progress-track,.wizard-status,.draft-status,.save-draft,.privacy-note){
+ display:none!important;
+}
+body[data-page=booking] #summary-result .result-tools{
+ background:#fff!important;border:1px solid #e8e8e5!important;
+ padding:18px!important;border-radius:22px!important;
+ margin:12px 0!important;
+}
+body[data-page=booking] #summary-result .result-tools .result-actions{
+ display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px;
+}
+body[data-page=booking] #summary-result .result-tools .result-actions .button{
+ font-size:12px!important;min-height:46px;padding:10px;
+ white-space:normal;text-align:center;
+ border-radius:14px!important;
+}
+body[data-page=booking] #summary-result .result-message{
+ font-size:11px!important;line-height:1.5;color:#777!important;
+}
+body[data-page=booking] #booking-customer-notice{margin:12px 0}
+body[data-page=booking] #booking-customer-notice :is(.card,.notice-card){
+ background:#fff;border:1px solid #e8e8e4;border-radius:20px;
+}
+body[data-page=booking] .ff-receipt-actions{
+ display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;
+ gap:9px!important;margin:16px 0 20px!important;
+}
+body[data-page=booking] .ff-receipt-actions .button{
+ width:100%;min-height:48px!important;min-width:0!important;
+ border-radius:15px!important;
+ padding:12px 9px!important;
+ font-size:12px!important;font-weight:650!important;
+ text-align:center;color:#161616!important;background:#fff!important;
+ border:1px solid #e2e3df!important;
+}
+body[data-page=booking] .ff-receipt-actions .button:last-child{
+ grid-column:1/-1;
+}
+body[data-page=booking] .ff-receipt-actions .button:hover{background:#f2f2ef!important}
+
+@media(max-width:800px){
+ body[data-page=booking] .booking-layout{
+  width:calc(100% - 40px)!important;
+  margin:12px auto 40px!important;
+  gap:15px!important;display:flex!important;flex-direction:column!important;
+ }
+ body[data-page=booking] .booking-aside{
+  position:static!important;padding:6px 2px 0!important;
+  border:0!important;border-radius:0!important;
+ }
+ body[data-page=booking] .booking-aside h1{
+  font-size:clamp(27px,6.2vw,35px)!important;
+  margin:8px 0!important;
+ }
+ body[data-page=booking] .booking-aside .booking-intro{
+  font-size:12px!important;margin:0 0 12px!important;
+ }
+ body[data-page=booking] .booking-aside .step-nav{margin:12px 0 0!important;gap:4px!important}
+ body[data-page=booking] .step-nav li>button{
+  min-height:55px!important;padding:7px 3px!important;
+  border-radius:12px!important;
+ }
+ body[data-page=booking] .step-nav li>button span{font-size:9px!important}
+ body[data-page=booking] .booking-panel{
+  padding:0 2px 28px!important;width:100%!important;
+  border:0!important;background:transparent!important;
+ }
+ body[data-page=booking].is-booking-complete .booking-layout{
+  width:calc(100% - 36px)!important;
+  margin:8px auto 30px!important;gap:6px!important;
+ }
+ body[data-page=booking].is-booking-complete .booking-aside{
+  padding:0!important;
+ }
+ body[data-page=booking] .review-list{padding:6px 15px!important}
+}
+@media(max-width:400px){
+ body[data-page=booking] .booking-layout{width:calc(100% - 30px)!important}
+ body[data-page=booking].is-booking-complete .booking-layout{width:calc(100% - 28px)!important}
+ body[data-page=booking] #summary-result .result-tools .result-actions{
+  grid-template-columns:1fr;
+ }
+}
+@media(prefers-reduced-motion:reduce){
+ body[data-page=booking] :is(.review-list,.hours-note,.quote-box,.choice-card,.extra-choice,button,a,input,select,textarea){
+  transition:none!important;transform:none!important;
+ }
+}

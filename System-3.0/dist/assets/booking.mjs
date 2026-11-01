@@ -193,14 +193,14 @@ function showResult(quote,token){
  result.innerHTML=buildDigitalReceipt(quote,link)+
   '<div class="ff-receipt-actions"><button class="button outline" id="copy-tracking" type="button">Copiar link</button><button class="button outline" id="download-receipt" type="button">Baixar comprovante</button><button class="button outline" id="print-receipt" type="button">Salvar PDF</button></div>'+
   '<div id="booking-customer-notice"></div>'+
-  '<section class="result-tools" aria-label="Compartilhar sua solicitação"><h3>Compartilhar os detalhes</h3><pre class="summary-pre"></pre><div class="result-actions">'+
+  '<details class="result-tools" aria-label="Mais opções de compartilhamento"><summary>Mais opções de compartilhamento</summary><div class="result-tools-body"><pre class="summary-pre"></pre><div class="result-actions">'+
   '<button class="button outline primary-send" type="button" id="send-whatsapp">'+esc(preferredContact(window.FINE_FORM_CONFIG||{}).label)+' <span>↗</span></button>'+
   '<button class="button outline" type="button" id="send-email">Enviar por e-mail <span>↗</span></button>'+
   '<button class="button outline" type="button" id="copy-summary">Copiar resumo <span>⧉</span></button>'+
   '<button class="button outline" type="button" id="download-summary">Baixar resumo .md <span>↓</span></button>'+
   '<button class="text-link" type="button" id="share-summary">Compartilhar solicitação ↗</button>'+
-  '<button class="text-link" type="button" id="edit-summary">Preparar outro pedido</button></div></section>'+
-  '<p class="result-message">O atendimento será confirmado após análise e conversa. Não há cobrança nem reserva automática.</p>';
+  '<button class="text-link" type="button" id="edit-summary">Preparar outro pedido</button></div></div></details>'+
+  '';
  mountCustomerNotice(document.getElementById('booking-customer-notice'),quote,token).catch(()=>{});
  $('.summary-pre').textContent=summary;
  $('#copy-tracking').addEventListener('click',()=>copyText(link).then(()=>window.ff?.toast('Link copiado.')).catch(e=>window.ff?.toast(e.message)));

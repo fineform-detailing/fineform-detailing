@@ -16,14 +16,14 @@ export function renderFooter({root='./',config={},year=new Date().getFullYear()}
     '<a class="ff-footer-emblem" href="'+base+'" aria-label="Fine Form, página inicial">'+
      '<img src="'+base+'assets/logo-transparent.svg" alt="Símbolo Fine Form" width="80" height="80" loading="lazy" decoding="async">'+
     '</a>'+
-    '<a class="ff-footer-cta ff-footer-cta-primary" href="'+base+'atendimento/">Pedir orçamento <span aria-hidden="true">↗</span></a>'+
+    '<a class="ff-footer-cta ff-footer-cta-primary" href="'+base+'atendimento/">Escolher cuidados <span aria-hidden="true">↗</span></a>'+
    '</div>'+
    '<nav class="ff-footer-contact" aria-label="Contato">'+
     '<h2 class="ff-footer-label">Contato</h2>'+
     (contactLinks||'<a href="'+base+'atendimento/">Fale conosco <span aria-hidden="true">↗</span></a>')+
    '</nav>'+
    '<nav class="ff-footer-nav" aria-label="Navegação">'+
-    '<h2 class="ff-footer-label">Acesse</h2>'+
+    '<h2 class="ff-footer-label">Navegue</h2>'+
     '<a href="'+base+'#cuidados">Cuidados <span aria-hidden="true">↗</span></a>'+
     '<a href="'+base+'acompanhar/">Pedidos <span aria-hidden="true">↗</span></a>'+
    '</nav>'+

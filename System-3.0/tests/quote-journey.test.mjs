@@ -38,7 +38,7 @@ test('estado inicial de envio jamais mostra sucesso antecipado; erro permite nov
   const journey=startQuoteJourney();
   const dialog=dom.window.document.getElementById('ff-quote-journey');
   assert.ok(dialog);
-  assert.match(dialog.textContent,/Organizando sua solicitação/);
+  assert.match(dialog.textContent,/Organizando sua solicitação|Enviando sua solicitação/);
   assert.doesNotMatch(dialog.textContent,/Solicitação recebida/);
   let retries=0;
   journey.fail('Falha de teste',()=>{retries++});

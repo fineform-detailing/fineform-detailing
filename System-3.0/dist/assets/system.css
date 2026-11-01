@@ -56,3 +56,11 @@ body[data-page=tracking] .system-card .quote-total{border-top:1px solid #e4e8e1}
  body[data-page=tracking] .system-heading{margin-bottom:10px}
  body[data-page=tracking] .system-card{margin:14px 0;padding:21px}
 }
+
+/* Estado de acompanhamento acessível sem rótulo duplicado no alto da tela. */
+body[data-page=tracking] .system-heading>.live-state{
+ position:absolute!important;width:1px!important;height:1px!important;
+ overflow:hidden!important;clip:rect(0,0,0,0)!important;
+ white-space:nowrap!important;padding:0!important;
+ border:0!important;margin:-1px!important;
+}

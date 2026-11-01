@@ -64,3 +64,24 @@ body[data-page=tracking] .system-heading>.live-state{
  white-space:nowrap!important;padding:0!important;
  border:0!important;margin:-1px!important;
 }
+
+/* Pedidos — retirar o espaço duplo acumulado abaixo do header fixo. */
+body[data-page=tracking]{padding-top:clamp(82px,8vw,102px)!important}
+body[data-page=tracking] .system-page{
+ padding-top:clamp(12px,2.2vw,24px)!important;
+ min-height:0;
+}
+body[data-page=tracking] .system-heading{
+ margin-bottom:20px!important;
+}
+body[data-page=tracking] .system-heading h1{
+ margin:4px 0 14px!important;
+}
+body[data-page=tracking] .system-heading p{
+ margin:0!important;
+}
+@media(max-width:700px){
+ body[data-page=tracking]{padding-top:92px!important}
+ body[data-page=tracking] .system-page{padding-top:10px!important}
+ body[data-page=tracking] .system-heading{margin-bottom:17px!important}
+}

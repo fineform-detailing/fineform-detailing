@@ -38,6 +38,8 @@ if(incomingService){state.vehicle=incomingService.vehicle;state.service=incoming
 const incomingPlan=findPlan(params.get('plan'));
 if(incomingPlan){state.vehicle=incomingPlan.vehicle;state.plan=incomingPlan.id;state.mode='plan';state.extras=[];state.treatments=[];}
 if(params.get('mode')==='guidance')state.mode='guidance';
+const incomingMotoPolish=params.get('extra')==='motoPolish'&&params.get('vehicle')==='moto';
+if(incomingMotoPolish){state.mode='guidance';state.extras=['motoPolish'];}
 const areaGoal={pintura:'Pintura',interior:'Interior',rodas:'Rodas',exterior:'Acabamentos'}[params.get('area')];
 if(areaGoal){state.goals=[areaGoal];state.mode='guidance';}
 state=sanitize(state);

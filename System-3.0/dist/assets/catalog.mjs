@@ -40,7 +40,7 @@ export const extras = [
  {id:'wheelIron',vehicle:'both',price:90,motoPrice:50,label:'Descontaminação das rodas',area:'rodas',description:'Tratamento da contaminação ferrosa nas faces acessíveis das rodas, sem desmontagem. Para quatro rodas de carro ou duas de moto; no Extra, quando indicado.'},
  {id:'paintIron',vehicle:'car',price:120,label:'Descontaminação da pintura',area:'pintura',description:'Remove resíduos ferrosos da pintura como parte da preparação de polimento, vitrificação ou Extra. Não substitui a etapa mecânica quando ela for necessária.'},
  {id:'glassCare',vehicle:'car',price:160,label:'Tratamento completo dos vidros',area:'vidros',description:'Vidros externos compatíveis com limpeza técnica, tratamento de marcas d’água removíveis e proteção hidrorrepelente. Incluído no Extra.'},
- {id:'motoPolish',vehicle:'moto',price:160,label:'Realce de uma peça pintada',area:'pintura',description:'Realce localizado em uma peça pintada elegível da moto, como o tanque, após avaliação. Não inclui toda a carenagem.'}
+ {id:'motoPolish',vehicle:'moto',price:400,label:'Polimento Premium',area:'pintura',description:'Polimento técnico das áreas pintadas da moto, com avaliação prévia para definir a correção e o acabamento compatíveis. Não inclui repintura ou reparos de pintura.'}
 ];
 export const extraPrice=(extra,vehicle)=>vehicle==='moto'&&extra.motoPrice?extra.motoPrice:extra.price;
 export const plans = [

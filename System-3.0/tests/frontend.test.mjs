@@ -299,7 +299,7 @@ test('orçamento conserva a tentativa durante falha, limpa dados ao confirmar e 
  input(w,'model','Civic orçamento futuro');submit(w,'care-form');submit(w,'care-form');submit(w,'care-form');submit(w,'care-form');
  input(w,'name','Contato em preparação');input(w,'phone','11900001771');
  const ack=w.document.querySelector('[name="ack"]');ack.checked=true;ack.dispatchEvent(new w.Event('change',{bubbles:true}));
- assert.match(w.document.querySelector('.request-disclosure').textContent,/sem|Não há/);
+ assert.match(w.document.querySelector('[name="ack"]').closest('label').textContent,/sem reserva ou cobrança automática/);
  assert.equal(w.document.querySelector('[name="plate"]'),null);
  submit(w,'care-form');await until(()=>w.document.getElementById('form-error').textContent.includes('Falha temporária'));
  assert.ok(w.sessionStorage.getItem('ff-pending-submission'));

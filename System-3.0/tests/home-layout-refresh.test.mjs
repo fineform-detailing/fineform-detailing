@@ -17,7 +17,7 @@ test('rodapé editorial é exclusivo da Home, mantendo o dock e os links legais 
  assert.ok(styles.includes('body:not([data-page=home]).has-ff-dock'));
  assert.ok(styles.includes('padding-bottom:calc(94px + env(safe-area-inset-bottom,0px))'));
 });
-test('horários se tornam um card editorial e destaque Premium deixa o visual decorativo',async()=>{
+test('horários e cards em destaque usam o layout editorial',async()=>{
  const home=new JSDOM(await readFile('dist/index.html','utf8')).window.document;
  const hours=home.querySelector('#horarios .hours-panel');
  assert.ok(hours.querySelector('.hours-heading h2'));

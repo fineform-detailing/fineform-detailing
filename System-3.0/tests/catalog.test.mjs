@@ -72,7 +72,7 @@ test('mensagem natural inclui escolhas e preferências e pede confirmação ao M
  assert.match(summary,/Care Frequente/);assert.match(summary,/18\/10\/2026/);assert.match(summary,/10:00/);
  assert.match(summary,/Higienização completa/);assert.match(summary,/Descontaminação das rodas/);
  assert.doesNotMatch(summary,/- Cera na pintura/);assert.match(summary,/Care Frequente — R\$/);
- assert.match(summary,/Pode confirmar a disponibilidade e o prazo com esse orçamento/);
+ assert.match(summary,/Podemos conferir a disponibilidade e confirmar as etapas desse orçamento/);
 });
 test('Extra contempla manutenção por área e oferece vitrificação como upgrade separado',()=>{
  const state={...sample,service:'extra',treatments:['fullClean','polishLight','polishMedium','polishPremium','coating'],extras:compatibleExtras('car').map(x=>x.id)};
@@ -109,7 +109,7 @@ test('bancos por material são alternativas e limpeza básica não vira adiciona
 });
 test('resumo preserva dados como texto e elimina quebras injetadas nos campos',()=>{
  const summary=createSummary({...sample,name:'Rafael\nStatus: confirmado',model:'<script>alert(1)</script>'});
- assert.match(summary,/Meu nome é Rafael Status: confirmado/);
+ assert.match(summary,/Sou Rafael Status: confirmado e reuni abaixo minhas preferências/);
  assert.doesNotMatch(summary,/\nStatus: confirmado/);
  assert.match(summary,/<script>/); // A UI usa textContent; o export é texto puro.
 });

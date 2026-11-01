@@ -10,7 +10,8 @@ test('Care Moto recebe destaque e Extra continua sem polimento',async()=>{
   readFile('dist/assets/studio.css','utf8'),
   readFile('dist/index.html','utf8')
  ]);
- assert.ok(js.includes("(vehicle==='moto'&&id==='motoPremium'?'service-featured':'')"));
+ assert.ok(!js.includes("(vehicle==='moto'&&id==='motoPremium'?'service-featured':'')"));
+ assert.ok(js.includes("grid.innerHTML=ids.map"));
  assert.ok(js.includes('service-featured care-moto-featured'));
  assert.ok(!js.includes("(id==='premium'?'service-featured':'')"));
  assert.ok(!js.includes("(id==='extra'?'service-complete':'')"));

@@ -15,15 +15,15 @@ export function socialContacts(config={}){
  if(number)links.push({key:'whatsapp',label:'WhatsApp',url:'https://wa.me/'+number});
  return links;
 }
-export function emailMessage(config,text,subject='Meu próximo cuidado — Fine Form'){
+export function emailMessage(config,text,subject='Solicitação de cuidado automotivo | Fine Form'){
  const email=socialContacts(config).find(x=>x.key==='email');
  if(!email)return '';
  return email.url+'?subject='+encodeURIComponent(subject)+'&body='+encodeURIComponent(String(text||'').replace(/\r?\n/g,'\r\n'));
 }
 export function preferredContact(config={}){
  const number=whatsappNumber(config);
- if(number)return {kind:'whatsapp',label:'Enviar pelo WhatsApp',number};
- if(socialContacts(config).some(x=>x.key==='email'))return {kind:'email',label:'Preparar e-mail para Mateus'};
+ if(number)return {kind:'whatsapp',label:'Conversar no WhatsApp',number};
+ if(socialContacts(config).some(x=>x.key==='email'))return {kind:'email',label:'Enviar por e-mail'};
  return {kind:'unavailable',label:'Escolher contato'};
 }
 export function whatsappMessage(config,text){

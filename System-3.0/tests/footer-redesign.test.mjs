@@ -20,10 +20,15 @@ test('rodapé ocupa toda a largura e mostra logotipo sem qualquer caixa',async()
  assert.ok(!d.querySelector('.ff-footer-emblem').querySelector('div'),'somente logo SVG, sem fundo');
  assert.ok(!block.includes('width:min(100%,1400px)'),'sem largura limitada');
  assert.ok(!block.includes('box-shadow:0 0 0 7px #fff'),'sem aro branco');
+ assert.ok(css.includes('body.has-ff-dock{padding-bottom:0}'));
+ assert.ok(css.includes('background:#fff;color:#121714'));
+ assert.ok(css.includes('grid-template-areas:"brand brand" "contact nav"'));
+ assert.ok(css.includes('calc(128px + env(safe-area-inset-bottom,0px))'));
 });
 test('rodapé minimalista preserva apenas CTA, contatos essenciais e dois atalhos',()=>{
  const d=doc();
- assert.equal(d.querySelector('.ff-footer-wordmark').textContent,'FINE FORM');
+ assert.equal(d.querySelector('.ff-footer-wordmark'),null);
+ assert.equal(d.querySelector('.ff-footer-slogan'),null);
  assert.equal(d.querySelectorAll('.ff-footer-cta').length,1);
  assert.equal(d.querySelector('.ff-footer-cta').getAttribute('href'),'./atendimento/');
  assert.deepEqual([...d.querySelectorAll('.ff-footer-nav>a')].map(a=>a.getAttribute('href')),['./#cuidados','./acompanhar/']);

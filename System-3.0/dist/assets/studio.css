@@ -969,3 +969,80 @@ body[data-page=home] .site-footer.ff-footer-redesign{
 @media(prefers-reduced-motion:reduce){
  .ff-footer-redesign :is(.ff-footer-emblem,.ff-footer-cta){transition:none!important}
 }
+
+
+/* Footer final: a faixa reservada ao dock passa a ser preta dentro do rodapé. */
+body.has-ff-dock{padding-bottom:0}
+body.has-ff-dock .site-footer.ff-footer-redesign,
+.site-footer.ff-footer-redesign{
+ width:100%;max-width:none;margin:0;padding:0;
+ background:#0f0f0f;color:#f2f2ee;
+}
+.site-footer.ff-footer-redesign .ff-footer-shell{
+ width:100%;max-width:none;margin:0;
+ padding:clamp(55px,6vw,80px) clamp(22px,5vw,64px) calc(125px + env(safe-area-inset-bottom,0px));
+ background:transparent;
+}
+.site-footer.ff-footer-redesign .ff-footer-layout{
+ width:min(100%,760px);
+ margin:0 auto;
+ display:grid;
+ grid-template-columns:repeat(2,minmax(0,190px));
+ grid-template-areas:"brand brand" "contact nav";
+ justify-content:center;align-items:start;column-gap:clamp(26px,7vw,90px);
+ row-gap:clamp(30px,4vw,42px);
+ text-align:center;
+}
+.site-footer.ff-footer-redesign .ff-footer-center{
+ grid-area:brand;display:flex;align-items:center;justify-content:center;
+ flex-direction:column;text-align:center;
+}
+.site-footer.ff-footer-redesign .ff-footer-contact{
+ grid-area:contact;align-items:center;text-align:center;
+}
+.site-footer.ff-footer-redesign .ff-footer-nav{
+ grid-area:nav;align-items:center;text-align:center;
+}
+.site-footer.ff-footer-redesign .ff-footer-emblem{
+ display:block;position:static;transform:none;
+ width:clamp(88px,11vw,116px);height:clamp(88px,11vw,116px);
+ margin:0;padding:0;
+ border:0;border-radius:0;background:transparent;box-shadow:none;
+}
+.site-footer.ff-footer-redesign .ff-footer-emblem img{
+ width:100%;height:100%;display:block;
+ object-fit:contain;filter:brightness(0) invert(1);
+}
+.site-footer.ff-footer-redesign .ff-footer-cta-primary{
+ background:#fff;color:#121714;
+ border-color:#fff;box-shadow:none;
+ margin-top:25px;
+}
+.site-footer.ff-footer-redesign .ff-footer-cta-primary:hover{
+ background:#e7ede9;color:#121714;
+}
+.site-footer.ff-footer-redesign .ff-footer-bottom{
+ width:min(100%,760px);margin:clamp(28px,4vw,42px) auto 0;
+ justify-content:center;text-align:center;
+}
+.site-footer.ff-footer-redesign .ff-footer-copyright{width:100%}
+.site-footer.ff-footer-redesign .ff-footer-bottom .footer-utilities{
+ justify-content:center;
+}
+@media(max-width:760px){
+ .site-footer.ff-footer-redesign .ff-footer-shell{
+  padding:53px 22px calc(128px + env(safe-area-inset-bottom,0px));
+ }
+ .site-footer.ff-footer-redesign .ff-footer-layout{
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  grid-template-areas:"brand brand" "contact nav";
+  gap:30px 15px;
+ }
+ .site-footer.ff-footer-redesign .ff-footer-center{grid-column:1/-1}
+ .site-footer.ff-footer-redesign .ff-footer-contact{
+  grid-column:1;grid-row:2;
+ }
+ .site-footer.ff-footer-redesign .ff-footer-nav{
+  grid-column:2;grid-row:2;
+ }
+}

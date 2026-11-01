@@ -26,7 +26,7 @@ test('Premium é o único serviço em destaque e Extra fica sem polimento',async
  assert.equal(treatmentPrice('coating',state),1250);
  assert.equal(quoteFor({...state,treatments:['coating']}).total,2450);
  assert.equal(quoteFor({...state,treatments:['polishLight']}).total,1620);
- assert.equal(quoteFor({...state,treatments:['polishPremium']}).total,2050);
+ assert.equal(quoteFor({...state,treatments:['polishPremium']}).total,1920);
  assert.ok(normalizeTreatments({...state,treatments:['polishPremium']}).includes('polishPremium'));
  assert.ok(createSummary(state).includes('1.200'),'resumo deve apresentar o preço R$ 1.200');
  assert.ok(html.includes('id="react-velocity"'),'animação mantida');

@@ -16,8 +16,6 @@ export function renderFooter({root='./',config={},year=new Date().getFullYear()}
     '<a class="ff-footer-emblem" href="'+base+'" aria-label="Fine Form, página inicial">'+
      '<img src="'+base+'assets/logo-transparent.svg" alt="Símbolo Fine Form" width="80" height="80" loading="lazy" decoding="async">'+
     '</a>'+
-    '<p class="ff-footer-wordmark">FINE FORM</p>'+
-    '<p class="ff-footer-slogan">Estética automotiva.</p>'+
     '<a class="ff-footer-cta ff-footer-cta-primary" href="'+base+'atendimento/">Pedir orçamento <span aria-hidden="true">↗</span></a>'+
    '</div>'+
    '<nav class="ff-footer-contact" aria-label="Contato">'+

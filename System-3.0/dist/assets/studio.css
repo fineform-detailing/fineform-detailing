@@ -1332,3 +1332,54 @@ body[data-page=booking] .booking-panel .result-tools .result-actions{margin:0}
 body[data-page=booking] .booking-panel .quote-box{
  background:#f8f8f6;border-color:#e5e7e0;
 }
+
+/* Booking mobile cleanup: compact text, visible prices, quiet notices. */
+body[data-page=booking] .booking-aside h1{line-height:1.18!important;letter-spacing:-.045em!important;word-break:normal}
+body[data-page=booking] .booking-aside h1 br{display:block!important}
+body[data-page=booking] .booking-aside .booking-intro{display:block!important;font-size:12px!important;line-height:1.45!important;max-width:35ch;margin-top:8px}
+body[data-page=booking] .booking-panel .choice-stack{gap:10px}
+body[data-page=booking] .booking-panel .choice-stack .choice-card{padding:16px 18px!important;min-height:0;border-radius:14px!important}
+body[data-page=booking] .booking-panel .choice-card h3{font-size:18px!important;line-height:1.3!important;font-weight:650;color:#1b241e}
+body[data-page=booking] .booking-panel .choice-card p{font-size:12px!important;line-height:1.45!important;margin-top:6px;color:#5c6860}
+body[data-page=booking] .booking-panel .booking-choice-price{display:block;font-size:20px;line-height:1.2;font-weight:750;color:#141b17;margin-top:11px}
+body[data-page=booking] .booking-panel .booking-choice-price span{font-size:12px;color:#58655c;margin-left:4px;font-weight:500}
+body[data-page=booking] .booking-panel .extra-choice{display:flex;align-items:flex-start;gap:13px;margin:0 0 10px;padding:16px!important;border:1px solid #e0e5dd!important;border-radius:14px!important;background:#fff!important;box-shadow:none;min-width:0}
+body[data-page=booking] .booking-panel .extra-choice>span{flex:1;min-width:0}
+body[data-page=booking] .booking-panel .extra-choice input[type=checkbox]{flex:none;width:19px;height:19px;margin:3px 2px 0 0;accent-color:#267a6a}
+body[data-page=booking] .booking-panel .extra-choice b{font-size:14px!important;line-height:1.4!important;font-weight:650;color:#1e2721}
+body[data-page=booking] .booking-panel .extra-choice small{font-size:12px!important;line-height:1.45!important;color:#646f65;margin-top:6px!important}
+body[data-page=booking] .booking-panel .extra-choice .option-price{display:block;margin-top:10px!important;font-size:19px!important;line-height:1.2!important;font-weight:750;color:#15231c!important}
+body[data-page=booking] .booking-panel .extra-choice.included{opacity:1;background:#f6f8f5!important}
+body[data-page=booking] .booking-panel .booking-treatments{border-top:0!important;padding-top:0!important;margin-top:18px!important}
+body[data-page=booking] .booking-panel .booking-treatments>h3{font-size:17px!important;margin:0 0 12px!important}
+body[data-page=booking] .booking-panel .booking-treatments .fieldset-clean{margin-top:8px!important}
+body[data-page=booking] .booking-panel .quote-box{background:#f7f8f6!important;border:1px solid #e1e5df!important;border-radius:18px;padding:19px 20px!important;margin-top:18px;box-shadow:none}
+body[data-page=booking] .booking-panel .quote-box h3{font-size:19px;line-height:1.3;margin-bottom:13px}
+body[data-page=booking] .booking-panel .quote-box dl{font-size:13px;line-height:1.45}
+body[data-page=booking] .booking-panel .quote-total{display:flex!important;flex-direction:row!important;align-items:baseline!important;justify-content:space-between;border:0!important;border-top:0!important;padding-top:0!important;margin-top:12px!important;gap:10px}
+body[data-page=booking] .booking-panel .quote-total span{font-size:12px;line-height:1.35}
+body[data-page=booking] .booking-panel .quote-total strong{font-size:clamp(25px,6vw,33px);color:#0f1511;font-weight:750;white-space:nowrap}
+body[data-page=booking] .booking-panel .quote-box .quote-note{font-size:11px;line-height:1.4;margin-top:9px;color:#79837a}
+body[data-page=booking] .booking-panel .wizard-actions{display:flex;flex-wrap:nowrap!important;align-items:stretch;gap:10px;margin-top:18px!important}
+body[data-page=booking] .booking-panel .wizard-actions>.button{min-width:0!important;min-height:50px;padding:11px 15px;font-size:13px!important;line-height:1.2;border-radius:999px}
+body[data-page=booking] .booking-panel #previous-step{flex:0 0 auto;white-space:nowrap}
+body[data-page=booking] .booking-panel #next-step{flex:1 1 auto;min-width:0!important;display:flex;align-items:center;justify-content:center;gap:8px;white-space:nowrap;font-size:13px!important}
+body[data-page=booking] .booking-panel .check-line{gap:12px;margin:14px 0;font-size:12px!important;line-height:1.48!important;color:#59675e}
+body[data-page=booking] .booking-panel .check-line input[type=checkbox]{flex:none;width:19px;height:19px;margin:2px 0 0;accent-color:#267a6a}
+body[data-page=booking] .booking-panel .request-disclosure{margin:12px 0 0;padding:0;background:none;border:0;font-size:11px;line-height:1.45;color:#748078}
+body[data-page=booking] .booking-panel .save-draft{border:0!important;border-top:0!important;padding:0!important;margin:20px 0 0!important;align-items:flex-start;gap:10px;font-size:12px!important;line-height:1.45!important;color:#546157}
+body[data-page=booking] .booking-panel .save-draft input[type=checkbox]{flex:none;width:18px;height:18px;margin:1px 0 0}
+body[data-page=booking] .booking-panel .privacy-note{margin:10px 0 0!important;padding:10px 0 0;border:0;font-size:10px!important;line-height:1.5;color:#7a857b}
+body[data-page=booking] .booking-panel .privacy-note a{text-decoration:underline;text-underline-offset:2px;color:#516d61}
+@media(max-width:800px){
+ body[data-page=booking] .booking-layout{margin-top:96px!important;gap:12px!important}
+ body[data-page=booking] .booking-aside{padding:22px 20px 18px!important}
+ body[data-page=booking] .booking-aside h1{font-size:clamp(25px,6.2vw,32px)!important;margin:10px 0!important}
+ body[data-page=booking] .booking-aside .step-nav{margin:15px 0 0!important}
+ body[data-page=booking] .booking-panel{padding:22px 19px 30px!important}
+}
+@media(max-width:360px){
+ body[data-page=booking] .booking-panel .wizard-actions>.button{font-size:11px!important;padding:11px 10px}
+ body[data-page=booking] .booking-panel .extra-choice{padding:13px!important}
+ body[data-page=booking] .booking-panel .quote-total strong{font-size:25px}
+}

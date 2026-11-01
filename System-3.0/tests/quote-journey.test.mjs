@@ -16,7 +16,7 @@ test('comprovante usa exclusivamente referencia, data e itens retornados da API'
  assert.match(html,/Premium/);
  assert.match(html,/04\/11\/2026/);
  assert.match(html,/R\$\s*180/);
- assert.match(html,/Acompanhar solicitação/);
+ assert.match(html,/Acompanhar pedido/);
  assert.match(html,/Solicitação recebida/);
  assert.doesNotMatch(html,/barcode|código de barras|pagamento confirmado/i);
 });

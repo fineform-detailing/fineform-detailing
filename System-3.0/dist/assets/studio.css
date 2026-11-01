@@ -549,25 +549,40 @@ body[data-design=kinetic] .ff-dock .ff-dock-link {height:58px}
 }
 
 
-/* Destaque editorial da lavagem Premium, exclusivo e sem selos extras. */
-body[data-page=home] .menu-section .service-row.service-featured {
+/* Destaque editorial Premium: contraste, sem degradê, faixas ou brilho decorativo. */
+body[data-page=home] .menu-section .service-row.service-featured{
  position:relative;isolation:isolate;overflow:hidden;
- background:linear-gradient(130deg,#e9f8f3 0%,#f7fcfa 58%,#ffffff 100%);
- border:1.5px solid #53c3b1;
- box-shadow:0 12px 32px rgba(20,100,87,.095),0 1px 2px rgba(17,41,34,.055);
+ background:#171b1a;border:1px solid #171b1a;box-shadow:none;
 }
-body[data-page=home] .menu-section .service-row.service-featured::before{
- content:"";position:absolute;top:0;bottom:0;left:0;width:4px;
- background:#53c3b1;pointer-events:none;
+body[data-page=home] .menu-section .service-row.service-featured::before{content:none}
+body[data-page=home] .menu-section .service-featured .menu-row-copy h3{
+ color:#fff;font-weight:650;letter-spacing:-.045em;
 }
-body[data-page=home] .menu-section .service-featured .menu-row-copy h3{color:#143e36;font-weight:750}
-body[data-page=home] .menu-section .service-featured .menu-row-price strong{color:#143e36}
+body[data-page=home] .menu-section .service-featured .menu-row-copy .service-positioning{
+ color:#b9c8c0;
+}
+body[data-page=home] .menu-section .service-featured .menu-row-copy p:not(.service-positioning){
+ color:#d0d8d2;
+}
+body[data-page=home] .menu-section .service-featured .menu-row-price strong{
+ color:#fff;
+}
+body[data-page=home] .menu-section .service-featured .menu-row-price small{
+ color:#afbeb5;
+}
+body[data-page=home] .menu-section .service-featured .service-open{
+ color:#f8f8f5;
+}
 body[data-page=home] .menu-section .service-featured .service-open>b{
- background:#53c3b1;border-color:#53c3b1;color:#102d27;
+ background:#f8f8f5;border-color:#f8f8f5;color:#161a18;
+ box-shadow:none;
 }
 @media(hover:hover) and (pointer:fine){
  body[data-page=home] .menu-section .service-featured:hover{
-  border-color:#369f8d;box-shadow:0 17px 38px rgba(20,100,87,.13);
+  border-color:#171b1a;box-shadow:none;
+ }
+ body[data-page=home] .menu-section .service-featured .service-open:hover>b{
+  background:#c9e6dd;border-color:#c9e6dd;
  }
 }
 
@@ -1045,4 +1060,233 @@ body.has-ff-dock .site-footer.ff-footer-redesign,
  .site-footer.ff-footer-redesign .ff-footer-nav{
   grid-column:2;grid-row:2;
  }
+}
+
+
+/* Fine Form 3.0 — interface refinada, formulário mais claro e rodapé apenas na Home. */
+body:not([data-page=home]).has-ff-dock{
+ padding-bottom:calc(108px + env(safe-area-inset-bottom,0px));
+}
+body[data-page=home] .site-footer.ff-footer-redesign .ff-footer-shell{
+ padding-bottom:calc(90px + env(safe-area-inset-bottom,0px));
+}
+@media(max-width:760px){
+ body[data-page=home] .site-footer.ff-footer-redesign .ff-footer-shell{
+  padding-bottom:calc(94px + env(safe-area-inset-bottom,0px));
+ }
+}
+
+/* Horários: tipografia e duas linhas úteis, sem mini-logo emoldurada. */
+body[data-page=home] .personal-section{
+ padding-top:clamp(22px,3vw,40px);
+ padding-bottom:clamp(25px,3vw,50px);
+}
+body[data-page=home] .personal-section .personal-layout{max-width:850px}
+body[data-page=home] .personal-section .hours-panel{
+ border:1px solid #dee2da;
+ border-radius:20px;
+ padding:clamp(25px,4vw,43px) clamp(23px,5vw,55px);
+ background:#f8f8f5;
+ box-shadow:none;
+}
+body[data-page=home] .hours-panel .hours-heading{
+ display:flex;align-items:center;justify-content:space-between;
+ gap:18px;flex-wrap:wrap;margin:0 0 20px;
+}
+body[data-page=home] .hours-panel .hours-heading h2{
+ color:#1a1e1b;font:650 clamp(22px,3vw,29px)/1.2 'FF Sans',Arial,sans-serif;
+ letter-spacing:-.045em;margin:0;
+}
+body[data-page=home] .hours-panel .hours-availability{
+ font-size:11px;font-weight:600;line-height:1.35;
+ color:#355c50;background:#e8f0eb;
+ border-radius:99px;padding:8px 12px;
+}
+body[data-page=home] .hours-panel dl{margin:0}
+body[data-page=home] .hours-panel dl>div{
+ display:flex;justify-content:space-between;align-items:baseline;
+ gap:14px;padding:17px 0;
+ border-bottom:1px solid #e0e3dd;
+}
+body[data-page=home] .hours-panel dt{
+ font-size:14px;color:#626b64;font-weight:450;
+}
+body[data-page=home] .hours-panel dd{
+ font-size:clamp(16px,2.5vw,21px);font-weight:550;
+ color:#1e2420;letter-spacing:-.035em;
+}
+body[data-page=home] .hours-panel>p{
+ margin:18px 0 0;font-size:12px;line-height:1.65;
+ color:#707971;
+}
+body[data-page=home] .hours-panel>img{display:none}
+
+/* Orçamento: duas peças editoriais em vez de uma única caixa pesada. */
+body[data-page=booking]{
+ background:#fafaf8;
+}
+body[data-page=booking] .booking-layout{
+ display:grid;
+ grid-template-columns:minmax(250px,330px) minmax(0,1fr);
+ gap:20px;
+ align-items:start;
+ width:min(1160px,calc(100% - 44px));
+ max-width:1160px;
+ margin:clamp(106px,11vw,142px) auto 54px;
+ padding:0;
+ background:transparent;
+ border:0;border-radius:0;
+ overflow:visible;
+ box-shadow:none;
+}
+body[data-page=booking] .booking-aside{
+ position:sticky;top:clamp(110px,11vw,145px);
+ padding:clamp(24px,3.4vw,37px);
+ background:#f1f2ee;
+ border:1px solid #e3e6df;
+ border-radius:22px;
+ box-shadow:none;
+}
+body[data-page=booking] .booking-aside .eyebrow{
+ color:#657469;font-size:10px;letter-spacing:.11em;
+ margin:24px 0 14px;
+}
+body[data-page=booking] .booking-aside h1{
+ display:block!important;
+ margin:0 0 15px;
+ color:#151a17;
+ font:650 clamp(27px,3vw,40px)/1.1 'FF Sans',Arial,sans-serif!important;
+ letter-spacing:-.052em!important;
+}
+body[data-page=booking] .booking-aside .booking-intro{
+ display:block!important;
+ margin:0;color:#5e6a61;
+ font-size:13px;line-height:1.65;
+}
+body[data-page=booking] .booking-aside .aside-note{
+ margin-top:22px;padding-top:15px;border-top:1px solid #dce1da;
+ background:transparent;
+}
+body[data-page=booking] .booking-aside .aside-note p{
+ font-size:11px;line-height:1.6;
+}
+body[data-page=booking] .booking-aside .step-nav{
+ display:flex;flex-direction:column;gap:3px;
+ margin:26px 0 0;padding:0;
+}
+body[data-page=booking] .step-nav li{
+ display:block;
+}
+body[data-page=booking] .step-nav li>button{
+ border-radius:10px;
+ min-height:43px;
+ padding:9px 11px;
+ gap:12px;
+}
+body[data-page=booking] .step-nav li.active>button{
+ background:#e1ece5;color:#1d3830;
+}
+body[data-page=booking] .step-nav li.done>button{
+ text-decoration:none;color:#4b7567;
+}
+body[data-page=booking] .booking-panel{
+ min-width:0;
+ padding:clamp(26px,4vw,50px);
+ border:1px solid #e3e6df;
+ border-radius:22px;
+ background:#fff;
+ box-shadow:none;
+}
+body[data-page=booking] .wizard-top{
+ display:flex;justify-content:space-between;gap:15px;
+ align-items:center;
+ margin:0 0 17px;
+}
+body[data-page=booking] .progress-track{
+ height:4px;
+ background:#ebefea;
+ border-radius:50px;overflow:hidden;
+}
+body[data-page=booking] #wizard-progress{
+ background:#3b9585;border-radius:50px;
+}
+body[data-page=booking] .wizard-title{
+ color:#151a17;font-size:clamp(27px,3vw,40px)!important;
+ font-weight:650!important;letter-spacing:-.048em!important;
+ line-height:1.15!important;
+}
+body[data-page=booking] .wizard-lead{
+ color:#58665d;font-size:14px!important;
+ line-height:1.65!important;
+}
+body[data-page=booking] :is(.choice-card,.extra-choice){
+ background:#fdfdfb;
+ border:1px solid #e3e6df;
+ border-radius:14px!important;
+ box-shadow:none;
+}
+body[data-page=booking] .choice-card:is(:hover,:focus-within){
+ border-color:#8eab9c;
+}
+body[data-page=booking] .wizard-actions{
+ margin-top:28px;gap:12px;
+}
+body[data-page=booking] .wizard-actions #next-step{
+ background:#171d19;border-color:#171d19;
+ color:#fff;border-radius:99px;
+}
+body[data-page=booking] .wizard-actions #next-step:hover{
+ background:#303e34;
+}
+body[data-page=booking] .save-draft{
+ margin-top:24px;
+}
+body[data-page=booking] .privacy-note{
+ max-width:65ch;color:#707c72;
+ font-size:11px;line-height:1.6;
+}
+@media(max-width:800px){
+ body[data-page=booking] .booking-layout{
+  display:flex;flex-direction:column;gap:14px;
+  width:calc(100% - 28px);margin:94px auto 34px;
+ }
+ body[data-page=booking] .booking-aside{
+  position:static;width:100%;padding:24px 22px 18px;
+ }
+ body[data-page=booking] .booking-aside .eyebrow{
+  margin:15px 0 9px;
+ }
+ body[data-page=booking] .booking-aside h1{
+  display:block!important;font-size:clamp(26px,6.5vw,33px)!important;
+  margin-bottom:8px;
+ }
+ body[data-page=booking] .booking-aside .booking-intro{
+  display:block!important;font-size:12px;line-height:1.55;
+ }
+ body[data-page=booking] .booking-aside .aside-note{display:none}
+ body[data-page=booking] .booking-aside .step-nav{
+  display:grid;grid-template-columns:repeat(5,minmax(0,1fr));
+  gap:3px;margin:20px 0 0;
+ }
+ body[data-page=booking] .step-nav li>button{
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  min-height:58px;padding:7px 3px;gap:5px;
+ }
+ body[data-page=booking] .step-nav li>button span{
+  font-size:9px;line-height:1.3;
+ }
+ body[data-page=booking] .booking-panel{
+  width:100%;padding:26px 22px 32px;
+ }
+ body[data-page=booking] .wizard-title{
+  font-size:clamp(26px,6vw,34px)!important;
+ }
+}
+@media(max-width:370px){
+ body[data-page=booking] .booking-layout{width:calc(100% - 20px)}
+ body[data-page=booking] .booking-aside,
+ body[data-page=booking] .booking-panel{padding-inline:16px}
+ body[data-page=booking] .step-nav li>button span{font-size:8px}
+ body[data-page=home] .hours-panel dl>div{align-items:start}
+ body[data-page=home] .hours-panel dt{font-size:12px}
 }

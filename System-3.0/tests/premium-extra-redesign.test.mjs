@@ -13,7 +13,9 @@ test('Premium é o único serviço em destaque e Extra fica sem polimento',async
  assert.ok(js.includes("(id==='premium'?'service-featured':'')"));
  assert.ok(!js.includes("(id==='extra'?'service-complete':'')"));
  assert.ok(css.includes('.service-row.service-featured'));
- assert.ok(css.includes('background:linear-gradient(130deg'));
+ assert.ok(css.includes('background:#171b1a'));
+ assert.ok(!css.includes('background:linear-gradient(130deg'));
+ assert.ok(css.includes('.service-row.service-featured::before{content:none}'));
  const extra=findService('extra');
  assert.equal(extra.price,1200);
  assert.ok(extra.includes.every(x=>!/polimento/i.test(x)));

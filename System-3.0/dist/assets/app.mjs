@@ -17,12 +17,18 @@ const header=$('[data-header]');
 mountHeaderGlass(header);
 if(header)header.innerHTML='<div class="ff-header-menu"><button type="button" class="nav-toggle" aria-expanded="false" aria-controls="main-nav" aria-label="Abrir menu"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button><nav class="nav-links" id="main-nav" aria-label="Navegação principal"><a href="'+root+'#cuidados">Cuidados</a><a href="'+root+'#care">Planos</a><a href="'+root+'#horarios">Horários</a><a href="'+root+'#avaliacoes">Avaliações</a><a href="'+root+'acompanhar/">Meus pedidos</a><a href="'+root+'atendimento/">Pedir orçamento</a></nav></div>'+brand;
 const footer=$('[data-footer]');
-if(footer){
+if(footer && document.body.dataset.page==='home'){
  footer.className='site-footer ff-footer-redesign';
  footer.innerHTML=renderFooter({root,config:cfg});
 }
 
 mountFloatingNav({root});
+if(footer && document.body.dataset.page!=='home'){
+ // O dock permanece flutuante e acessível; o rodapé editorial é exclusivo da Home.
+ const dock=footer.querySelector('.ff-dock');
+ if(dock)document.body.append(dock);
+ footer.remove();
+}
 mountPublicBusiness();
 
 $$('[data-social-links]').forEach(nav=>nav.innerHTML=socialMarkup());

@@ -26,6 +26,9 @@ test('horários são apresentados sozinhos e FAQ mantém primeira, segunda e úl
  assert.equal(sec.querySelectorAll('.personal-layout>div').length,0);
  assert.ok(sec.textContent.includes('Segunda a sábado'));
  assert.ok(sec.textContent.includes('Domingo'));
+ assert.ok(sec.querySelector('.hours-heading h2'));
+ assert.equal(sec.querySelector('.hours-panel>img'),null);
+ assert.ok(sec.textContent.includes('Com agendamento'));
  assert.ok(sec.textContent.includes('9h — 17h30'));
  assert.ok(sec.textContent.includes('9h — 12h'));
  for(const removed of ['É comigo','que você fala','Prefiro e-mail','Conversar no WhatsApp'])assert.ok(!sec.textContent.includes(removed));

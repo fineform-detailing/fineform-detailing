@@ -897,3 +897,105 @@ body[data-page="admin"] .admin-notification{
   scroll-behavior:auto!important;
  }
 }
+
+
+/* Correcoes Fine Form: header do site, hierarquia limpa e hero sem perdas. */
+body[data-page="admin"] .admin-main{overflow:visible}
+body[data-page="admin"] .site-header.admin-glass-header{
+ position:sticky!important;inset:auto!important;top:10px!important;left:auto!important;right:auto!important;transform:none!important;
+ width:100%!important;max-width:none!important;height:68px!important;margin:0 0 15px!important;padding:0 18px!important;
+ display:flex!important;align-items:center!important;justify-content:space-between!important;z-index:100;
+ border:1px solid transparent!important;border-radius:20px!important;background:transparent!important;box-shadow:none!important;
+ transition:background .25s,box-shadow .25s,border-color .25s!important;
+}
+body[data-page="admin"] .site-header.admin-glass-header.is-scrolled{
+ background:rgba(255,255,255,.82)!important;border-color:#e5e7e3!important;
+ -webkit-backdrop-filter:blur(24px) saturate(175%)!important;backdrop-filter:blur(24px) saturate(175%)!important;
+ box-shadow:0 10px 32px #0f0f0f12!important;
+}
+body[data-page="admin"] .admin-glass-header .ff-header-menu{display:flex!important;align-items:center!important}
+body[data-page="admin"] .admin-glass-header .nav-toggle.admin-site-menu{
+ display:grid!important;place-items:center!important;width:42px!important;height:42px!important;padding:8px!important;
+ background:transparent!important;border:0!important;border-radius:12px!important;color:#0f0f0f!important;
+}
+body[data-page="admin"] .admin-glass-header .nav-toggle svg{width:25px;height:25px}
+body[data-page="admin"] .admin-glass-header .brand.ff-header-mark{
+ margin-left:auto!important;display:flex!important;align-items:center!important;justify-content:center!important;
+ width:46px!important;height:46px!important;padding:0!important;background:transparent!important;border:0!important;
+}
+body[data-page="admin"] .admin-glass-header .brand.ff-header-mark img{
+ display:block!important;width:38px!important;height:38px!important;object-fit:contain!important;
+ border:0!important;background:transparent!important;mix-blend-mode:normal!important;
+}
+body[data-page="admin"] .admin-appbar{
+ border:0!important;background:transparent!important;box-shadow:none!important;
+ padding:4px 2px 10px!important;margin-bottom:19px!important;border-radius:0!important;
+}
+body[data-page="admin"] .admin-profile-logo{display:none!important}
+body[data-page="admin"] .admin-header-copy h1{font-size:clamp(19px,2vw,24px)!important;line-height:1.2!important}
+body[data-page="admin"] .admin-header-copy>p{font-size:11px!important;margin-bottom:3px!important}
+body[data-page="admin"] .ff-overview-hero{
+ display:grid!important;grid-template-columns:minmax(0,1fr) auto!important;align-items:center!important;gap:12px!important;
+ background:#fff!important;color:#0f0f0f!important;border:1px solid #dce7e1!important;overflow:hidden!important;
+}
+body[data-page="admin"] .ff-hero-copy{min-width:0!important;overflow-wrap:break-word}
+body[data-page="admin"] .ff-hero-copy h2{
+ font-size:clamp(21px,2.4vw,30px)!important;color:#0f0f0f!important;line-height:1.14!important;
+ letter-spacing:-.05em!important;word-break:normal!important;overflow-wrap:normal!important;
+}
+body[data-page="admin"] .ff-hero-kicker{color:#60706a!important;font-size:10px!important;margin-bottom:10px!important}
+body[data-page="admin"] .ff-hero-copy>button{font-size:11px!important;color:#0f0f0f!important;border-color:#53c3b1!important}
+body[data-page="admin"] .ff-progress-ring{width:82px!important;height:82px!important;color:#0f0f0f!important}
+body[data-page="admin"] .ff-ring-track{stroke:#dee5e1!important}
+body[data-page="admin"] .ff-ring-value{stroke:#53c3b1!important}
+body[data-page="admin"] .ff-progress-ring strong{font-size:23px!important}
+body[data-page="admin"] .ff-progress-ring small{color:#4c5953!important;font-size:9px!important}
+body[data-page="admin"] #admin-view>h2,
+body[data-page="admin"] #admin-view .admin-section-title,
+body[data-page="admin"] #admin-view .system-history-title{
+ font:600 clamp(20px,2.1vw,25px)/1.23 "FF Sans",Arial,sans-serif!important;
+ letter-spacing:-.04em!important;overflow-wrap:normal!important;word-break:normal!important;
+ margin:22px 0 14px!important;
+}
+body[data-page="admin"] #admin-view .system-card h2{
+ font:600 clamp(19px,2vw,23px)/1.25 "FF Sans",Arial,sans-serif!important;letter-spacing:-.04em!important;margin:0 0 16px!important;
+}
+body[data-page="admin"] #admin-view .system-card h3{
+ font:600 clamp(16px,1.65vw,19px)/1.3 "FF Sans",Arial,sans-serif!important;letter-spacing:-.025em!important;margin:18px 0 11px!important;
+}
+body[data-page="admin"] #admin-view .system-card p,
+body[data-page="admin"] #admin-view .system-muted{font-size:12px!important;line-height:1.6!important}
+body[data-page="admin"] #admin-view .system-card{padding:clamp(18px,3vw,26px)!important}
+body[data-page="admin"] #business-profile-form .system-field{margin:11px 0 15px!important}
+body[data-page="admin"] #business-profile-form .system-field>span{font-size:12px!important}
+body[data-page="admin"] #business-profile-form .system-field textarea{min-height:76px;resize:vertical}
+body[data-page="admin"] #business-profile-form .system-field :is(input,textarea){font-size:14px;line-height:1.5}
+body[data-page="admin"] .admin-form-notes{
+ margin:17px 0;padding:13px 16px;border:1px solid #e2e5e1;border-radius:14px;background:#fbfbfa;font-size:12px;
+}
+body[data-page="admin"] .admin-form-notes summary{cursor:pointer;font-size:12px;font-weight:600}
+body[data-page="admin"] .admin-backup{background:#fafaf8!important}
+body[data-page="admin"] .system-empty{font-size:13px!important;line-height:1.55!important}
+body[data-page="admin"] .admin-more-menu[hidden]{display:none!important}
+@media(min-width:901px){
+ body[data-page="admin"] .admin-more-menu:not([hidden]){
+  position:fixed;display:grid;top:94px;right:24px;left:auto;bottom:auto;transform:none;z-index:110;
+  width:min(370px,calc(100vw - 32px));max-height:75dvh;overflow-y:auto;
+  padding:20px;border:1px solid #e4e6e1;border-radius:23px;background:#fff;box-shadow:0 16px 48px #0f0f0f1b;
+ }
+}
+@media(max-width:900px){
+ body[data-page="admin"] .admin-main{padding-top:10px!important}
+ body[data-page="admin"] .site-header.admin-glass-header{height:62px!important;top:8px!important;padding:0 12px!important;margin-bottom:13px!important}
+ body[data-page="admin"] .ff-overview-hero{padding:19px 15px!important;min-height:150px!important;gap:8px!important}
+ body[data-page="admin"] .ff-hero-copy h2{font-size:clamp(20px,5.4vw,24px)!important}
+ body[data-page="admin"] .ff-progress-ring{width:74px!important;height:74px!important}
+ body[data-page="admin"] #admin-view .admin-section-title{font-size:21px!important}
+ body[data-page="admin"] .admin-more-heading h2{font-size:19px!important}
+}
+@media(max-width:365px){
+ body[data-page="admin"] .ff-overview-hero{grid-template-columns:minmax(0,1fr) 66px!important}
+ body[data-page="admin"] .ff-progress-ring{width:65px!important;height:65px!important}
+ body[data-page="admin"] .ff-hero-copy h2{font-size:19px!important}
+}
+@media(prefers-reduced-motion:reduce){body[data-page="admin"] .admin-glass-header{transition:none!important}}

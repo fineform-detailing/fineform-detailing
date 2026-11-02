@@ -8,11 +8,11 @@ const check=(name,label,value)=>'<label class="system-check"><input name="'+name
 
 export async function mountBusinessSettings(host,{toast}){
  const {profile:p}=await api('/api/admin/business');
- host.innerHTML='<h2>Local e dados da Fine Form.</h2><p>Cadastre o local uma vez. Depois, abra cada pedido para liberar o endereço no acompanhamento ou preparar a mensagem ao cliente.</p><form id="business-profile-form">'+
-  '<h3>Local de atendimento</h3><p class="system-muted">O endereço, o mapa e as orientações ficam privados. Só aparecem no acompanhamento dos pedidos em que você liberar o local.</p>'+area('visitAddress','Endereço completo para receber o veículo',p.visitAddress)+field('mapsUrl','Link do mapa (opcional)',p.mapsUrl,1200)+area('arrivalNote','Orientações de chegada (opcional)',p.arrivalNote)+
-  '<hr class="system-divider"><h3>Identificação do fornecedor</h3><p class="system-muted">Preencha somente dados reais. O endereço cadastral pode ser diferente do local de atendimento e permanece restrito ao painel.</p>'+field('legalName','Nome empresarial conforme o documento',p.legalName)+field('cnpj','CNPJ conforme o documento (aceita letras)',p.cnpj,24)+area('registeredAddress','Endereço cadastral (somente no painel)',p.registeredAddress)+check('publishIdentity','Publicar nome empresarial e CNPJ na página de informações',p.publishIdentity)+
-  '<p class="system-note">A oferta de serviços por meios eletrônicos exige informações claras sobre o fornecedor, incluindo identificação e endereço físico e eletrônico, conforme o Decreto 7.962/2013. O envio privado do local de atendimento não substitui essas informações. Confira o cadastro antes de começar a oferecer e contratar serviços.</p>'+ 
-  '<p id="business-error" class="system-error" role="alert" hidden></p><button class="button orange" type="submit">Salvar dados</button></form><p class="system-muted">Salvar um novo local não altera os endereços já liberados em pedidos. Para atualizar um deles, abra o pedido e libere o local cadastrado novamente.</p>';
+ host.innerHTML='<h2>Dados do estúdio</h2><form id="business-profile-form">'+
+  '<h3>Atendimento</h3>'+area('visitAddress','Endereço completo para receber o veículo',p.visitAddress)+field('mapsUrl','Link do mapa (opcional)',p.mapsUrl,1200)+area('arrivalNote','Orientações de chegada (opcional)',p.arrivalNote)+
+  '<hr class="system-divider"><h3>Dados legais</h3>'+field('legalName','Nome empresarial conforme o documento',p.legalName)+field('cnpj','CNPJ conforme o documento (aceita letras)',p.cnpj,24)+area('registeredAddress','Endereço cadastral (somente no painel)',p.registeredAddress)+check('publishIdentity','Publicar nome empresarial e CNPJ na página de informações',p.publishIdentity)+
+  '<details class="admin-form-notes"><summary>Privacidade e publicação</summary><p>Informe apenas dados reais. A identificação e o endereço do fornecedor devem atender às normas de comércio eletrônico. O local de atendimento só aparece ao cliente quando você o libera no pedido.</p></details>'+ 
+  '<p id="business-error" class="system-error" role="alert" hidden></p><button class="button orange" type="submit">Salvar dados</button></form>';
  const form=host.querySelector('form');
  form.addEventListener('submit',async event=>{
   event.preventDefault();if(form.dataset.busy)return;form.dataset.busy='true';

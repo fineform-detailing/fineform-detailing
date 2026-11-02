@@ -40,3 +40,31 @@ html[data-ff-intro],html[data-ff-intro] body{overflow:hidden}
 .ff-intro .intro-logo{display:none!important}
 .ff-intro .intro-symbol{display:block;width:clamp(74px,18vw,100px);height:auto;aspect-ratio:1;object-fit:contain;background:transparent!important;border:0!important;border-radius:0!important;box-shadow:none!important;filter:none!important;animation:ff-logo-reveal .58s ease-out both}
 @media(prefers-reduced-motion:reduce){.ff-intro .intro-symbol{animation:none!important}}
+
+
+/* Loader Fine Form: vetor puro, fundo branco e volta de corrida preta. */
+.ff-intro,.ff-intro .intro-sheet{background:#fff!important}
+.ff-intro .intro-logo-stage{
+ position:relative;display:grid;place-items:center;
+ width:clamp(144px,37vw,178px);height:clamp(144px,37vw,178px);
+ flex:none;background:transparent;border:0;box-shadow:none;
+}
+.ff-intro .intro-logo-stage .intro-symbol{
+ position:relative;z-index:2;width:47%!important;height:auto!important;
+ aspect-ratio:1!important;display:block;object-fit:contain;
+ image-rendering:auto;animation:ff-loader-mark-in .48s cubic-bezier(.2,.7,.2,1) both;
+}
+.ff-intro .intro-race-orbit{
+ position:absolute;inset:0;width:100%;height:100%;overflow:visible;
+ transform-origin:50% 50%;animation:ff-loader-orbit 1.18s linear infinite;
+}
+.ff-intro .intro-race-orbit circle{fill:none;stroke-width:2.5}
+.ff-intro .intro-race-track{stroke:#0f0f0f;opacity:.10;stroke-dasharray:2 13;stroke-linecap:round}
+.ff-intro .intro-race-runner{stroke:#0f0f0f;stroke-width:3.5!important;stroke-linecap:round;stroke-dasharray:58 357}
+@keyframes ff-loader-orbit{to{transform:rotate(360deg)}}
+@keyframes ff-loader-mark-in{
+ from{opacity:0;transform:scale(.90)}to{opacity:1;transform:scale(1)}
+}
+@media(prefers-reduced-motion:reduce){
+ .ff-intro .intro-race-orbit,.ff-intro .intro-logo-stage .intro-symbol{animation:none!important}
+}

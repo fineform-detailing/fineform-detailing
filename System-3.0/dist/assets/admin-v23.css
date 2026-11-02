@@ -999,3 +999,115 @@ body[data-page="admin"] .admin-more-menu[hidden]{display:none!important}
  body[data-page="admin"] .ff-hero-copy h2{font-size:19px!important}
 }
 @media(prefers-reduced-motion:reduce){body[data-page="admin"] .admin-glass-header{transition:none!important}}
+
+
+/* 2026-11-02 | Ajustes cirúrgicos do painel: anel, glass e modal móvel. */
+body[data-page="admin"] .ff-overview-hero{
+ grid-template-columns:minmax(0,1fr) 116px!important;
+ column-gap:clamp(12px,3vw,24px)!important;
+ min-height:202px!important;
+ padding:clamp(20px,3vw,30px)!important;
+}
+body[data-page="admin"] .ff-progress-ring{
+ position:relative!important;display:flex!important;
+ flex-direction:column!important;align-items:center!important;justify-content:center!important;
+ width:116px!important;height:116px!important;min-width:116px!important;min-height:116px!important;
+ flex:0 0 116px!important;box-sizing:border-box!important;
+ padding:19px 12px!important;gap:3px!important;
+ border:0!important;box-shadow:none!important;background:transparent!important;
+ overflow:visible!important;
+}
+body[data-page="admin"] .ff-progress-ring svg{
+ position:absolute!important;inset:0!important;width:100%!important;height:100%!important;
+ overflow:visible!important;pointer-events:none;
+}
+body[data-page="admin"] .ff-progress-ring strong{
+ display:block!important;position:relative!important;z-index:1;
+ font-size:30px!important;font-weight:600!important;line-height:1!important;
+ margin:0!important;padding:0!important;color:#0f0f0f!important;
+}
+body[data-page="admin"] .ff-progress-ring small{
+ display:block!important;position:relative!important;z-index:1;
+ margin:0!important;padding:0!important;
+ font-size:10px!important;font-weight:400!important;
+ line-height:1.1!important;letter-spacing:-.01em!important;
+ white-space:nowrap!important;color:#56615b!important;
+}
+body[data-page="admin"] .ff-ring-track{stroke-width:7!important}
+body[data-page="admin"] .ff-ring-value{stroke-width:7!important}
+body[data-page="admin"] .site-header.admin-glass-header{
+ background:transparent!important;border:1px solid transparent!important;
+ -webkit-backdrop-filter:none!important;backdrop-filter:none!important;
+}
+body[data-page="admin"] .site-header.admin-glass-header.is-scrolled{
+ background:rgba(248,250,248,.72)!important;
+ border:1px solid rgba(255,255,255,.80)!important;
+ -webkit-backdrop-filter:blur(24px) saturate(175%)!important;
+ backdrop-filter:blur(24px) saturate(175%)!important;
+ box-shadow:0 12px 34px rgba(22,35,31,.13),inset 0 1px 0 rgba(255,255,255,.78)!important;
+}
+body[data-page="admin"] .admin-more-menu{
+ z-index:3000!important;
+}
+body[data-page="admin"] .admin-more-menu:not([hidden]){
+ z-index:3000!important;
+}
+body[data-page="admin"]:has(.admin-more-menu:not([hidden])) .admin-glass-header,
+body[data-page="admin"]:has(.admin-more-menu:not([hidden])) .admin-mobile-nav{
+ opacity:0!important;visibility:hidden!important;pointer-events:none!important;
+}
+body[data-page="admin"] .admin-more-menu .admin-more-heading{
+ position:sticky;top:-2px;z-index:1;
+ background:rgba(255,255,255,.96);
+ -webkit-backdrop-filter:blur(15px);backdrop-filter:blur(15px);
+}
+body[data-page="admin"] .admin-more-menu>button,
+body[data-page="admin"] .admin-more-menu>a{flex-shrink:0}
+@media(max-width:900px){
+ body[data-page="admin"] .ff-overview-hero{
+  grid-template-columns:minmax(0,1fr) 106px!important;
+  padding:21px 18px!important;
+  gap:13px!important;
+  min-height:200px!important;
+ }
+ body[data-page="admin"] .ff-progress-ring{
+  width:106px!important;height:106px!important;min-width:106px!important;min-height:106px!important;
+  flex-basis:106px!important;padding:18px 11px!important;
+ }
+ body[data-page="admin"] .ff-progress-ring strong{font-size:28px!important}
+ body[data-page="admin"] .ff-progress-ring small{font-size:10px!important}
+ body[data-page="admin"] .admin-more-menu:not([hidden]){
+  position:fixed!important;
+  top:calc(28px + env(safe-area-inset-top,0px))!important;
+  bottom:auto!important;left:50%!important;right:auto!important;
+  transform:translateX(-50%)!important;
+  width:min(470px,calc(100vw - 32px))!important;
+  max-height:calc(100dvh - 125px - env(safe-area-inset-bottom,0px))!important;
+  min-height:0!important;
+  overflow-x:hidden!important;overflow-y:auto!important;
+  padding:21px 18px 24px!important;border-radius:27px!important;
+  background:#fff!important;border:1px solid #e5e7e3!important;
+  box-shadow:0 0 0 100vmax rgba(15,15,15,.50),0 20px 58px rgba(15,15,15,.18)!important;
+  overscroll-behavior:contain!important;z-index:3000!important;
+ }
+ body[data-page="admin"] .admin-more-menu .admin-more-heading{
+  padding:0 5px 15px!important;margin-bottom:10px!important;
+ }
+ body[data-page="admin"] .admin-more-menu>button,
+ body[data-page="admin"] .admin-more-menu>a{min-height:48px!important}
+}
+@media(max-width:390px){
+ body[data-page="admin"] .ff-overview-hero{
+  grid-template-columns:minmax(0,1fr) 98px!important;
+  gap:9px!important;padding:18px 13px!important;
+ }
+ body[data-page="admin"] .ff-progress-ring{
+  width:98px!important;height:98px!important;min-width:98px!important;min-height:98px!important;
+  flex-basis:98px!important;padding:15px 9px!important;
+ }
+ body[data-page="admin"] .ff-progress-ring strong{font-size:25px!important}
+ body[data-page="admin"] .ff-progress-ring small{font-size:9px!important}
+}
+@media(prefers-reduced-motion:reduce){
+ body[data-page="admin"] .ff-progress-ring{transition:none!important}
+}

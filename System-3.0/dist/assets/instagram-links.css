@@ -76,9 +76,10 @@ body[data-page="links"] .links-photo img{
 body[data-page="links"] .links-request{
  display:flex;justify-content:space-between;align-items:center;gap:18px;
  min-height:93px;padding:20px 21px 20px 25px;
- background:var(--links-cyan);border:1px solid var(--links-cyan);
- border-radius:24px;color:var(--links-ink);
- transition:background-color .22s ease,transform .22s ease;
+ background:#0f0f0f;border:1px solid #0f0f0f;
+ border-radius:24px;color:#fff;
+ box-shadow:inset 0 0 0 1px rgba(255,255,255,.08);
+ transition:background-color .22s ease,border-color .22s ease,box-shadow .22s ease,transform .22s ease;
 }
 body[data-page="links"] .links-request>span{
  display:block;min-width:0;font-size:19px;font-weight:600;
@@ -86,11 +87,11 @@ body[data-page="links"] .links-request>span{
 }
 body[data-page="links"] .links-request small{
  display:block;margin-top:6px;
- color:#19352e;font-size:12px;font-weight:400;line-height:1.4;letter-spacing:0;
+ color:#d0d9d4;font-size:12px;font-weight:400;line-height:1.4;letter-spacing:0;
 }
 body[data-page="links"] .links-request>b{
  display:grid;place-items:center;width:43px;height:43px;flex:0 0 43px;
- border-radius:50%;background:#0f0f0f;color:#fff;
+ border-radius:50%;background:#fff;color:#0f0f0f;
  font-size:20px;font-weight:400;line-height:1;
  transition:transform .2s ease;
 }
@@ -183,8 +184,8 @@ body[data-page="links"] .bio-nav>:nth-child(5){animation-delay:.22s}
 @keyframes ff-links-arrive{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
 @media(hover:hover) and (pointer:fine){
  body[data-page="links"] .links-site:hover{background:#f0f7f4;border-color:#b4d7ce;transform:translateY(-1px)}
- body[data-page="links"] .links-request:hover{background:#60c9b7;transform:translateY(-2px)}
- body[data-page="links"] .links-request:hover>b{transform:translate(2px,-2px)}
+ body[data-page="links"] .links-request:hover{background:#222523;border-color:#222523;transform:translateY(-2px);box-shadow:inset 0 0 0 1px #ffffff18,0 10px 24px #0f0f0f19}
+ body[data-page="links"] .links-request:hover>b{background:#53c3b1;transform:translate(2px,-2px)}
  body[data-page="links"] .bio-nav>a:hover,
  body[data-page="links"] .bio-nav>button:hover{background:#f4faf7;border-color:#9dcfc2;transform:translateY(-1px)}
  body[data-page="links"] .bio-nav>*:hover b{background:#e2f4ee;transform:translate(2px,-2px)}
@@ -241,3 +242,84 @@ body[data-page="links"] .bio-nav>:nth-child(5){animation-delay:.22s}
 }
 body.motion-paused[data-page="links"] .links-enter{animation:none!important;opacity:1!important;transform:none!important}
 body.motion-paused[data-page="links"] .links-photo img{transition:none!important;transform:none!important}
+
+
+/* Fine Form | Toque, pressão e foco: preto/branco/ciano, sem tonalidades alaranjadas.
+   Estados de hover simulados no Instagram WebView não devem deixar o card bege. */
+body[data-page="links"] :is(.links-mark,.links-site,.links-request,.bio-nav>a,.bio-nav>button,.bio-socials .social-link,.links-hours summary){
+ -webkit-tap-highlight-color:transparent;
+ -webkit-touch-callout:none;
+ touch-action:manipulation;
+}
+body[data-page="links"] :is(.links-site,.links-request,.bio-nav>a,.bio-nav>button,.bio-socials .social-link){
+ -webkit-user-select:none;user-select:none;
+}
+body[data-page="links"] .links-request,
+body[data-page="links"] .links-request:link,
+body[data-page="links"] .links-request:visited{
+ background:#0f0f0f;color:#fff;border-color:#0f0f0f;
+}
+body[data-page="links"] .links-request small{color:#d0d9d4}
+body[data-page="links"] .links-request>b{background:#fff;color:#0f0f0f;border:1px solid #ffffffcc}
+body[data-page="links"] :is(.links-site,.links-request,.bio-nav>a,.bio-nav>button,.bio-socials .social-link,.links-mark,.links-hours summary):focus-visible{
+ outline:3px solid #187b69!important;
+ outline-offset:3px!important;
+}
+body[data-page="links"] .links-request:active{
+ background:#1d2421!important;
+ border-color:#53c3b1!important;
+ box-shadow:inset 0 0 0 1px #53c3b1,0 0 0 3px #53c3b12b!important;
+ transform:scale(.991)!important;
+}
+body[data-page="links"] .links-request:active>b{
+ background:#53c3b1!important;
+ transform:scale(.94)!important;
+}
+body[data-page="links"] .bio-nav>a:active,
+body[data-page="links"] .bio-nav>button:active{
+ background:#eff8f4!important;
+ border-color:#53c3b1!important;
+ box-shadow:0 0 0 2px #53c3b126!important;
+ transform:scale(.992)!important;
+}
+body[data-page="links"] .bio-nav>a:active b,
+body[data-page="links"] .bio-nav>button:active b{
+ background:#d6f2e8!important;border-color:#b5e4d8!important;
+ color:#0f0f0f!important;transform:scale(.94)!important;
+}
+body[data-page="links"] .bio-socials .social-link:active,
+body[data-page="links"] .links-site:active{
+ background:#e9f7f1!important;border-color:#53c3b1!important;
+ transform:scale(.98)!important;
+}
+@media (hover:none),(pointer:coarse){
+ body[data-page="links"] .links-request:hover:not(:active){
+  background:#0f0f0f!important;border-color:#0f0f0f!important;
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.08)!important;
+  transform:none!important;translate:none!important;
+ }
+ body[data-page="links"] .links-request:hover:not(:active)>b{
+  background:#fff!important;color:#0f0f0f!important;transform:none!important;
+ }
+ body[data-page="links"] .bio-nav>a:hover:not(:active),
+ body[data-page="links"] .bio-nav>button:hover:not(:active){
+  background:#fff!important;border-color:var(--links-border)!important;
+  box-shadow:none!important;transform:none!important;translate:none!important;
+ }
+ body[data-page="links"] .bio-nav>a:hover:not(:active) b,
+ body[data-page="links"] .bio-nav>button:hover:not(:active) b{
+  background:#f6f7f5!important;transform:none!important;border-color:#eceeeb!important;
+ }
+ body[data-page="links"] .bio-socials .social-link:hover:not(:active){
+  background:#f9faf8!important;border-color:var(--links-border)!important;
+ }
+ body[data-page="links"] .links-site:hover:not(:active){
+  background:#fff!important;border-color:#e2e5e0!important;transform:none!important;
+ }
+}
+@media(prefers-reduced-motion:reduce){
+ body[data-page="links"] :is(.links-request,.bio-nav>a,.bio-nav>button,.bio-socials .social-link,.links-site):active,
+ body[data-page="links"] :is(.links-request,.bio-nav>a,.bio-nav>button,.bio-socials .social-link,.links-site):focus-visible{
+  transition:none!important;
+ }
+}

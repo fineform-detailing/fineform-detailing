@@ -60,7 +60,7 @@ body[data-page="links"] .links-intro h1 span{
  -webkit-box-decoration-break:initial;
 }
 body[data-page="links"] .links-description{
- margin:18px 0 0;max-width:44ch;
+ margin:16px 0 0;max-width:34ch;
  color:var(--links-muted);font-size:14px;line-height:1.7;letter-spacing:0;
 }
 body[data-page="links"] .links-photo{
@@ -203,7 +203,7 @@ body[data-page="links"] .bio-nav>:nth-child(5){animation-delay:.22s}
  body[data-page="links"] .links-intro h1{max-width:100%;font-size:clamp(29px,7.6vw,38px);line-height:1.12}
  body[data-page="links"] .links-kicker{font-size:9px;margin-bottom:11px}
  body[data-page="links"] .links-description{
-  max-width:36ch;margin:13px auto 22px;
+  max-width:34ch;margin:16px auto 22px;
   font-size:12px;line-height:1.65;
  }
  body[data-page="links"] .links-destinations{order:2}

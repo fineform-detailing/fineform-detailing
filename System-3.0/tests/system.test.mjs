@@ -145,7 +145,14 @@ test('cliente que retorna após intervalo ganha um mês a partir da nova data',a
 });
 test('novos links revogam as capacidades anteriores e produção exige o autenticador',async()=>{
  const body=selection(),saved=await call('/api/quotes',{method:'POST',body}),id=saved.data.quote.id;
- const reissued=await call('/api/admin/quotes/'+id+'/link',{method:'POST',auth:true,body:{}});assert.equal(reissued.status,200);
+ const oldToken=body.submissionToken;
+ const accepted=await call('/api/admin/quotes/'+id,{method:'PATCH',auth:true,body:{version:1,status:'accepted',message:'Atendimento aceito.'}});
+ assert.equal(accepted.status,200);
+ assert.equal((await call('/api/quotes/'+id,{cap:oldToken})).status,200,'atualizar status deve manter o link do cliente');
+ assert.equal((await call('/api/admin/quotes/'+id+'/link',{method:'POST',auth:true,body:{}})).status,400,'reemitir sem confirmação não pode revogar o link');
+ assert.equal((await call('/api/admin/quotes/'+id+'/link',{method:'POST',auth:true,body:{rotate:true,version:1}})).status,409,'versão antiga não pode revogar o link');
+ assert.equal((await call('/api/quotes/'+id,{cap:oldToken})).status,200);
+ const reissued=await call('/api/admin/quotes/'+id+'/link',{method:'POST',auth:true,body:{rotate:true,version:2}});assert.equal(reissued.status,200);
  assert.equal((await call('/api/quotes/'+id,{cap:body.submissionToken})).status,404);
  assert.equal((await call('/api/quotes/'+id,{cap:reissued.data.trackingToken})).status,200);
  const res=await mf.dispatchFetch('https://fine-form.test/api/admin/session',{method:'POST',headers:{Origin:'https://fine-form.test','Content-Type':'application/json','CF-Connecting-IP':'203.0.113.50'},body:JSON.stringify({key})});assert.equal(res.status,503);assert.equal(res.headers.get('Set-Cookie'),null);

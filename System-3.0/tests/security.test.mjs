@@ -74,7 +74,7 @@ test('sensitive operations require recent reauthentication and rotate session',a
  assert.equal((await call('/api/admin/subscriptions',{method:'POST',body:{paidConfirmed:true}})).status,428);
  const result=await call('/api/admin/reauth',{method:'POST',body:{key,code:await totpCode(secret)}});assert.equal(result.status,200);keepSession(result);assert.notEqual(cookie,old);assert.notEqual(csrf,'');
  assert.equal((await call('/api/admin/dashboard',{headers:{Cookie:old}})).status,401);assert.equal((await call('/api/admin/export')).status,200);
- assert.match(result.res.headers.get('Set-Cookie'),/Secure/);assert.match(result.res.headers.get('Set-Cookie'),/HttpOnly/);assert.match(result.res.headers.get('Set-Cookie'),/SameSite=Strict/);assert.match(result.res.headers.get('Set-Cookie'),/Path=\//);assert.match(result.res.headers.get('Set-Cookie'),/Max-Age=7200/);
+ assert.match(result.res.headers.get('Set-Cookie'),/Secure/);assert.match(result.res.headers.get('Set-Cookie'),/HttpOnly/);assert.match(result.res.headers.get('Set-Cookie'),/SameSite=Strict/);assert.match(result.res.headers.get('Set-Cookie'),/Path=\//);assert.match(result.res.headers.get('Set-Cookie'),new RegExp('Max-Age='+SESSION_SECONDS));
 });
 test('JSON rejects oversized, deeply nested, prototype and incorrectly typed money payloads',async()=>{
  assert.equal((await call('/api/quotes',{method:'POST',auth:false,body:{notes:'x'.repeat(17000)}})).status,413);

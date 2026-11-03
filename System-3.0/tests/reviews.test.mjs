@@ -153,7 +153,8 @@ test('avaliar, revogar aparelho ou reemitir link impede envio pendente',async t=
  await dispatchReviewPush(f.env,{fetcher});assert.equal(calls,0);
  const revoked=await f.quote();await f.enroll(revoked,await browser());await f.deliver(revoked);
  const cap=await sign({type:'review',id:revoked.id,viewerHash:await digest(revoked.token),aud:origin,exp:Date.now()+60000},f.env);
- assert.equal((await f.call('/api/admin/quotes/'+revoked.id+'/link',{method:'POST',body:{}})).status,200);
+ const version=(await f.db.prepare('SELECT version FROM quotes WHERE id=?').bind(revoked.id).first()).version;
+ assert.equal((await f.call('/api/admin/quotes/'+revoked.id+'/link',{method:'POST',body:{rotate:true,version}})).status,200);
  await dispatchReviewPush(f.env,{fetcher});assert.equal(calls,0);assert.equal((await f.call('/api/quotes/'+revoked.id+'/review',{token:cap})).status,404);
 });
 test('convite rejeita expiração, outra origem, outro pedido e assinatura adulterada; exclusão remove avaliação e aparelhos',async t=>{

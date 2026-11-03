@@ -49,6 +49,16 @@ test('origin, fetch metadata and CSRF token are required for every privileged mu
  assert.equal((await call('/api/admin/session',{method:'DELETE',headers:{'X-FF-CSRF':''}})).status,403);
  assert.equal((await db.prepare('SELECT COUNT(*) n FROM subscriptions').first()).n,0);
 });
+test('admin session duration supports a longer workday while keeping idle and sensitive-action limits',async()=>{
+ assert.equal(SESSION_SECONDS,8*60*60);
+ assert.equal(IDLE_SECONDS,60*60);
+ assert.equal(REAUTH_SECONDS,30*60);
+ assert.ok(IDLE_SECONDS<SESSION_SECONDS);
+ assert.ok(REAUTH_SECONDS<IDLE_SECONDS);
+ const id=await digest(cookie.split('=')[1]);
+ const session=await db.prepare('SELECT created_at,expires_at FROM admin_sessions WHERE id=?').bind(id).first();
+ assert.equal(session.expires_at-session.created_at,SESSION_SECONDS);
+});
 test('session is bound to host and browser and has idle and absolute expiration',async()=>{
  assert.equal((await call('/api/admin/dashboard',{headers:{'User-Agent':'another-browser'}})).status,401);
  assert.equal((await call('/api/admin/dashboard',{urlOrigin:'https://another-host.test'})).status,401);

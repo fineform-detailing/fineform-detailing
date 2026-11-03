@@ -1,6 +1,6 @@
 import {fail} from './domain.mjs';
 const enc=new TextEncoder();
-export const SESSION_SECONDS=7200,IDLE_SECONDS=1200,REAUTH_SECONDS=600;
+export const SESSION_SECONDS=8*60*60,IDLE_SECONDS=60*60,REAUTH_SECONDS=30*60;
 export const b64=v=>btoa(String.fromCharCode(...new Uint8Array(v))).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'');
 const unb64=s=>Uint8Array.from(atob(s.replace(/-/g,'+').replace(/_/g,'/')),c=>c.charCodeAt(0));
 export const randomToken=()=>b64(crypto.getRandomValues(new Uint8Array(32)));

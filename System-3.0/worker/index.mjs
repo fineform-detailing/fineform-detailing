@@ -1,6 +1,6 @@
 import {AppError,fail,text,idValid,todaySP,plans,cycleView} from './domain.mjs';
 import {keyReady,adminReady,mfaReady,isLocal,digest,sign,verify,checkOrigin,jsonBody,adminSession,requireAdmin,limit,randomToken,bearer,createSession,sessionCookie,csrfToken,verifyCredentials,securityHeaders} from './security.mjs';
-import {all,first,stmt,now,uuid,getQuote,quoteView,authorizeQuote,getSub,authorizeSub,subView,audit} from './store.mjs';
+import {all,first,stmt,now,uuid,getQuote,quoteView,authorizeQuote,getSub,authorizeSub,subView,audit,checkVersion} from './store.mjs';
 import {publicQuote,updateQuote,quoteList} from './quotes.mjs';
 import {activateSubscription,renewSubscription,changeSubscription,deleteSubscription,recordVisit,updateVisit,requestVisit} from './subscriptions.mjs';
 import {notify} from './live.mjs';
@@ -150,8 +150,11 @@ async function api(req,env,ctx){
   if(match&&method==='PATCH'){const q=await registerQuotePlate(env,idFrom(match[1]),await jsonBody(req));emit(ctx,env,['quote:'+q.id]);return response({quote:q});}
   match=path.match(/^\/api\/admin\/quotes\/([^/]+)\/link$/);
   if(match&&method==='POST'){
-   const id=idFrom(match[1]);await getQuote(env,id);const {randomToken}=await import('./security.mjs'),token=randomToken();
-   await stmt(env,'UPDATE quotes SET viewer_hash=?,version=version+1,updated_at=? WHERE id=?',await digest(token),now(),id).run();
+   const id=idFrom(match[1]),body=await jsonBody(req),quote=await getQuote(env,id);
+   if(body.rotate!==true)fail(400,'A troca do link requer confirmação explícita. Atualizar o pedido não troca o link privado.');
+   checkVersion(body,quote);
+   const token=randomToken(),changed=await stmt(env,'UPDATE quotes SET viewer_hash=?,version=version+1,updated_at=? WHERE id=? AND version=?',await digest(token),now(),id,quote.version).run();
+   if(changed.meta.changes!==1)fail(409,'O pedido mudou. Recarregue antes de trocar o link privado.');
    await audit(env,'quote',id,'link_reissued');emit(ctx,env,['quote:'+id]);return response({quoteId:id,trackingToken:token});
   }
   if(path==='/api/admin/subscriptions'){

@@ -62,3 +62,35 @@ body[data-page="admin"] #admin-dialog.ff-quote-dialog .ff-quote-fold .system-car
  body[data-page="admin"] #admin-dialog.ff-quote-dialog .ff-quote-fact{grid-column:1/-1}
  body[data-page="admin"] .ff-order-card-footer button{padding:10px 12px}
 }
+/* Operação rápida dos pedidos — controles agrupados por responsabilidade */
+body[data-page="admin"] #admin-dialog.ff-quote-dialog .ff-dialog-error:not([hidden]){position:sticky;top:0;z-index:5;margin:0 0 14px;padding:13px 16px;border:1px solid #e9afa5;border-radius:13px;background:#fff7f5;color:#7f261d;font-size:13px;line-height:1.5}
+body[data-page="admin"] #admin-dialog.ff-quote-dialog .ff-quote-quick{background:#f8faf8;border:1px solid #dee5df;border-radius:18px;padding:17px;margin:0 0 13px}
+body[data-page="admin"] #admin-dialog.ff-quote-dialog .ff-quote-quick-title{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:12px}
+body[data-page="admin"] #admin-dialog.ff-quote-dialog .ff-quote-quick-title h3{margin:0;color:#111;font-size:16px}
+body[data-page="admin"] #admin-dialog.ff-quote-dialog .ff-quote-quick-title span{color:#616b65;font-size:11px}
+body[data-page="admin"] #admin-dialog.ff-quote-dialog .ff-quick-statuses{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
+body[data-page="admin"] #admin-dialog.ff-quote-dialog .ff-quick-status{min-width:0;min-height:48px;padding:11px 10px;border:1px solid #dce3de;border-radius:12px;background:white;color:#10231d;text-align:center;font-size:13px;line-height:1.25;font-weight:700;cursor:pointer}
+body[data-page="admin"] #admin-dialog.ff-quote-dialog .ff-quick-status:not(:disabled):active{transform:translateY(1px)}
+body[data-page="admin"] #admin-dialog.ff-quote-dialog .ff-quick-status:not(:disabled):focus-visible{outline:3px solid #53c3b1;outline-offset:2px}
+body[data-page="admin"] #admin-dialog.ff-quote-dialog .ff-quick-status:disabled{opacity:.5;cursor:not-allowed;background:#eee}
+body[data-page="admin"] #admin-dialog.ff-quote-dialog .ff-quick-warning{padding:11px 12px;margin:12px 0 0;border:1px solid #e9d8ad;border-radius:12px;background:#fffaf0;color:#5f4e30;font-size:12px;line-height:1.5}
+body[data-page="admin"] #admin-dialog.ff-quote-dialog .ff-quick-warning button{display:inline;border:0;background:transparent;color:#275e4b;text-decoration:underline;font-weight:750;cursor:pointer}
+body[data-page="admin"] #admin-dialog.ff-quote-dialog .ff-quick-secondary{margin-top:12px}
+body[data-page="admin"] #admin-dialog.ff-quote-dialog .ff-quick-secondary summary{padding:8px 0;font-size:12px;color:#735350;cursor:pointer}
+body[data-page="admin"] #admin-dialog.ff-quote-dialog .ff-quick-secondary .ff-quick-statuses{margin-top:8px}
+body[data-page="admin"] #admin-dialog.ff-quote-dialog .ff-quick-hint{margin:12px 0 0;color:#68706b;font-size:11px;line-height:1.55}
+body[data-page="admin"] #admin-dialog.ff-quote-dialog .ff-quote-form-heading{margin:20px 0 10px;padding-top:13px;border-top:1px solid #e6e9e5;font-size:13px;font-weight:750}
+body[data-page="admin"] #admin-dialog.ff-quote-dialog .ff-quote-form-heading:first-child{padding-top:0;margin-top:5px;border-top:0}
+body[data-page="admin"] #admin-dialog.ff-quote-dialog .ff-quote-whatsapp{display:flex;justify-content:center;align-items:center;min-height:46px;margin:10px 0 0;text-align:center}
+body[data-page="admin"] #admin-dialog.ff-quote-dialog .ff-quote-security{margin:16px 0 5px}
+body[data-page="admin"] #admin-dialog.ff-quote-dialog .ff-quote-security>.button{display:block;width:100%;min-height:46px;margin:0 0 10px;text-align:center}
+body[data-page="admin"] #admin-dialog.ff-quote-dialog .ff-quote-security .system-danger{background:#fff;color:#8b2d22}
+body[data-page="admin"] #admin-dialog.ff-quote-dialog form#quote-edit>.button[type="submit"]{width:100%;min-height:50px;margin-top:12px}
+@media (max-width:600px){
+ body[data-page="admin"] #admin-dialog.ff-quote-dialog .ff-quote-quick{padding:14px}
+ body[data-page="admin"] #admin-dialog.ff-quote-dialog .ff-quick-statuses{grid-template-columns:repeat(2,minmax(0,1fr))}
+ body[data-page="admin"] #admin-dialog.ff-quote-dialog .ff-quote-quick-title h3{font-size:15px}
+ body[data-page="admin"] #admin-dialog.ff-quote-dialog .ff-quote-facts{gap:8px}
+ body[data-page="admin"] #admin-dialog.ff-quote-dialog .ff-quote-shortcuts button{min-height:48px}
+ body[data-page="admin"] #admin-dialog.ff-quote-dialog .ff-quote-fold>summary{min-height:54px}
+}

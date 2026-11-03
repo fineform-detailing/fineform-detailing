@@ -1,0 +1,64 @@
+/* Fine Form / Painel — visualização de pedidos e lista mobile */
+body[data-page="admin"] .ff-order-cards{display:none}
+body[data-page="admin"] #admin-dialog.ff-quote-dialog .ff-quote-view{min-width:0}
+body[data-page="admin"] #admin-dialog.ff-quote-dialog .ff-quote-head{padding-right:42px;margin-bottom:16px}
+body[data-page="admin"] #admin-dialog.ff-quote-dialog .ff-quote-kicker{display:block;font-size:10px;font-weight:700;letter-spacing:.12em;color:#777e79}
+body[data-page="admin"] #admin-dialog.ff-quote-dialog .ff-quote-head h2{font-size:clamp(23px,3.4vw,31px);line-height:1.2;letter-spacing:-.035em;margin:6px 0 10px;overflow-wrap:anywhere}
+body[data-page="admin"] #admin-dialog.ff-quote-dialog .ff-quote-head .status-badge{display:inline-flex;padding:7px 12px;border-radius:999px}
+body[data-page="admin"] #admin-dialog.ff-quote-dialog .ff-quote-facts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px;margin:0 0 14px}
+body[data-page="admin"] #admin-dialog.ff-quote-dialog .ff-quote-fact{min-width:0;padding:16px;border:1px solid #e8eae6;background:#fafaf8;border-radius:17px;overflow-wrap:anywhere}
+body[data-page="admin"] #admin-dialog.ff-quote-dialog .ff-quote-client,
+body[data-page="admin"] #admin-dialog.ff-quote-dialog .ff-quote-notes{grid-column:1/-1}
+body[data-page="admin"] #admin-dialog.ff-quote-dialog .ff-quote-fact>span{display:block;font-size:11px;font-weight:650;color:#717a75;margin-bottom:7px}
+body[data-page="admin"] #admin-dialog.ff-quote-dialog .ff-quote-fact>strong{display:block;font-size:16px;font-weight:650;line-height:1.3;color:#0f0f0f}
+body[data-page="admin"] #admin-dialog.ff-quote-dialog .ff-quote-client>strong{font-size:19px}
+body[data-page="admin"] #admin-dialog.ff-quote-dialog .ff-quote-fact small{display:block;margin-top:6px;color:#6d756f;font-size:12px;line-height:1.4;overflow-wrap:anywhere}
+body[data-page="admin"] #admin-dialog.ff-quote-dialog .ff-quote-client>a{display:inline-flex;align-items:center;min-height:38px;padding:7px 13px;margin-top:10px;border-radius:999px;background:#e8f7f2;color:#145748;font-size:12px;font-weight:700;text-decoration:none}
+body[data-page="admin"] #admin-dialog.ff-quote-dialog .ff-quote-notes p{margin:0;color:#161817;font-size:13px;line-height:1.55;white-space:pre-wrap;overflow-wrap:anywhere}
+body[data-page="admin"] #admin-dialog.ff-quote-dialog .ff-quote-services{padding:15px 17px;margin:0 0 12px;border:1px solid #e6e9e5;border-radius:17px;background:#fff}
+body[data-page="admin"] #admin-dialog.ff-quote-dialog .ff-quote-services h3{font-size:15px;line-height:1.3;margin:0 0 6px}
+body[data-page="admin"] #admin-dialog.ff-quote-dialog .ff-quote-services .system-list{gap:0}
+body[data-page="admin"] #admin-dialog.ff-quote-dialog .ff-quote-services .system-row{gap:12px;padding:10px 0;font-size:13px;line-height:1.4}
+body[data-page="admin"] #admin-dialog.ff-quote-dialog .ff-quote-services .system-row strong{font-size:14px;text-align:right}
+body[data-page="admin"] #admin-dialog.ff-quote-dialog .ff-quote-services .system-row:last-child{margin-top:5px;padding-top:14px;border-top:1px solid #e5e9e5}
+body[data-page="admin"] #admin-dialog.ff-quote-dialog .ff-quote-services .system-row:last-child strong{font-size:18px}
+body[data-page="admin"] #admin-dialog.ff-quote-dialog .ff-quote-shortcuts{display:flex;gap:9px;margin-bottom:14px}
+body[data-page="admin"] #admin-dialog.ff-quote-dialog .ff-quote-shortcuts button{flex:1;min-width:0;min-height:46px;padding:10px 12px;border:0;border-radius:14px;background:#0f0f0f;color:#fff;font-size:13px;font-weight:700}
+body[data-page="admin"] #admin-dialog.ff-quote-dialog .ff-quote-shortcuts button+button{background:#eaf6f1;color:#15594d}
+body[data-page="admin"] #admin-dialog.ff-quote-dialog .ff-quote-fold{display:block;margin:10px 0;scroll-margin-top:16px;border:1px solid #e2e5e1;border-radius:16px;background:#fff;overflow:hidden}
+body[data-page="admin"] #admin-dialog.ff-quote-dialog .ff-quote-fold>summary{display:flex;align-items:center;justify-content:space-between;gap:14px;min-height:52px;padding:15px 17px;cursor:pointer;list-style:none;color:#202321;font-size:13px;font-weight:700;line-height:1.4}
+body[data-page="admin"] #admin-dialog.ff-quote-dialog .ff-quote-fold>summary::-webkit-details-marker{display:none}
+body[data-page="admin"] #admin-dialog.ff-quote-dialog .ff-quote-fold>summary::after{content:"+";font-size:22px;font-weight:400;line-height:1;color:#6a706c}
+body[data-page="admin"] #admin-dialog.ff-quote-dialog .ff-quote-fold[open]>summary::after{content:"−"}
+body[data-page="admin"] #admin-dialog.ff-quote-dialog .ff-quote-fold>:not(summary){margin:0 16px 17px}
+body[data-page="admin"] #admin-dialog.ff-quote-dialog .ff-quote-fold .system-card{padding:14px;border-radius:14px}
+@media(max-width:900px){
+ body[data-page="admin"] .ff-order-desktop{display:none}
+ body[data-page="admin"] .ff-order-cards{display:grid;gap:11px}
+ body[data-page="admin"] .ff-order-card{min-width:0;padding:18px;background:#fff;border:1px solid #e3e6e2;border-radius:22px}
+ body[data-page="admin"] .ff-order-card-head{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:9px;margin-bottom:10px}
+ body[data-page="admin"] .ff-order-code{color:#717975;font-size:12px;font-weight:750}
+ body[data-page="admin"] .ff-order-card .status-badge{font-size:11px;padding:6px 11px}
+ body[data-page="admin"] .ff-order-card h3{color:#0f0f0f;font-size:19px;line-height:1.25;margin:0 0 6px;overflow-wrap:anywhere}
+ body[data-page="admin"] .ff-order-card .ff-order-vehicle{font-size:13px;color:#626b66;margin:0 0 14px;line-height:1.5}
+ body[data-page="admin"] .ff-order-card-footer{display:flex;justify-content:space-between;align-items:center;gap:12px;border-top:1px solid #edf0ec;padding-top:13px}
+ body[data-page="admin"] .ff-order-card-footer strong{font-size:19px;font-weight:750;white-space:nowrap}
+ body[data-page="admin"] .ff-order-card-footer button{min-height:44px;padding:10px 16px;background:#0f0f0f;color:#fff;border:0;border-radius:999px;font-size:13px;font-weight:700}
+ body[data-page="admin"] .ff-order-card-delete{display:block;margin:7px 0 -7px auto;padding:8px 0;border:0;background:transparent;color:#805752;text-decoration:underline;text-underline-offset:3px;font-size:11px}
+ body[data-page="admin"] #admin-dialog.ff-quote-dialog[open]{width:min(530px,calc(100vw - 20px));max-width:none;max-height:calc(100dvh - 20px);padding:0;overflow:hidden;border-radius:25px}
+ body[data-page="admin"] #admin-dialog.ff-quote-dialog #admin-detail{max-height:calc(100dvh - 20px);overflow-y:auto;overscroll-behavior:contain;padding:24px 17px calc(24px + env(safe-area-inset-bottom,0px))}
+ body[data-page="admin"] #admin-dialog.ff-quote-dialog>.dialog-close{position:absolute;top:14px;right:14px;z-index:3;width:40px;height:40px;background:#f3f4f1;border-radius:50%}
+ body[data-page="admin"] #admin-dialog.ff-quote-dialog .ff-quote-facts{gap:8px}
+ body[data-page="admin"] #admin-dialog.ff-quote-dialog .ff-quote-fact{padding:13px}
+ body[data-page="admin"] #admin-dialog.ff-quote-dialog .ff-quote-services{padding:14px}
+ body[data-page="admin"] #admin-dialog.ff-quote-dialog .ff-quote-fact>strong{font-size:15px}
+ body[data-page="admin"] #admin-dialog.ff-quote-dialog .ff-quote-client>strong{font-size:18px}
+ body[data-page="admin"] #admin-dialog.ff-quote-dialog .system-field input,
+ body[data-page="admin"] #admin-dialog.ff-quote-dialog .system-field select,
+ body[data-page="admin"] #admin-dialog.ff-quote-dialog .system-field textarea{font-size:16px}
+}
+@media(max-width:350px){
+ body[data-page="admin"] #admin-dialog.ff-quote-dialog .ff-quote-facts{grid-template-columns:1fr}
+ body[data-page="admin"] #admin-dialog.ff-quote-dialog .ff-quote-fact{grid-column:1/-1}
+ body[data-page="admin"] .ff-order-card-footer button{padding:10px 12px}
+}

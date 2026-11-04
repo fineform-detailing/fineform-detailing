@@ -4,6 +4,23 @@ import {now,uuid,stmt,first,all,getQuote,quoteView,checkVersion,customerFor} fro
 import {requireRegisteredVehicle} from './plates.mjs';
 import {queuePushStatement} from './push.mjs';
 import {queueReviewPushStatement} from './reviews.mjs';
+
+/** Mensagem padrão publicada no link privado quando o status muda. */
+export function automaticQuoteStatusMessage(q,status,date=q.scheduled_date,time=q.scheduled_time){
+ const name=String(q.name||'cliente').trim().split(/\s+/)[0],ref=q.reference,vehicle=q.model||'veículo';
+ const schedule=date?date.slice(0,10).split('-').reverse().join('/')+(time?' às '+time:' (horário a confirmar)'):'';
+ switch(status){
+ case 'pending':return 'Olá, '+name+'! Recebemos seu pedido '+ref+' na Fine Form. Vamos avaliar e confirmar os próximos passos.';
+ case 'accepted':return schedule?'Olá, '+name+'! Seu pedido '+ref+' foi aceito. Atendimento agendado para '+schedule+'. Acompanhe pelo seu link privado.':'Olá, '+name+'! Seu pedido '+ref+' foi aceito. Vamos confirmar a data e o horário do atendimento. Acompanhe pelo seu link privado.';
+ case 'in_progress':return 'Olá, '+name+'! Seu '+vehicle+' está em atendimento na Fine Form. Avisaremos sobre a próxima etapa.';
+ case 'ready':return 'Olá, '+name+'! Seu veículo está pronto para retirada na Fine Form. Entre em contato para combinar a entrega.';
+ case 'completed':return 'Olá, '+name+'! Seu veículo foi entregue. Obrigado pela confiança! O histórico permanece disponível pelo seu link privado.';
+ case 'declined':return 'Olá, '+name+'! Não foi possível aceitar o pedido '+ref+' nas condições solicitadas. Fale conosco para avaliar alternativas.';
+ case 'cancelled':return 'Olá, '+name+'! Seu pedido '+ref+' foi cancelado. Entre em contato para verificar um novo atendimento.';
+ default:return q.public_message||'Pedido atualizado pela Fine Form.';
+ }
+}
+
 export async function saveQuote(env,{state,budget,token,subscription=null,cycle=null,creditKind=null}){
  if(!/^[A-Za-z0-9_-]{43}$/.test(token||''))fail(400,'Reabra o formulário para gerar seu link de acompanhamento.');
  // Phase is server metadata, not a change to the customer's requested budget.
@@ -34,7 +51,7 @@ export async function updateQuote(env,id,body){
  let time=body.scheduledTime===undefined?q.scheduled_time:text(body.scheduledTime,5)||null;
  if(date&&!validDate(date))fail(400,'Data de atendimento inválida.');
  if(time&&!/^([01]\d|2[0-3]):[0-5]\d$/.test(time))fail(400,'Horário inválido.');
- const message=body.message===undefined?q.public_message:text(body.message,600),internal=body.internalNote===undefined?q.internal_note:text(body.internalNote,600);
+ const provided=body.message===undefined?undefined:text(body.message,600);const message=changing?(provided||automaticQuoteStatusMessage(q,status,date,time)):(provided===undefined?q.public_message:provided),internal=body.internalNote===undefined?q.internal_note:text(body.internalNote,600);
  let confirmed=q.confirmed_total_cents;
  if(body.confirmedTotal!==undefined){
   if(body.confirmedTotal===null)confirmed=null;

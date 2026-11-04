@@ -48,6 +48,19 @@ test('pedido muda de status, mantém histórico e rejeita edição desatualizada
  const timeline=await call('/api/quotes/'+id,{cap:body.submissionToken});assert.equal(timeline.data.events.length,2);
  assert.equal((await call('/api/admin/customers',{auth:true})).data.items.length>0,true);
 });
+
+test('mudar status publica automaticamente uma mensagem visível no acompanhamento privado',async()=>{
+ const body=selection({name:'Ana Teste',phone:'11900000009'}),saved=await call('/api/quotes',{method:'POST',body}),id=saved.data.quote.id;
+ const accepted=await call('/api/admin/quotes/'+id,{method:'PATCH',auth:true,body:{version:1,status:'accepted'}});
+ assert.equal(accepted.status,200);assert.match(accepted.data.quote.message,/pedido .* foi aceito/);assert.match(accepted.data.quote.message,/confirmar a data e o horário/);
+ let tracking=await call('/api/quotes/'+id,{cap:body.submissionToken});
+ assert.equal(tracking.data.quote.message,accepted.data.quote.message);assert.equal(tracking.data.events.at(-1).message,accepted.data.quote.message);
+ const cancelled=await call('/api/admin/quotes/'+id,{method:'PATCH',auth:true,body:{version:2,status:'cancelled'}});
+ assert.equal(cancelled.status,200);assert.match(cancelled.data.quote.message,/foi cancelado/);
+ tracking=await call('/api/quotes/'+id,{cap:body.submissionToken});
+ assert.equal(tracking.data.events.at(-1).message,cancelled.data.quote.message);assert.equal(tracking.data.events.length,3);
+});
+
 test('orientação exige valor completo antes de aceitar',async()=>{
  const saved=await call('/api/quotes',{method:'POST',body:selection({mode:'guidance',extras:['glassCare']})}),id=saved.data.quote.id;
  assert.equal(saved.data.quote.budget.hasBase,false);

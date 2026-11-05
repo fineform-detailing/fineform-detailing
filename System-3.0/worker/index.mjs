@@ -1,3 +1,4 @@
+import {loyaltyView,changeLoyalty} from './loyalty.mjs';
 import {AppError,fail,text,idValid,todaySP,plans,cycleView} from './domain.mjs';
 import {keyReady,adminReady,mfaReady,isLocal,digest,sign,verify,checkOrigin,jsonBody,adminSession,requireAdmin,limit,randomToken,bearer,createSession,sessionCookie,csrfToken,verifyCredentials,securityHeaders} from './security.mjs';
 import {all,first,stmt,now,uuid,getQuote,quoteView,authorizeQuote,getSub,authorizeSub,subView,audit,checkVersion} from './store.mjs';
@@ -175,6 +176,8 @@ async function api(req,env,ctx){
   }
   match=path.match(/^\/api\/admin\/visits\/([^/]+)$/);
   if(match&&method==='PATCH'){const result=await updateVisit(env,idFrom(match[1]),await jsonBody(req));emit(ctx,env,['subscription:'+result.subscriptionId,...(result.quoteId?['quote:'+result.quoteId]:[])]);wakeReviewPush(ctx,env);return response(result);}
+  match=path.match(/^\/api\/admin\/customers\/([^/]+)\/loyalty$/);
+  if(match){const id=idFrom(match[1]);if(method==='GET')return response(await loyaltyView(env,id));if(method==='POST'){const result=await changeLoyalty(env,id,await jsonBody(req));emit(ctx,env,[]);return response(result);}}
   match=path.match(/^\/api\/admin\/customers\/([^/]+)$/);
   if(match){const id=idFrom(match[1]);
    if(method==='GET')return response(await customerDeletionPreview(env,id));
@@ -188,7 +191,7 @@ async function api(req,env,ctx){
    const [quotes,visits]=await Promise.all([all(env,"SELECT id,reference,name,model,plate,scheduled_date date,scheduled_time time,status,kind FROM quotes WHERE scheduled_date=? AND kind!='subscription_visit' AND status IN ('accepted','in_progress','ready','completed') ORDER BY scheduled_time",date),all(env,"SELECT v.id,c.name,s.model,v.plate,v.visit_date date,v.visit_time time,v.status,v.kind,v.quote_id,v.version,s.id subscriptionId FROM visits v JOIN cycles cy ON cy.id=v.cycle_id JOIN subscriptions s ON s.id=cy.subscription_id JOIN customers c ON c.id=s.customer_id WHERE v.visit_date=? AND v.status!='cancelled' ORDER BY v.visit_time",date)]);return response({date,quotes,visits});
   }
   if(path==='/api/admin/export'&&method==='GET'){
-   const tables=['customers','subscriptions','cycles','quotes','quote_events','visits','audit_events','payment_receipts','reviews','business_profile'];const result={version:'3.0.0',exportedAt:now()};let count=0;
+   const tables=['customers','subscriptions','cycles','quotes','quote_events','visits','audit_events','payment_receipts','reviews','business_profile','loyalty_cards','loyalty_stamps','loyalty_events'];const result={version:'3.0.0',exportedAt:now()};let count=0;
    for(const table of tables){const rows=await all(env,'SELECT * FROM '+table+' LIMIT 5001');count+=rows.length;if(rows.length>5000||count>15000)fail(413,'Use o comando de backup D1 para exportar essa base completa.');result[table]=rows;}
    return response(result,200,{'Content-Disposition':'attachment; filename="fine-form-backup.json"'});
   }

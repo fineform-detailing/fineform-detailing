@@ -14,7 +14,7 @@ export async function deleteQuote(env,id,body){
   stmt(env,'INSERT INTO audit_events(id,entity,entity_id,action,detail,created_at,actor_id) SELECT ?,\'quote\',?,\'deleted\',\'Pedido e registros de visita vinculados excluídos pelo operador.\',?,? WHERE '+claimed,op,id,stamp,env.ADMIN_SESSION?.id||'server',id,op),
   stmt(env,'DELETE FROM quotes WHERE id=? AND last_op=?',id,op),
   stmt(env,`DELETE FROM customers WHERE id=? AND NOT EXISTS(SELECT 1 FROM quotes WHERE customer_id=customers.id OR phone=customers.phone)
-   AND NOT EXISTS(SELECT 1 FROM subscriptions WHERE customer_id=customers.id) AND EXISTS(SELECT 1 FROM audit_events WHERE id=?)`,q.customer_id,op)
+   AND NOT EXISTS(SELECT 1 FROM subscriptions WHERE customer_id=customers.id) AND NOT EXISTS(SELECT 1 FROM loyalty_cards WHERE customer_id=customers.id) AND EXISTS(SELECT 1 FROM audit_events WHERE id=?)`,q.customer_id,op)
  ]);
  if(results[0].meta.changes!==1||results[4].meta.changes<1)fail(409,'Este pedido mudou. Recarregue antes de excluir.');
  return {deleted:true,quoteId:id,subscriptionIds:related.map(s=>s.id)};
@@ -24,6 +24,7 @@ const quoteScope='customer_id=? OR phone=?';
 const cycleScope='subscription_id IN(SELECT id FROM subscriptions WHERE customer_id=?)';
 const visitScope='cycle_id IN(SELECT id FROM cycles WHERE '+cycleScope+') OR quote_id IN(SELECT id FROM quotes WHERE '+quoteScope+')';
 function graphQueries(id,phone){return [
+ ["SELECT COALESCE(group_concat(value,'|'),'') value FROM(SELECT id||':'||version value FROM loyalty_cards WHERE customer_id=? ORDER BY id)",[id]],
  ['SELECT json_array(id,name,phone,vehicle,model,created_at,updated_at) value FROM customers WHERE id=?',[id]],
  ["SELECT COALESCE(group_concat(value,'|'),'') value FROM(SELECT id||':'||version value FROM quotes WHERE "+quoteScope+' ORDER BY id)',[id,phone]],
  ["SELECT COALESCE(group_concat(value,'|'),'') value FROM(SELECT id||':'||version value FROM subscriptions WHERE customer_id=? ORDER BY id)",[id]],

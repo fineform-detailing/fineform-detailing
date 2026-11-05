@@ -1,0 +1,22 @@
+import {test} from 'node:test';
+import assert from 'node:assert/strict';
+import {build} from 'esbuild';
+import {JSDOM} from 'jsdom';
+test('círculo só fica preto após salvar; falha preserva pontos e conteúdo é escapado',async()=>{
+ const dom=new JSDOM('<div id="detail"></div>',{url:'http://localhost/painel/',runScripts:'outside-only'}),w=dom.window;
+ const data={customer:{name:'Cliente <script>teste</script>',phone:'11999999999'},cards:[{id:'card-test',target:2,reward:'Lavagem <img src=x>',status:'active',version:1,stamps:[],events:[]}],eligible:[{id:'quote-test',reference:'FF-TEST',model:'Carro'}]};
+ let release,calls=0,fail=false;
+ w.AbortController=globalThis.AbortController;
+ w.fetch=async(path,options)=>{if(options.method==='POST'){calls++;await new Promise(resolve=>release=resolve);if(fail)return new Response(JSON.stringify({error:'Pedido já pontuado.'}),{status:409});data.cards[0].stamps.push({reference:'FF-TEST',created_at:new Date().toISOString()});data.cards[0].version++;}return new Response(JSON.stringify(data));};
+ const bundle=await build({stdin:{contents:"import {openLoyalty} from './dist/assets/admin-loyalty.mjs'; window.openLoyalty=openLoyalty;",resolveDir:process.cwd()},bundle:true,format:'iife',write:false});
+ w.eval(bundle.outputFiles[0].text);const detail=w.document.getElementById('detail');
+ await w.openLoyalty('customer-test',{detail,modal:html=>detail.innerHTML=html,toast(){}});
+ assert.equal(detail.querySelectorAll('.ff-loyalty-circle').length,2);assert.equal(detail.querySelectorAll('script,img').length,0);
+ detail.querySelector('[data-loyalty-stamp]').click();detail.querySelector('[data-loyalty-stamp]').click();
+ assert.equal(calls,1);assert.equal(detail.querySelectorAll('.is-stamped').length,0);release();
+ for(let i=0;i<50&&!detail.querySelector('.is-stamped');i++)await new Promise(r=>setTimeout(r,10));
+ assert.equal(detail.querySelectorAll('.is-stamped').length,1);
+ fail=true;detail.querySelector('[data-loyalty-stamp]').click();release();
+ for(let i=0;i<50&&!detail.querySelector('.system-error');i++)await new Promise(r=>setTimeout(r,10));
+ assert.equal(detail.querySelectorAll('.is-stamped').length,1);assert.match(detail.querySelector('.system-error').textContent,/já pontuado/);dom.window.close();
+});

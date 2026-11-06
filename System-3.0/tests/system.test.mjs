@@ -61,11 +61,14 @@ test('mudar status publica automaticamente uma mensagem visível no acompanhamen
  assert.equal(tracking.data.events.at(-1).message,cancelled.data.quote.message);assert.equal(tracking.data.events.length,3);
 });
 
-test('orientação exige valor completo antes de aceitar',async()=>{
+test('orientação aceita sem exigir um valor confirmado e preserva o orçamento',async()=>{
  const saved=await call('/api/quotes',{method:'POST',body:selection({mode:'guidance',extras:['glassCare']})}),id=saved.data.quote.id;
  assert.equal(saved.data.quote.budget.hasBase,false);
- assert.equal((await call('/api/admin/quotes/'+id,{auth:true,method:'PATCH',body:{version:1,status:'accepted'}})).status,400);
- const accepted=await call('/api/admin/quotes/'+id,{auth:true,method:'PATCH',body:{version:1,status:'accepted',confirmedTotal:340.50}});assert.equal(accepted.status,200);assert.equal(accepted.data.quote.confirmedTotal,340.5);
+ const accepted=await call('/api/admin/quotes/'+id,{auth:true,method:'PATCH',body:{version:1,status:'accepted'}});
+ assert.equal(accepted.status,200);assert.equal(accepted.data.quote.confirmedTotal,null);
+ assert.deepEqual(accepted.data.quote.budget,saved.data.quote.budget);
+ const legacy=await call('/api/admin/quotes/'+id,{auth:true,method:'PATCH',body:{version:2,confirmedTotal:340.50}});
+ assert.equal(legacy.status,200);assert.equal(legacy.data.quote.confirmedTotal,340.5);
 });
 test('Care requer pagamento e oferece portal privado pelo pedido original',async()=>{
  const body=selection({mode:'plan',plan:'careEssential',phone:'11900000002'}),saved=await call('/api/quotes',{method:'POST',body}),id=saved.data.quote.id;

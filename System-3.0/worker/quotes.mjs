@@ -51,13 +51,12 @@ export async function updateQuote(env,id,body){
  let time=body.scheduledTime===undefined?q.scheduled_time:text(body.scheduledTime,5)||null;
  if(date&&!validDate(date))fail(400,'Data de atendimento inválida.');
  if(time&&!/^([01]\d|2[0-3]):[0-5]\d$/.test(time))fail(400,'Horário inválido.');
- const provided=body.message===undefined?undefined:text(body.message,600);const message=changing?(provided||automaticQuoteStatusMessage(q,status,date,time)):(provided===undefined?q.public_message:provided),internal=body.internalNote===undefined?q.internal_note:text(body.internalNote,600);
+ const provided=body.message===undefined?undefined:text(body.message,600);const scheduleChanged=date!==q.scheduled_date||time!==q.scheduled_time;const message=(changing||(status==='accepted'&&scheduleChanged&&provided===undefined))?(provided||automaticQuoteStatusMessage(q,status,date,time)):(provided===undefined?q.public_message:provided),internal=body.internalNote===undefined?q.internal_note:text(body.internalNote,600);
  let confirmed=q.confirmed_total_cents;
  if(body.confirmedTotal!==undefined){
   if(body.confirmedTotal===null)confirmed=null;
   else{const amount=body.confirmedTotal;if(typeof amount!=='number'||!Number.isFinite(amount)||amount<0||amount>100000||Math.abs(amount*100-Math.round(amount*100))>0.000001)fail(400,'Valor confirmado inválido. Use até duas casas decimais.');confirmed=Math.round(amount*100);}
  }
- if(q.kind==='guidance'&&status==='accepted'&&confirmed===null)fail(400,'Defina o valor completo antes de aceitar o pedido de orientação.');
  if(changing&&['declined','cancelled'].includes(status)&&!message)fail(400,'Explique ao cliente o motivo dessa atualização.');
  if(status==='completed'&&date&&date>todaySP())fail(400,'Não conclua um atendimento futuro.');
  let checkedAt=q.plate_checked_at||null,checkedBy=q.plate_checked_by||null,verifiedAt=q.plate_verified_at||null,verifiedBy=q.plate_verified_by||null;

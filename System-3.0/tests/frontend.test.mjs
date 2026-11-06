@@ -55,7 +55,7 @@ test('painel filtra pela etapa do gráfico, busca no topo e abre as áreas do me
  const more=w.document.querySelector('[data-action="more"]'),menu=w.document.getElementById('admin-more-menu');
  more.click();assert.equal(menu.hidden,false);assert.equal(more.getAttribute('aria-expanded'),'true');
  menu.querySelector('[data-tab="customers"]').click();await until(()=>w.document.getElementById('customers-form'));
- assert.equal(menu.hidden,true);assert.equal(w.document.querySelector('.admin-mobile-nav [data-tab="customers"]').getAttribute('aria-current'),'page');assert.equal(more.hasAttribute('aria-current'),false);
+ assert.equal(menu.hidden,true);assert.equal(w.document.querySelector('#admin-dock [data-tab="customers"]').getAttribute('aria-current'),'page');assert.equal(more.hasAttribute('aria-current'),false);
  more.click();w.document.dispatchEvent(new w.KeyboardEvent('keydown',{key:'Escape',bubbles:true}));
  assert.equal(menu.hidden,true);assert.equal(more.getAttribute('aria-expanded'),'false');assert.equal(w.document.activeElement,more);
 });
@@ -77,7 +77,7 @@ test('painel autentica, aceita pedido e ativa assinatura com pagamento confirmad
  assert.deepEqual([...w.document.querySelectorAll('.admin-metric>span')].map(el=>el.textContent),['Aguardando resposta','Agenda de hoje']);
  assert.doesNotMatch(w.document.getElementById('admin-view').textContent,/Pagamentos Care registrados no mês|O valor acima registra|histórico financeiro/);
  w.document.querySelector('[data-quote="'+quoteId+'"]').click();await until(()=>w.document.getElementById('quote-edit'));
- input(w,'status','accepted');input(w,'message','Care aprovado.');const editing=w.document.getElementById('quote-edit');submit(w,'quote-edit');await until(()=>w.document.getElementById('quote-edit')!==editing&&w.document.querySelector('#quote-edit [name="status"]')?.value==='accepted');const vehicle=w.document.getElementById('register-vehicle');vehicle.elements.plate.value='DOM1A23';vehicle.elements.confirm.checked=true;submit(w,'register-vehicle');await until(()=>w.document.getElementById('activate-plan'));
+ w.document.querySelector('[data-quick-quote-status="accepted"]').click();await until(()=>w.document.querySelector('.ff-quote-head .status-accepted'));const vehicle=w.document.getElementById('register-vehicle');vehicle.elements.plate.value='DOM1A23';vehicle.elements.confirm.checked=true;submit(w,'register-vehicle');await until(()=>w.document.getElementById('activate-plan'));
  const paid=w.document.querySelector('#activate-plan [name="paidConfirmed"]');paid.checked=true;submit(w,'activate-plan');await until(()=>w.document.getElementById('generated-link'));
  const url=new URL(w.document.querySelector('#generated-link a').href);subId=url.searchParams.get('id');portalToken=new URLSearchParams(url.hash.slice(1)).get('t');
  assert.match(w.document.getElementById('admin-detail').textContent,/1.*disponíveis/);assert.ok(!w.localStorage.getItem('key'));
@@ -197,7 +197,7 @@ test('conteúdo enviado pelo cliente é texto no painel e expiração limpa regi
  const q=(await request('/api/quotes',payload)).data.quote;
  const w=await open('painel','admin');await until(()=>w.document.getElementById('access-form'));input(w,'key',key);submit(w,'access-form');await until(()=>w.document.querySelector('[data-tab="quotes"]'));
  w.document.querySelector('[data-tab="quotes"]').click();await until(()=>w.document.querySelector('[data-quote="'+q.id+'"]'));w.document.querySelector('[data-quote="'+q.id+'"]').click();await until(()=>w.document.getElementById('admin-detail').textContent.includes(name));
- assert.equal(w.document.querySelector('#admin-detail img'),null);assert.equal(w.document.querySelector('#admin-detail script'),null);
+ assert.equal(w.document.querySelector('#admin-detail img:not(.ff-order-brand img)'),null);assert.equal(w.document.querySelector('#admin-detail script'),null);
  const id=await digest(w.__testCookie().split('=')[1]);await db.prepare('DELETE FROM admin_sessions WHERE id=?').bind(id).run();
  w.document.querySelector('[data-action="reload-quote"]').click();await until(()=>w.document.getElementById('access-form'));assert.equal(w.document.getElementById('admin-dialog').open,false);assert.equal(w.document.getElementById('admin-detail').textContent,'');assert.equal(w.document.body.textContent.includes(name),false);
 });
@@ -257,9 +257,9 @@ test('link de notificação aguarda login e abre o pedido pelo acesso administra
 test('toque em notificação preserva edição aberta e só aceita mensagem do service worker do painel',async()=>{
  const first=await newSingleQuote('11900000987'),next=await newSingleQuote('11900000988');let listeners;
  const w=await open('painel','admin','http://localhost/painel/',w=>{listeners=new Map();Object.defineProperty(w.navigator,'serviceWorker',{value:{addEventListener:(name,handler)=>listeners.set(name,handler)}});});
- await until(()=>w.document.getElementById('access-form'));input(w,'key',key);submit(w,'access-form');await until(()=>w.document.querySelector('[data-quote="'+first.id+'"]'));w.document.querySelector('[data-quote="'+first.id+'"]').click();await until(()=>w.document.getElementById('quote-edit'));input(w,'internalNote','Manter esta edição.').focus();
+ await until(()=>w.document.getElementById('access-form'));input(w,'key',key);submit(w,'access-form');await until(()=>w.document.querySelector('[data-quote="'+first.id+'"]'));w.document.querySelector('[data-quote="'+first.id+'"]').click();await until(()=>w.document.getElementById('quote-edit'));input(w,'scheduledTime','15:30').focus();
  listeners.get('message')({data:{type:'ff-open-order',quoteId:next.id},source:{scriptURL:'https://evil.test/painel/sw.js'}});assert.equal(new URL(w.location.href).searchParams.has('pedido'),false);
- listeners.get('message')({data:{type:'ff-open-order',quoteId:next.id},source:{scriptURL:'http://localhost/painel/sw.js'}});assert.equal(w.document.querySelector('[name="internalNote"]').value,'Manter esta edição.');assert.match(w.document.getElementById('admin-detail').textContent,new RegExp(first.reference));
+ listeners.get('message')({data:{type:'ff-open-order',quoteId:next.id},source:{scriptURL:'http://localhost/painel/sw.js'}});assert.equal(w.document.querySelector('[name="scheduledTime"]').value,'15:30');assert.match(w.document.getElementById('admin-detail').textContent,new RegExp(first.reference));
  w.document.getElementById('admin-dialog').close();await until(()=>w.document.getElementById('admin-detail').textContent.includes(next.reference));closeWindow(w);
 });
 
@@ -375,4 +375,42 @@ test('rascunho incompleto não pula veículo e erro fica associado ao campo',asy
  assert.equal(w.document.querySelector('.booking-treatments summary'),null);
  assert.ok(w.document.querySelector('.booking-treatments .choice-stack'));
  assert.ok(w.document.querySelector('.booking-treatments [data-action="service"][data-value="polishPremium"]'));closeWindow(w);
+});
+
+
+test('atendimento usa ações contextuais, salva agendamento e preserva dados e link do pedido',async()=>{
+ const q=await newSingleQuote('11900000761');
+ const seed=await request('/api/admin/session',{key}),cookie=seed.r.headers.get('Set-Cookie').split(';')[0];
+ const seeded=await request('/api/admin/quotes/'+q.id,{version:q.version,internalNote:'Histórico interno preservado',confirmedTotal:230.50},cookie,null,'PATCH');
+ assert.equal(seeded.r.status,200);
+ const w=await adminWindow();w.document.querySelector('[data-tab="quotes"]').click();
+ await until(()=>w.document.querySelector('[data-quote="'+q.id+'"]'));w.document.querySelector('[data-quote="'+q.id+'"]').click();
+ await until(()=>w.document.getElementById('quote-edit'));w.document.querySelector('[data-order-section="service"]').click();
+ for(const name of ['confirmedTotal','internalNote','message','status'])assert.equal(w.document.querySelector('#admin-detail [name="'+name+'"]'),null);
+ assert.equal(w.document.querySelector('#ff-quote-template'),null);assert.equal(w.document.querySelector('.ff-quick-preview'),null);
+ input(w,'scheduledDate',todaySP());input(w,'scheduledTime','11:00');
+ w.document.querySelector('[data-quick-quote-status="accepted"]').click();
+ await until(()=>w.document.querySelector('.ff-quote-head .status-accepted'));
+ let saved=(await request('/api/admin/quotes/'+q.id,null,cookie)).data.quote;
+ assert.equal(saved.scheduledDate,todaySP());assert.equal(saved.scheduledTime,'11:00');assert.match(saved.message,/11:00/);
+ assert.equal(saved.confirmedTotal,230.5);assert.equal(saved.internalNote,'Histórico interno preservado');
+ const scheduleForm=w.document.getElementById('quote-edit');input(w,'scheduledTime','13:30');submit(w,'quote-edit');
+ await until(()=>w.document.getElementById('quote-edit')!==scheduleForm);
+ assert.match((await request('/api/admin/quotes/'+q.id,null,cookie)).data.quote.message,/13:30/);
+ assert.ok(w.document.querySelector('[data-quick-quote-status="in_progress"]'));
+ assert.equal(w.document.querySelector('[data-quick-quote-status="accepted"]'),null);
+ w.document.querySelector('[data-quick-quote-status="in_progress"]').click();
+ assert.equal(w.document.querySelector('.ff-quote-view').dataset.section,'customer');
+ assert.equal((await request('/api/admin/quotes/'+q.id,null,cookie)).data.quote.status,'accepted');
+ const vehicle=w.document.getElementById('register-vehicle');vehicle.elements.plate.value='NEW1A23';vehicle.elements.confirm.checked=true;submit(w,'register-vehicle');
+ await until(()=>w.document.getElementById('register-vehicle')!==vehicle);
+ w.document.querySelector('[data-order-section="service"]').click();w.document.querySelector('[data-quick-quote-status="in_progress"]').click();
+ await until(()=>w.document.querySelector('.ff-quote-head .status-in_progress'));
+ w.document.querySelector('[data-quick-quote-status="ready"]').click();await until(()=>w.document.querySelector('.ff-quote-head .status-ready'));
+ w.document.querySelector('[data-quick-quote-status="completed"]').click();await until(()=>w.document.querySelector('.ff-quote-head .status-completed'));
+ saved=(await request('/api/admin/quotes/'+q.id,null,cookie)).data.quote;
+ assert.equal(saved.status,'completed');assert.equal(saved.confirmedTotal,230.5);assert.equal(saved.internalNote,'Histórico interno preservado');
+ assert.equal(w.document.querySelectorAll('[data-quick-quote-status]').length,0);
+ assert.match(w.document.querySelector('.ff-service-closed').textContent,/concluído/);
+ closeWindow(w);
 });

@@ -28,7 +28,8 @@ export async function mountBusinessSettings(host,{toast}){
 export async function mountQuoteLocation(detail,q,{toast,onSaved}){
  const panel=document.createElement('section');panel.className='system-card';panel.id='quote-location';
  panel.innerHTML='<h3>Endereço para este cliente.</h3><p class="system-muted">Consultando o local cadastrado…</p>';
- detail.querySelector('#quote-edit').before(panel);
+ const customerPanel=detail.querySelector('[data-quote-panel="customer"]');
+ if(customerPanel)customerPanel.append(panel);else detail.querySelector('#quote-edit').before(panel);
  try{
   const {profile:p}=await api('/api/admin/business');if(!panel.isConnected)return;
   const canShare=p.visitAddress&&!['declined','cancelled'].includes(q.status);

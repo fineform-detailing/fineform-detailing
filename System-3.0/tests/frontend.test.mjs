@@ -55,7 +55,7 @@ test('painel filtra pela etapa do gráfico, busca no topo e abre as áreas do me
  const more=w.document.querySelector('[data-action="more"]'),menu=w.document.getElementById('admin-more-menu');
  more.click();assert.equal(menu.hidden,false);assert.equal(more.getAttribute('aria-expanded'),'true');
  menu.querySelector('[data-tab="customers"]').click();await until(()=>w.document.getElementById('customers-form'));
- assert.equal(menu.hidden,true);assert.equal(more.getAttribute('aria-current'),'page');
+ assert.equal(menu.hidden,true);assert.equal(w.document.querySelector('.admin-mobile-nav [data-tab="customers"]').getAttribute('aria-current'),'page');assert.equal(more.hasAttribute('aria-current'),false);
  more.click();w.document.dispatchEvent(new w.KeyboardEvent('keydown',{key:'Escape',bubbles:true}));
  assert.equal(menu.hidden,true);assert.equal(more.getAttribute('aria-expanded'),'false');assert.equal(w.document.activeElement,more);
 });

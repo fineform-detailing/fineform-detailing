@@ -1,3 +1,6 @@
+import {mountActionDock} from './dock-ui.mjs';
+const docks=new WeakMap();
+export function disposeQuoteView(detail){docks.get(detail)?.destroy();docks.delete(detail);}
 // Presentation only: keep the existing forms, permissions and event handlers.
 let previousReference='',previousSection='summary';
 const sections=[
@@ -6,7 +9,7 @@ const sections=[
  ['customer','Cliente','M20 21v-2a7 7 0 0 0-14 0v2 M13 11a4 4 0 1 0 0-8a4 4 0 0 0 0 8'],
  ['history','Histórico','M3 11a9 9 0 1 1 2 7 M3 4v7h7 M12 7v5l3 2']
 ];
-const icon=path=>'<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="'+path+'"/></svg>';
+const icon=path=>'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="'+path+'"/></svg>';
 export function revealQuoteSection(element){
  const panel=element?.closest('[data-quote-panel]');
  if(!panel)return;
@@ -16,14 +19,17 @@ export function revealQuoteSection(element){
 export function organizeQuoteView(detail){
  const document=detail.ownerDocument;
  const frame=detail.querySelector('.ff-quote-view');
- if(!frame||frame.querySelector('.ff-order-body'))return;
+ if(frame?.querySelector('.ff-order-body'))return;
+ disposeQuoteView(detail);
+ if(!frame)return;
  const head=frame.querySelector('.ff-quote-head');
  if(!head)return;
  const reference=head.querySelector('h2')?.textContent||'';
  if(reference!==previousReference){previousReference=reference;previousSection='summary';}
  const body=document.createElement('div');body.className='ff-order-body';
  const footer=document.createElement('footer');footer.className='ff-order-footer';
- footer.innerHTML='<nav class="ff-order-tabs" role="tablist" aria-label="Áreas do pedido">'+sections.map(([id,label,path])=>'<button type="button" role="tab" id="ff-order-tab-'+id+'" data-order-section="'+id+'" aria-controls="ff-order-panel-'+id+'" aria-selected="false" tabindex="-1">'+icon(path)+'<span>'+label+'</span></button>').join('')+'</nav>';
+ const dock=mountActionDock({container:footer,label:'Áreas do pedido',tablist:true,scrollTarget:body,items:sections.map(([id,label,path])=>({id,label,icon:icon(path),attributes:{id:'ff-order-tab-'+id,'data-order-section':id,'aria-controls':'ff-order-panel-'+id}}))});
+ dock.nav.classList.add('ff-order-tabs');docks.set(detail,dock);
  const panels={};
  for(const [id,label] of sections){
   const panel=document.createElement('section');
@@ -47,6 +53,7 @@ export function organizeQuoteView(detail){
  back.setAttribute('aria-label','Fechar pedido e voltar ao painel');
  back.innerHTML='<span aria-hidden="true">←</span> Painel';
  head.prepend(back);
+ const brand=document.createElement('a');brand.className='ff-order-brand';brand.href='../';brand.setAttribute('aria-label','Fine Form, abrir site');brand.innerHTML='<img src="../assets/logo-transparent.svg" width="36" height="36" alt="">';head.append(brand);
  const context=document.createElement('p');context.className='ff-order-context';context.setAttribute('aria-live','polite');head.append(context);
  frame.append(body,footer);
  const tabs=[...footer.querySelectorAll('[role="tab"]')];
@@ -60,7 +67,7 @@ export function organizeQuoteView(detail){
    if(active&&focus)button.focus();
   }
   for(const [key,panel] of Object.entries(panels))panel.hidden=key!==id;
-  frame.dataset.section=id;previousSection=id;
+  dock.select(id);frame.dataset.section=id;previousSection=id;
   context.textContent=sections.find(([key])=>key===id)[1];
   if(scroll)body.scrollTop=Number(panels[id].dataset.scroll)||0;
  }

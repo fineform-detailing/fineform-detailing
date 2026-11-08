@@ -53,7 +53,7 @@
 .ff-folder-label strong{font:700 18px/1.1 Arial,sans-serif;letter-spacing:-.03em;color:#fff}
 .ff-folder-label small{font:500 9px/1.3 Arial,sans-serif;letter-spacing:.12em;color:#d1d1ce}
 .ff-folder-accent{position:absolute;inset:auto 14px 6px;z-index:4;height:2px;border-radius:99px;
- background:#53c3b1;opacity:0;transform:scaleX(0);transform-origin:left center}
+ background:#ff8000;opacity:0;transform:scaleX(0);transform-origin:left center}
 .ff-journey.is-packed .ff-folder{animation:ff-folder-settle .38s cubic-bezier(.22,1.25,.36,1) both}
 .ff-journey.is-packed .ff-folder-front{transform:translateZ(19px) rotateX(0)}
 .ff-journey.is-packed .ff-folder-accent{animation:ff-folder-trace .92s ease .16s both}
@@ -62,10 +62,10 @@
  letter-spacing:.012em;color:#424845;
 }
 .ff-journey-indicator{height:2px;width:94px;border-radius:20px;background:#dce1dd;overflow:hidden}
-.ff-journey-indicator span{display:block;width:35%;height:100%;background:#53c3b1;border-radius:inherit;animation:ff-indicator 1.25s ease-in-out infinite alternate}
+.ff-journey-indicator span{display:block;width:35%;height:100%;background:#ff8000;border-radius:inherit;animation:ff-indicator 1.25s ease-in-out infinite alternate}
 .ff-journey-confirm{position:absolute;top:16px;right:calc(50% - 160px);z-index:6;
  display:grid;place-items:center;width:46px;height:46px;border-radius:50%;color:#111;
- background:#53c3b1;box-shadow:0 9px 22px #0002;font:700 23px/1 Arial,sans-serif;
+ background:#ff8000;box-shadow:0 9px 22px #0002;font:700 23px/1 Arial,sans-serif;
  transform:scale(.2) rotate(-30deg);opacity:0}
 .ff-journey-ticket{
  position:absolute;z-index:7;left:50%;top:50%;width:min(86vw,325px);min-height:224px;
@@ -118,7 +118,7 @@ body[data-page=booking] .ff-digital-receipt{
 .ff-receipt-field:last-child{grid-column:1/-1}
 .ff-receipt-meta dt,.ff-receipt-content dt{font-size:11px;color:#7a817c;margin:0}
 .ff-receipt-meta dd{margin:5px 0 0;font-size:13px;color:#1a201c;font-weight:700;overflow-wrap:anywhere}
-.ff-receipt-status-dot{display:inline-block;width:7px;height:7px;border-radius:50%;background:#53c3b1;margin-right:4px}
+.ff-receipt-status-dot{display:inline-block;width:7px;height:7px;border-radius:50%;background:#ff8000;margin-right:4px}
 .ff-receipt-content{padding:21px 26px 16px}
 .ff-receipt-content h3{font-size:18px!important;margin:0 0 11px!important;font-weight:700;letter-spacing:-.035em;color:#1b1b1b}
 .ff-receipt-content dl{margin:0}

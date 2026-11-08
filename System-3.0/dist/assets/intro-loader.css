@@ -1,5 +1,5 @@
 /* Fine Form — Comet Dial loader, based on the tick-ring/comet visual language of React Bits. */
-.ff-intro{--intro-accent:#53c3b1;--intro-ink:#0f0f0f;--intro-paper:#efeee8;position:fixed;inset:0;z-index:1000;isolation:isolate;background:var(--intro-paper);color:var(--intro-ink);font-family:"FF Sans",Arial,sans-serif;overflow:hidden}
+.ff-intro{--intro-accent:#ff8000;--intro-ink:#0f0f0f;--intro-paper:#efeee8;position:fixed;inset:0;z-index:1000;isolation:isolate;background:var(--intro-paper);color:var(--intro-ink);font-family:"FF Sans",Arial,sans-serif;overflow:hidden}
 .ff-intro *,.ff-intro *::before,.ff-intro *::after{box-sizing:border-box}
 html:not([data-ff-intro]) .ff-intro{display:none!important}
 html[data-ff-intro] .ff-intro{display:flex!important}

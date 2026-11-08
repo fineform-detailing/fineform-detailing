@@ -33,10 +33,10 @@ test('tema atual usa a paleta Fine Form em celular e desktop',async()=>{
  assert.match(css,/@media\(max-width:900px\)/);
  assert.match(css,/prefers-reduced-motion/);
  assert.match(css,/admin-mobile-nav/);
- assert.match(css,/--ff-cyan:#58c1b2/);
+ assert.match(css,/--ff-cyan:#ff8000/);
  assert.doesNotMatch(css,/#(?:c7fb4b|b8f52d|a4d740|99df41)/i);
  const storefront=await readFile(new URL('../dist/assets/studio.css',import.meta.url),'utf8');
- assert.match(storefront,/--orange:#53c3b1/);
+ assert.match(storefront,/--orange:#ff8000/);
  assert.equal((css.match(/\{/g)||[]).length,(css.match(/\}/g)||[]).length);
  assert.doesNotMatch(css,/https?:\/\//);
 });

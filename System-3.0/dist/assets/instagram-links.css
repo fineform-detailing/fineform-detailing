@@ -1,7 +1,7 @@
 /* Fine Form / Instagram Links — sistema visual oficial, isolado da Home e do Orçamento. */
 body[data-page="links"]{
  --links-ink:#0f0f0f;
- --links-cyan:#53c3b1;
+ --links-cyan:#ff8000;
  --links-muted:#66706b;
  --links-border:#e5e8e3;
  background:#fff;color:var(--links-ink);color-scheme:light;
@@ -185,7 +185,7 @@ body[data-page="links"] .bio-nav>:nth-child(5){animation-delay:.22s}
 @media(hover:hover) and (pointer:fine){
  body[data-page="links"] .links-site:hover{background:#f0f7f4;border-color:#b4d7ce;transform:translateY(-1px)}
  body[data-page="links"] .links-request:hover{background:#222523;border-color:#222523;transform:translateY(-2px);box-shadow:inset 0 0 0 1px #ffffff18,0 10px 24px #0f0f0f19}
- body[data-page="links"] .links-request:hover>b{background:#53c3b1;transform:translate(2px,-2px)}
+ body[data-page="links"] .links-request:hover>b{background:#ff8000;transform:translate(2px,-2px)}
  body[data-page="links"] .bio-nav>a:hover,
  body[data-page="links"] .bio-nav>button:hover{background:#f4faf7;border-color:#9dcfc2;transform:translateY(-1px)}
  body[data-page="links"] .bio-nav>*:hover b{background:#e2f4ee;transform:translate(2px,-2px)}
@@ -267,19 +267,19 @@ body[data-page="links"] :is(.links-site,.links-request,.bio-nav>a,.bio-nav>butto
 }
 body[data-page="links"] .links-request:active{
  background:#1d2421!important;
- border-color:#53c3b1!important;
- box-shadow:inset 0 0 0 1px #53c3b1,0 0 0 3px #53c3b12b!important;
+ border-color:#ff8000!important;
+ box-shadow:inset 0 0 0 1px #ff8000,0 0 0 3px #ff80002b!important;
  transform:scale(.991)!important;
 }
 body[data-page="links"] .links-request:active>b{
- background:#53c3b1!important;
+ background:#ff8000!important;
  transform:scale(.94)!important;
 }
 body[data-page="links"] .bio-nav>a:active,
 body[data-page="links"] .bio-nav>button:active{
  background:#eff8f4!important;
- border-color:#53c3b1!important;
- box-shadow:0 0 0 2px #53c3b126!important;
+ border-color:#ff8000!important;
+ box-shadow:0 0 0 2px #ff800026!important;
  transform:scale(.992)!important;
 }
 body[data-page="links"] .bio-nav>a:active b,
@@ -289,7 +289,7 @@ body[data-page="links"] .bio-nav>button:active b{
 }
 body[data-page="links"] .bio-socials .social-link:active,
 body[data-page="links"] .links-site:active{
- background:#e9f7f1!important;border-color:#53c3b1!important;
+ background:#e9f7f1!important;border-color:#ff8000!important;
  transform:scale(.98)!important;
 }
 @media (hover:none),(pointer:coarse){

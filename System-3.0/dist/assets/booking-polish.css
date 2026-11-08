@@ -140,7 +140,7 @@ body[data-page=booking] :is(.review-list,.hours-note,.quote-box,.choice-card,.ex
 }
 body[data-page=booking] :is(button,a):active{transform:scale(.985)}
 body[data-page=booking] :is(button,a):focus-visible{
- outline:3px solid #53C3B1!important;outline-offset:3px!important;
+ outline:3px solid #ff8000!important;outline-offset:3px!important;
 }
 
 /* Completion: previous five-step navigator is over; keep only the back link above the ticket. */

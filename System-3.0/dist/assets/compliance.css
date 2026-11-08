@@ -1,4 +1,4 @@
-/* Brand accent stays #53c3b1; text and focus use darker ink for contrast. */
+/* Brand accent stays #ff8000; text and focus use darker ink for contrast. */
 [hidden]{display:none!important}
 body[data-design=kinetic] :is(a,button,input,select,textarea,summary,[tabindex]):focus-visible{outline:3px solid #176359;outline-offset:4px}
 body[data-design=kinetic] :is(.field,.system-field) :is(input:not([type=checkbox],[type=radio]),select,textarea),body[data-design=kinetic] .system-input{border-color:#747d72}

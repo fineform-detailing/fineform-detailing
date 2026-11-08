@@ -1,7 +1,7 @@
 /* Fine Form Admin / Editorial dashboard inspired by the supplied reference.
    Visual layer only: data, security, forms, API and notifications remain unchanged. */
 body[data-page="admin"]{
-  --panel-ink:#0c1517;--panel-accent:#53c3b1;--panel-line:#e3ebe8;
+  --panel-ink:#0c1517;--panel-accent:#ff8000;--panel-line:#e3ebe8;
   --panel-muted:#70817e;
   background:#f1f5f3;color:var(--panel-ink);padding:0;
 }
@@ -47,7 +47,7 @@ body[data-page="admin"] .admin-nav button:hover,
 body[data-page="admin"] .admin-nav button:focus-visible{background:#ffffff12;color:#fff}
 body[data-page="admin"] .admin-nav button[aria-current="page"]{
   background:#d9f7f0;color:#0d3833;border-color:#d9f7f0;
-  box-shadow:0 5px 16px #53c3b129;font-weight:700;
+  box-shadow:0 5px 16px #ff800029;font-weight:700;
 }
 body[data-page="admin"] .admin-sidebar-bottom{
   margin-top:auto;padding:14px 0 0;display:grid;gap:10px;border-top:1px solid #ffffff1a;
@@ -80,7 +80,7 @@ body[data-page="admin"] .admin-top-actions .button{
   border-radius:13px;font-weight:600;min-height:44px;
 }
 body[data-page="admin"] .button.orange{
-  color:#092623;background:#53c3b1;border-color:#53c3b1;
+  color:#092623;background:#ff8000;border-color:#ff8000;
 }
 body[data-page="admin"] .button.orange:hover{background:#79d6c7}
 body[data-page="admin"] .button.outline{background:#fff;border-color:#dce8e3;color:#233936}
@@ -134,7 +134,7 @@ body[data-page="admin"] .admin-metric strong{display:block;font-size:clamp(31px,
 body[data-page="admin"] .admin-metric p{font-size:10px;line-height:1.45;color:#81908d;margin:0}
 body[data-page="admin"] .admin-metric-decoration{
   display:block;width:100%;height:5px;border-radius:30px;
-  background:linear-gradient(90deg,#53c3b1 0 46%,#e5f5ef 46% 100%);margin-top:14px;
+  background:linear-gradient(90deg,#ff8000 0 46%,#e5f5ef 46% 100%);margin-top:14px;
 }
 body[data-page="admin"] .admin-metric:nth-child(2) .admin-metric-decoration{
   background:linear-gradient(90deg,#7fcdbb 0 28%,#edf4f0 28% 100%);
@@ -206,7 +206,7 @@ body[data-page="admin"] .system-field input,
 body[data-page="admin"] .system-field select,
 body[data-page="admin"] .system-field textarea{border-radius:12px;border-color:#dce9e3}
 body[data-page="admin"] :is(button,a,input,select,textarea,summary):focus-visible{
-  outline:3px solid #53c3b1;outline-offset:3px
+  outline:3px solid #ff8000;outline-offset:3px
 }
 body[data-page="admin"] .admin-access{max-width:460px;padding:clamp(25px,4vw,42px);border-radius:25px;margin:min(12vh,100px) auto;border-color:#e4ebe7;box-shadow:0 20px 55px #172d2412}
 body[data-page="admin"] .admin-access .admin-brand{color:#15342c}

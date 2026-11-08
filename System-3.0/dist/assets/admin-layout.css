@@ -1,6 +1,6 @@
 /* Fine Form: shared workspace navigation and task-based order detail. */
 body[data-page="admin"][data-layout="organized"]{
- --ff-surface:#fff;--ff-canvas:#f7f8f5;--ff-accent:#53c3b1;
+ --ff-surface:#fff;--ff-canvas:#f7f8f5;--ff-accent:#ff8000;
  --ff-soft:#e9f6f1;--ff-border:#e1e7e2;background:var(--ff-canvas);
 }
 body[data-layout="organized"] .ff-workspace{grid-template-columns:236px minmax(0,1fr)!important;max-width:1560px!important;background:var(--ff-canvas)!important}

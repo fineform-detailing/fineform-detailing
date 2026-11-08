@@ -257,7 +257,7 @@ body[data-page="admin"] #admin-view>*{animation:ff-panel-enter .18s ease-out}
    dock compacto com cápsula preta ativa. Somente apresentação; nenhum fluxo
    de autenticação, operação, persistência ou API é alterado. */
 body[data-page="admin"]{
- --ff-cyan:#53c3b1;
+ --ff-cyan:#ff8000;
  --ff-paper:#efeee8;
  --ff-gray:#9da29e;
  --ff-black:#0f0f0f;
@@ -621,7 +621,7 @@ body[data-page="admin"] #admin-view>.system-muted{
 body[data-page="admin"] .system-input:focus,
 body[data-page="admin"] .admin-global-search:focus-within{
  border-color:#8ccdbf;
- outline:2px solid #53c3b140;
+ outline:2px solid #ff800040;
  outline-offset:1px;
 }
 body[data-page="admin"] .status-badge{
@@ -944,10 +944,10 @@ body[data-page="admin"] .ff-hero-copy h2{
  letter-spacing:-.05em!important;word-break:normal!important;overflow-wrap:normal!important;
 }
 body[data-page="admin"] .ff-hero-kicker{color:#60706a!important;font-size:10px!important;margin-bottom:10px!important}
-body[data-page="admin"] .ff-hero-copy>button{font-size:11px!important;color:#0f0f0f!important;border-color:#53c3b1!important}
+body[data-page="admin"] .ff-hero-copy>button{font-size:11px!important;color:#0f0f0f!important;border-color:#ff8000!important}
 body[data-page="admin"] .ff-progress-ring{width:82px!important;height:82px!important;color:#0f0f0f!important}
 body[data-page="admin"] .ff-ring-track{stroke:#dee5e1!important}
-body[data-page="admin"] .ff-ring-value{stroke:#53c3b1!important}
+body[data-page="admin"] .ff-ring-value{stroke:#ff8000!important}
 body[data-page="admin"] .ff-progress-ring strong{font-size:23px!important}
 body[data-page="admin"] .ff-progress-ring small{color:#4c5953!important;font-size:9px!important}
 body[data-page="admin"] #admin-view>h2,

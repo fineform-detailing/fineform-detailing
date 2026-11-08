@@ -64,8 +64,8 @@ test('preferências removem rascunhos e links sem consentimento fictício de pub
 test('texto e foco da camada de privacidade têm contraste AA nas superfícies utilizadas',()=>{
  const lum=hex=>{const rgb=hex.match(/[0-9a-f]{2}/gi).map(n=>parseInt(n,16)/255).map(v=>v<=.04045?v/12.92:((v+.055)/1.055)**2.4);return .2126*rgb[0]+.7152*rgb[1]+.0722*rgb[2];};
  const ratio=(a,b)=>(Math.max(lum(a),lum(b))+.05)/(Math.min(lum(a),lum(b))+.05);
- for(const [foreground,background] of [['0b0d0c','53c3b1'],['37483f','e9f6f2'],['4e5848','ffffff'],['17594f','ffffff']])assert.ok(ratio(foreground,background)>=4.5,foreground+' / '+background);
- assert.ok(ratio('176359','ffffff')>=3);
+ for(const [foreground,background] of [['0b0d0c','ff8000'],['37483f','e9f6f2'],['4e5848','ffffff'],['17594f','ffffff']])assert.ok(ratio(foreground,background)>=4.5,foreground+' / '+background);
+ assert.ok(ratio('b85a00','ffffff')>=3);
 });
 
 test('foco e bordas de contraste prevalecem sobre os estilos anteriores do formulário',async()=>{
@@ -75,6 +75,6 @@ test('foco e bordas de contraste prevalecem sobre os estilos anteriores do formu
  }
  const input=w.document.getElementById('model');input.focus();const style=w.getComputedStyle(input);
  assert.equal(style.borderTopColor,'rgb(116, 125, 114)');
- assert.match(style.outline,/#176359/);assert.match(style.outline,/3px/);
+ assert.match(style.outline,/#b85a00/);assert.match(style.outline,/3px/);
  w.close();
 });

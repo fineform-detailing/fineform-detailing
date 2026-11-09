@@ -6,7 +6,7 @@ const id=()=>crypto.randomUUID();
 const enc=new TextEncoder();
 const hash=async value=>Array.from(new Uint8Array(await crypto.subtle.digest('SHA-256',enc.encode(value)))).map(x=>x.toString(16).padStart(2,'0')).join('');
 const passwordHash=async(password,salt)=>{const key=await crypto.subtle.importKey('raw',enc.encode(password),'PBKDF2',false,['deriveBits']);const bits=await crypto.subtle.deriveBits({name:'PBKDF2',salt:enc.encode(salt),iterations:310000,hash:'SHA-256'},key,256);return Array.from(new Uint8Array(bits)).map(x=>x.toString(16).padStart(2,'0')).join('');};
-const cookie=req=>(req.headers.get('Cookie')||'').split(';').map(v=>v.trim()).find(v=>v.startsWith('ff_finance_session='))?.slice(20)||'';
+const cookie=req=>(req.headers.get('Cookie')||'').split(';').map(v=>v.trim()).find(v=>v.startsWith('ff_finance_session='))?.slice(19)||'';
 const setCookie=(token,maxAge=60*60*24*30)=>({ 'Set-Cookie':token?'ff_finance_session='+token+'; Path=/; HttpOnly; Secure; SameSite=Lax; Max-Age='+maxAge:'ff_finance_session=; Path=/; HttpOnly; Secure; SameSite=Lax; Max-Age=0'});
 const body=async req=>{try{return await req.json();}catch{return fail(400,'Envie dados válidos.');}};
 const getUser=async(req,env)=>{const token=cookie(req);if(!token)return null;const row=await env.DB.prepare('SELECT u.id,u.name,u.email,u.role FROM family_finance_sessions s JOIN family_finance_users u ON u.id=s.user_id WHERE s.token_hash=? AND s.expires_at>?').bind(await hash(token),now()).first();return row||null;};

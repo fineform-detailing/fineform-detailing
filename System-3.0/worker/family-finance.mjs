@@ -74,7 +74,7 @@ export async function handleFamilyFinance(req,env,ctx){
  }catch(e){return json({error:e.status?e.message:'Não foi possível concluir a operação.'},e.status||500);}
 }
 export async function dispatchFamilyFinance(env){
- const today=new Date().toISOString().slice(0,10);await env.DB.prepare("UPDATE family_finance_contributions SET status='overdue',updated_at=? WHERE status='pending' AND due_date<?").bind(now(),today).run();const rows=await env.DB.prepare("SELECT * FROM family_finance_contributions WHERE status!='confirmed' AND due_date<=date(?,'+3 day') ORDER BY due_date").bind(today).all();
+ const parts=new Intl.DateTimeFormat('en-CA',{timeZone:'America/Sao_Paulo',year:'numeric',month:'2-digit',day:'2-digit'}).formatToParts(new Date()),part=t=>parts.find(x=>x.type===t).value,today=part('year')+'-'+part('month')+'-'+part('day');await env.DB.prepare("UPDATE family_finance_contributions SET status='overdue',updated_at=? WHERE status='pending' AND due_date<?").bind(now(),today).run();const rows=await env.DB.prepare("SELECT * FROM family_finance_contributions WHERE status!='confirmed' AND due_date<=date(?,'+3 day') ORDER BY due_date").bind(today).all();
  for(const c of rows.results||[]){
   const days=Math.round((Date.parse(c.due_date+'T00:00:00Z')-Date.parse(today+'T00:00:00Z'))/86400000);
   const kind=days<0?'overdue':days===0?'due_today':days>0&&days<=3?'due_soon':null;if(!kind)continue;

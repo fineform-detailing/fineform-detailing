@@ -10,6 +10,7 @@ import {notificationStatus,registerPush,removePush,testPush,wakePush,dispatchPus
 import {changePlate,registerQuotePlate} from './plates.mjs';
 import {publicReviews,authorizeReview,reviewState,saveReview,customerNotificationState,registerCustomerPush,removeCustomerPush,wakeReviewPush,dispatchReviewPush} from './reviews.mjs';
 import {withdrawReview} from './privacy.mjs';
+import {handleFamilyFinance,dispatchFamilyFinance} from './family-finance.mjs';
 import {businessProfile,publicBusiness,saveBusinessProfile,shareQuoteLocation} from './business.mjs';
 import {publicBusinessDetails} from '../dist/assets/business-profile.mjs';
 export {LiveUpdates} from './live.mjs';
@@ -48,6 +49,7 @@ async function dashboard(env){
 }
 async function api(req,env,ctx){
  const url=new URL(req.url),path=url.pathname,method=req.method;
+ if(path.startsWith('/api/finance/'))return handleFamilyFinance(req,env,ctx);
  if(path==='/api/health'&&method==='GET'){
   let database=false;try{if(env.DB)await first(env,'SELECT id FROM quotes LIMIT 1');database=Boolean(env.DB);}catch{}
   let security=false;try{security=Boolean(database&&await first(env,'SELECT id FROM admin_sessions LIMIT 1')!==undefined&&await first(env,'SELECT id FROM payment_receipts LIMIT 1')!==undefined);}catch{}
@@ -219,4 +221,4 @@ export default {async fetch(req,env,ctx){
   return securityHeaders(req,result,{privatePage});
  }
  try{return securityHeaders(req,await api(req,env,ctx),{api:true});}catch(error){const registrationMissing=String(error.message||'').includes('FF_VEHICLE_NOT_REGISTERED'),plateConflict=String(error.message||'').includes('FF_PLATE_MISMATCH');const status=registrationMissing||plateConflict?409:error instanceof AppError?error.status:500;return securityHeaders(req,response({error:registrationMissing?'Confira o veículo pessoalmente e cadastre a placa no painel antes de iniciar o atendimento ou ativar/utilizar o Care.':plateConflict?'A placa do veículo não corresponde à assinatura ou ainda precisa ser conferida. Atualize o cadastro no painel.':status===500?'Não foi possível concluir a operação. Tente novamente.':error.message,...(status===428?{code:'reauth_required'}:{})},status,status===429?{'Retry-After':'600'}:{}),{api:true});}
-},async scheduled(_controller,env){await Promise.all([dispatchPush(env),dispatchReviewPush(env)]);}};
+},async scheduled(_controller,env){await Promise.all([dispatchPush(env),dispatchReviewPush(env),dispatchFamilyFinance(env)]);}};

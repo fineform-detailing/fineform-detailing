@@ -80,6 +80,6 @@ export async function dispatchFamilyFinance(env){
   const kind=days<0?'overdue':days===0?'due_today':days>0&&days<=3?'due_soon':null;if(!kind)continue;
   const title=kind==='overdue'?'Pagamento em atraso':kind==='due_today'?'Pagamento vence hoje':'Pagamento próximo';
   const message=c.label+' · R$ '+money(c.amount_cents).toLocaleString('pt-BR',{minimumFractionDigits:2})+' · vencimento '+c.due_date.split('-').reverse().join('/');
-  await env.DB.prepare("INSERT OR IGNORE INTO family_finance_notifications(id,user_id,person_role,contribution_id,kind,title,message,scheduled_for,created_at) SELECT ?,NULL,?,?,?,?,?,?,? WHERE EXISTS(SELECT 1 FROM family_finance_users WHERE role=?)").bind(id(),c.person_role,c.id,kind,title,message,today,now(),c.person_role).run();
+  await env.DB.prepare("INSERT OR IGNORE INTO family_finance_notifications(id,user_id,person_role,contribution_id,kind,title,message,scheduled_for,created_at) SELECT ?,NULL,?,?,?,?,?,?,? WHERE EXISTS(SELECT 1 FROM family_finance_users WHERE role=?) AND NOT EXISTS(SELECT 1 FROM family_finance_notifications WHERE user_id IS NULL AND person_role=? AND contribution_id=? AND kind=?)").bind(id(),c.person_role,c.id,kind,title,message,today,now(),c.person_role,c.person_role,c.id,kind).run();
  }
 }

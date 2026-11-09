@@ -67,14 +67,14 @@ export async function handleFamilyFinance(req,env,ctx){
   }
   if(path==='/api/finance/notifications'&&method==='GET'){
    const user=await getUser(req,env);if(!user)fail(401,'Entre para continuar.');
-   const rows=await env.DB.prepare('SELECT id,kind,title,message,scheduled_for,sent_at FROM family_finance_notifications WHERE (user_id=? OR (user_id IS NULL AND person_role=?)) ORDER BY scheduled_for DESC LIMIT 40').bind(user.id,user.role).all();
+   const rows=await env.DB.prepare('SELECT id,kind,title,message,scheduled_for,sent_at FROM family_finance_notifications WHERE (user_id=? OR (?='admin' OR (user_id IS NULL AND person_role=?))) ORDER BY scheduled_for DESC LIMIT 40').bind(user.id,user.role,user.role).all();
    return json({items:rows.results||[]});
   }
   fail(404,'Recurso financeiro não encontrado.');
  }catch(e){return json({error:e.status?e.message:'Não foi possível concluir a operação.'},e.status||500);}
 }
 export async function dispatchFamilyFinance(env){
- const today=new Date().toISOString().slice(0,10),rows=await env.DB.prepare("SELECT * FROM family_finance_contributions WHERE status!='confirmed' AND due_date<=date(?,'+3 day') ORDER BY due_date").bind(today).all();
+ const today=new Date().toISOString().slice(0,10);await env.DB.prepare("UPDATE family_finance_contributions SET status='overdue',updated_at=? WHERE status='pending' AND due_date<?").bind(now(),today).run();const rows=await env.DB.prepare("SELECT * FROM family_finance_contributions WHERE status!='confirmed' AND due_date<=date(?,'+3 day') ORDER BY due_date").bind(today).all();
  for(const c of rows.results||[]){
   const days=Math.round((Date.parse(c.due_date+'T00:00:00Z')-Date.parse(today+'T00:00:00Z'))/86400000);
   const kind=days<0?'overdue':days===0?'due_today':days===3?'due_soon':null;if(!kind)continue;

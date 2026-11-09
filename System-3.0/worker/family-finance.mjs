@@ -1,4 +1,4 @@
-import {requireAdmin,checkOrigin,randomToken} from './security.mjs';
+import {requireAdmin,checkOrigin,randomToken,limit} from './security.mjs';
 const json=(data,status=200)=>new Response(JSON.stringify(data),{status,headers:{'Content-Type':'application/json; charset=utf-8','Cache-Control':'no-store','X-Content-Type-Options':'nosniff'}});
 const fail=(status,message)=>{throw Object.assign(new Error(message),{status});};
 const now=()=>new Date().toISOString();
@@ -24,7 +24,7 @@ export async function handleFamilyFinance(req,env,ctx){
  const url=new URL(req.url),path=url.pathname,method=req.method;
  try{
   if(path==='/api/finance/register'&&method==='POST'){
-   checkOrigin(req);const b=await body(req),name=String(b.name||'').trim().slice(0,90),email=String(b.email||'').trim().toLowerCase(),password=String(b.password||''),code=String(b.code||'').trim();
+   checkOrigin(req);await limit(req,env,'family-finance-register',5,900);const b=await body(req),name=String(b.name||'').trim().slice(0,90),email=String(b.email||'').trim().toLowerCase(),password=String(b.password||''),code=String(b.code||'').trim();
    if(name.length<2||!/^\S+@\S+\.\S+$/.test(email)||password.length<10||password.length>200||code.length<8)fail(400,'Confira nome, e-mail, senha (mínimo 10 caracteres) e convite.');
    const invite=await env.DB.prepare('SELECT * FROM family_finance_invites WHERE code_hash=? AND used_at IS NULL AND expires_at>?').bind(await hash(code),now()).first();if(!invite)fail(400,'Convite inválido ou expirado.');
    const salt=randomToken(),pass=await passwordHash(password,salt),user={id:id(),name,email,role:invite.role};
@@ -32,7 +32,7 @@ export async function handleFamilyFinance(req,env,ctx){
    const token=await session(env,user);return json({user:{id:user.id,name,role:user.role}},201,setCookie(token));
   }
   if(path==='/api/finance/login'&&method==='POST'){
-   checkOrigin(req);const b=await body(req),email=String(b.email||'').trim().toLowerCase(),password=String(b.password||'');
+   checkOrigin(req);await limit(req,env,'family-finance-login',8,900);const b=await body(req),email=String(b.email||'').trim().toLowerCase(),password=String(b.password||'');
    const u=await env.DB.prepare('SELECT * FROM family_finance_users WHERE email=?').bind(email).first();if(!u||await passwordHash(password,u.password_salt)!==u.password_hash)fail(401,'E-mail ou senha incorretos.');
    await env.DB.prepare('UPDATE family_finance_users SET last_login=? WHERE id=?').bind(now(),u.id).run();const token=await session(env,u);return json({user:{id:u.id,name:u.name,role:u.role}},200,setCookie(token));
   }
@@ -47,7 +47,7 @@ export async function handleFamilyFinance(req,env,ctx){
    return json(await overview(env,user));
   }
   if(path==='/api/finance/invites'&&method==='POST'){
-   checkOrigin(req);await requireAdmin(req,env);const b=await body(req),role=b.role;if(!['father','mother'].includes(role))fail(400,'Perfil inválido.');
+   checkOrigin(req);await requireAdmin(req,env,{csrf:false});const b=await body(req),role=b.role;if(!['father','mother'].includes(role))fail(400,'Perfil inválido.');
    const code=randomToken().slice(0,24),inviteId=id(),expires=new Date(Date.now()+7*86400000).toISOString();
    await env.DB.prepare('INSERT INTO family_finance_invites(id,code_hash,role,expires_at,created_at) VALUES(?,?,?,?,?)').bind(inviteId,await hash(code),role,expires,now()).run();
    return json({code,role,expiresAt:expires},201);
@@ -60,7 +60,7 @@ export async function handleFamilyFinance(req,env,ctx){
    return json({ok:true,status:'reported'});
   }
   if(path.match(/^\/api\/finance\/contributions\/[^/]+\/confirm$/)&&method==='POST'){
-   checkOrigin(req);await requireAdmin(req,env);const contributionId=path.split('/')[4],b=await body(req);
+   checkOrigin(req);await requireAdmin(req,env,{csrf:false});const contributionId=path.split('/')[4],b=await body(req);
    const row=await env.DB.prepare('SELECT * FROM family_finance_contributions WHERE id=?').bind(contributionId).first();if(!row)fail(404,'Contribuição não encontrada.');
    await env.DB.prepare("UPDATE family_finance_contributions SET status='confirmed',confirmed_at=?,confirmed_by='admin',note=?,updated_at=? WHERE id=?").bind(now(),String(b.note||row.note||'').slice(0,500),now(),row.id).run();
    return json({ok:true,status:'confirmed'});

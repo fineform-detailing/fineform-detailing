@@ -32,3 +32,44 @@ button,.button{display:inline-flex;align-items:center;justify-content:center;gap
 .rb-scroller span{font-family:FF Sans,Arial,sans-serif;font-size:17px;font-weight:400;letter-spacing:.04em;color:#687260}
 @keyframes finance-marquee{from{transform:translateX(0)}to{transform:translateX(-33.333%)}}
 @media(prefers-reduced-motion:reduce){.rb-scroller{animation:none;transform:none}}
+
+/* Requested access-screen refinements */
+body{padding-bottom:0}
+.auth-shell{grid-template-columns:minmax(0,1fr) minmax(360px,.82fr);gap:clamp(34px,6vw,90px);padding-top:clamp(34px,5vw,64px);padding-bottom:clamp(45px,7vw,84px);min-height:calc(100svh - 112px)}
+.auth-copy .eyebrow,.auth-copy .notice{display:none!important}
+.auth-copy h1{font-size:clamp(58px,7.3vw,98px);max-width:650px}
+.auth-copy>p{max-width:510px;font-size:clamp(15px,1.4vw,18px);line-height:1.8;margin-top:26px}
+.auth-card{justify-self:stretch;max-width:520px;padding:clamp(26px,3.5vw,42px);background:#fff;border:1px solid #e6e8e2;border-radius:26px;box-shadow:0 18px 60px #10130d0a}
+.auth-card h2{font-size:clamp(29px,3.2vw,39px);line-height:1.12;letter-spacing:-.06em}
+.auth-card>p{font-size:14px;line-height:1.7;margin:12px 0 30px}
+.auth-card form{display:grid;gap:5px}
+.auth-card .field{gap:9px;margin:10px 0 14px}
+.auth-card .field label{font-size:10px;letter-spacing:.12em;color:#60685d}
+.auth-card .field input{min-height:56px;padding:15px 17px;border:1px solid #d9ded5;border-radius:13px;background:#fbfcfa;font-size:15px;transition:border-color .2s,box-shadow .2s}
+.auth-card .field input:focus{border-color:var(--orange);box-shadow:0 0 0 3px #ff80001c}
+.auth-card form>button{min-height:56px;margin-top:15px;border-radius:13px;background:var(--ink);font-size:13px;letter-spacing:.01em}
+.auth-card form>button:hover{background:#242923}
+.auth-card .switch{display:block;margin-top:25px;padding-top:20px;border-top:1px solid #eceee9;text-align:center;font-size:13px;line-height:1.7}
+.auth-card .switch button{display:inline!important;min-height:0;margin:0;padding:0;border:0;border-radius:0;background:none;color:#a44f00;font-size:13px;font-weight:600;box-shadow:none}
+.auth-card .switch button:hover{transform:none;text-decoration:underline;background:none}
+.finance-footer,.site-footer{display:none!important}
+@media(max-width:900px){
+ .auth-shell{grid-template-columns:minmax(0,1fr);gap:32px;padding:32px 22px 58px;min-height:0}
+ .auth-copy{padding:8px 0 0}
+ .auth-copy h1{font-size:clamp(54px,11.5vw,76px);line-height:1.01;max-width:620px}
+ .auth-copy>p{max-width:620px;font-size:15px;line-height:1.8;margin-top:20px}
+ .auth-card{justify-self:stretch;max-width:none;padding:28px;border-radius:23px}
+ .auth-card>p{margin-bottom:22px}
+}
+@media(max-width:480px){
+ .auth-shell{padding:27px 22px 42px;gap:26px}
+ .auth-copy h1{font-size:clamp(50px,11.8vw,60px);letter-spacing:-.07em}
+ .auth-copy>p{font-size:14px;line-height:1.75;margin-top:17px}
+ .auth-card{padding:25px 22px 23px;border-radius:22px}
+ .auth-card h2{font-size:29px}
+ .auth-card>p{font-size:13px;margin:9px 0 22px}
+ .auth-card .field input{min-height:54px}
+ .auth-card form>button{min-height:54px}
+ .auth-card .switch{margin-top:22px;padding-top:18px;font-size:12px}
+ .auth-card .switch button{font-size:12px}
+}

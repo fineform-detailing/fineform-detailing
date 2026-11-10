@@ -1,4 +1,4 @@
-import {requireAdmin,checkOrigin,randomToken,limit} from './security.mjs';
+import {checkOrigin,randomToken,limit} from './security.mjs';
 const json=(data,status=200)=>new Response(JSON.stringify(data),{status,headers:{'Content-Type':'application/json; charset=utf-8','Cache-Control':'no-store','X-Content-Type-Options':'nosniff'}});
 const fail=(status,message)=>{throw Object.assign(new Error(message),{status});};
 const now=()=>new Date().toISOString();
@@ -10,6 +10,7 @@ const cookie=req=>(req.headers.get('Cookie')||'').split(';').map(v=>v.trim()).fi
 const setCookie=(token,maxAge=60*60*24*30)=>({ 'Set-Cookie':token?'ff_finance_session='+token+'; Path=/; HttpOnly; Secure; SameSite=Lax; Max-Age='+maxAge:'ff_finance_session=; Path=/; HttpOnly; Secure; SameSite=Lax; Max-Age=0'});
 const body=async req=>{try{return await req.json();}catch{return fail(400,'Envie dados válidos.');}};
 const getUser=async(req,env)=>{const token=cookie(req);if(!token)return null;const row=await env.DB.prepare('SELECT u.id,u.name,u.email,u.role FROM family_finance_sessions s JOIN family_finance_users u ON u.id=s.user_id WHERE s.token_hash=? AND s.expires_at>?').bind(await hash(token),now()).first();return row||null;};
+const requireFamilyAdmin=async(req,env)=>{const user=await getUser(req,env);if(!user||user.role!=='admin')fail(403,'Entre com a conta administrativa do Controle Financeiro.');return user;};
 const session=async(env,user)=>{const token=randomToken();await env.DB.prepare('INSERT INTO family_finance_sessions(token_hash,user_id,expires_at,created_at) VALUES(?,?,?,?)').bind(await hash(token),user.id,new Date(Date.now()+30*86400000).toISOString(),now()).run();return token;};
 const money=n=>Number(n||0)/100;
 async function overview(env,user){
@@ -23,6 +24,25 @@ async function overview(env,user){
 export async function handleFamilyFinance(req,env,ctx){
  const url=new URL(req.url),path=url.pathname,method=req.method;
  try{
+  if(path==='/api/finance/admin/setup-status'&&method==='GET'){
+   const existing=await env.DB.prepare("SELECT id FROM family_finance_users WHERE role='admin' LIMIT 1").first();
+   const setup=await env.DB.prepare("SELECT expires_at,used_at FROM family_finance_admin_setup WHERE id=1").first();
+   return json({available:!existing&&Boolean(setup)&&!setup.used_at&&setup.expires_at>now()});
+  }
+  if(path==='/api/finance/admin/setup'&&method==='POST'){
+   checkOrigin(req);await limit(req,env,'family-finance-admin-setup',5,900);
+   const b=await body(req),name=String(b.name||'').trim().slice(0,90),email=String(b.email||'').trim().toLowerCase(),password=String(b.password||''),code=String(b.code||'').trim();
+   if(name.length<2||!/^\\S+@\\S+\\.\\S+$/.test(email)||password.length<12||password.length>200||code.length<20)fail(400,'Informe nome, e-mail, senha com pelo menos 12 caracteres e o código de configuração.');
+   const existing=await env.DB.prepare("SELECT id FROM family_finance_users WHERE role='admin' LIMIT 1").first();if(existing)fail(409,'A conta administrativa já foi configurada.');
+   const setup=await env.DB.prepare('SELECT * FROM family_finance_admin_setup WHERE id=1 AND used_at IS NULL AND expires_at>?').bind(now()).first();
+   if(!setup||await hash(code)!==setup.code_hash)fail(401,'Código de configuração inválido ou expirado.');
+   const salt=randomToken(),pass=await passwordHash(password,salt),user={id:id(),name,email,role:'admin'};
+   try{
+    await env.DB.prepare("INSERT INTO family_finance_users(id,name,email,role,password_hash,password_salt,created_at) VALUES(?,?,?,'admin',?,?,?)").bind(user.id,name,email,pass,salt,now()).run();
+    await env.DB.prepare('UPDATE family_finance_admin_setup SET used_at=? WHERE id=1 AND used_at IS NULL').bind(now()).run();
+   }catch{fail(409,'Não foi possível criar o administrador. O código pode já ter sido utilizado ou o e-mail cadastrado.');}
+   const token=await session(env,user);return json({user:{id:user.id,name,role:user.role}},201,setCookie(token));
+  }
   if(path==='/api/finance/register'&&method==='POST'){
    checkOrigin(req);await limit(req,env,'family-finance-register',5,900);const b=await body(req),name=String(b.name||'').trim().slice(0,90),email=String(b.email||'').trim().toLowerCase(),password=String(b.password||''),code=String(b.code||'').trim();
    if(name.length<2||!/^\S+@\S+\.\S+$/.test(email)||password.length<10||password.length>200||code.length<8)fail(400,'Confira nome, e-mail, senha (mínimo 10 caracteres) e convite.');
@@ -40,14 +60,13 @@ export async function handleFamilyFinance(req,env,ctx){
    checkOrigin(req);const token=cookie(req);if(token)await env.DB.prepare('DELETE FROM family_finance_sessions WHERE token_hash=?').bind(await hash(token)).run();return json({ok:true},200,setCookie(''));
   }
   if(path==='/api/finance/session'&&method==='GET'){
-   const user=await getUser(req,env);if(user)return json({user});try{const admin=await requireAdmin(req,env);return json({user:{id:admin.id,name:'Administrador',role:'admin'}});}catch{return json({user:null},401);}
+   const user=await getUser(req,env);return json({user},user?200:401);
   }
   if(path==='/api/finance/overview'&&method==='GET'){
-   let user=await getUser(req,env);if(!user){try{const a=await requireAdmin(req,env);user={id:a.id,name:'Administrador',role:'admin'};}catch{fail(401,'Entre para continuar.');}}
-   return json(await overview(env,user));
+   const user=await getUser(req,env);if(!user)fail(401,'Entre para continuar.');return json(await overview(env,user));
   }
   if(path==='/api/finance/invites'&&method==='POST'){
-   checkOrigin(req);await requireAdmin(req,env,{csrf:false});const b=await body(req),role=b.role;if(!['father','mother'].includes(role))fail(400,'Perfil inválido.');
+   checkOrigin(req);await requireFamilyAdmin(req,env);const b=await body(req),role=b.role;if(!['father','mother'].includes(role))fail(400,'Perfil inválido.');
    const code=randomToken().slice(0,24),inviteId=id(),expires=new Date(Date.now()+7*86400000).toISOString();
    await env.DB.prepare('INSERT INTO family_finance_invites(id,code_hash,role,expires_at,created_at) VALUES(?,?,?,?,?)').bind(inviteId,await hash(code),role,expires,now()).run();
    return json({code,role,expiresAt:expires},201);
@@ -60,14 +79,14 @@ export async function handleFamilyFinance(req,env,ctx){
    return json({ok:true,status:'reported'});
   }
   if(path.match(/^\/api\/finance\/contributions\/[^/]+\/confirm$/)&&method==='POST'){
-   checkOrigin(req);await requireAdmin(req,env,{csrf:false});const contributionId=path.split('/')[4],b=await body(req);
+   checkOrigin(req);await requireFamilyAdmin(req,env);const contributionId=path.split('/')[4],b=await body(req);
    const row=await env.DB.prepare('SELECT * FROM family_finance_contributions WHERE id=?').bind(contributionId).first();if(!row)fail(404,'Contribuição não encontrada.');
    await env.DB.prepare("UPDATE family_finance_contributions SET status='confirmed',confirmed_at=?,confirmed_by='admin',note=?,updated_at=? WHERE id=?").bind(now(),String(b.note||row.note||'').slice(0,500),now(),row.id).run();
    return json({ok:true,status:'confirmed'});
   }
   if(path==='/api/finance/notifications'&&method==='GET'){
-   let user=await getUser(req,env);if(!user){try{const a=await requireAdmin(req,env);user={id:a.id,name:'Administrador',role:'admin'};}catch{fail(401,'Entre para continuar.');}}
-   const rows=await env.DB.prepare(`SELECT id,kind,title,message,scheduled_for,sent_at FROM family_finance_notifications WHERE (user_id=? OR (?='admin' OR (user_id IS NULL AND person_role=?))) ORDER BY scheduled_for DESC LIMIT 40`).bind(user.id,user.role,user.role).all();
+   const user=await getUser(req,env);if(!user)fail(401,'Entre para continuar.');
+   const rows=await env.DB.prepare("SELECT id,kind,title,message,scheduled_for,sent_at FROM family_finance_notifications WHERE (user_id=? OR (?='admin' OR (user_id IS NULL AND person_role=?))) ORDER BY scheduled_for DESC LIMIT 40").bind(user.id,user.role,user.role).all();
    return json({items:rows.results||[]});
   }
   fail(404,'Recurso financeiro não encontrado.');

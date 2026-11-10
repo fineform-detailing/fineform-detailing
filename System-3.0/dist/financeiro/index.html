@@ -1,22 +1,33 @@
 <!doctype html>
 <html lang="pt-BR">
 <head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="theme-color" content="#ffffff"><meta name="robots" content="noindex,nofollow">
-<meta name="description" content="Área privada para organização e acompanhamento de contribuições familiares.">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#f4f6f2">
+<meta name="robots" content="noindex,nofollow">
+<meta name="description" content="Acesso privado ao planejamento e acompanhamento financeiro familiar.">
 <title>Controle Financeiro — Área privada</title>
 <link rel="stylesheet" href="/assets/family-finance.css">
 <script type="module" src="/assets/family-finance.mjs"></script>
 </head>
-<body data-design="kinetic" data-page="finance">
-<header class="site-header finance-header">
-<a class="brand finance-brand" href="/financeiro/" aria-label="Início do controle financeiro">
-<span class="brand-symbol" aria-hidden="true"><i></i><i></i><i></i></span>
-<span class="brand-title">CONTROLE<span> FINANCEIRO</span><small>ÁREA PRIVADA · ACESSO INDIVIDUAL</small></span>
-</a>
-<nav class="nav-links" aria-label="Navegação principal"><a href="#resumo">Resumo</a><a href="#contribuicoes">Contribuições</a><a href="#avisos">Avisos</a></nav>
-<div class="header-actions"><span class="secure-label"><i></i> Ambiente protegido</span><button id="logout" class="header-cta" hidden>Sair da conta <span aria-hidden="true">↗</span></button></div>
+<body>
+<div class="app-shell">
+<header class="app-topbar">
+  <a class="app-identity" href="/financeiro/" aria-label="Início do Controle Financeiro">
+    <span class="app-symbol" aria-hidden="true"><i></i><i></i><i></i></span>
+    <span class="identity-copy"><small id="header-caption">ÁREA PRIVADA</small><strong id="header-title">Controle financeiro</strong></span>
+  </a>
+  <div class="topbar-actions">
+    <button id="header-bell" class="icon-button" type="button" aria-label="Abrir avisos" hidden>
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18 9a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9M10 21h4"/></svg><span class="notification-dot"></span>
+    </button>
+    <button id="logout" class="logout-button" type="button" hidden>Sair <span aria-hidden="true">↗</span></button>
+  </div>
 </header>
-<main id="app"><section class="loading"><span class="spinner"></span><p>Preparando seu espaço financeiro…</p></section></main>
+<main id="app">
+  <section class="loading"><span class="spinner"></span><p>Preparando seu espaço financeiro…</p></section>
+</main>
 <div id="toast" role="status" aria-live="polite"></div>
-</body></html>
+</div>
+</body>
+</html>

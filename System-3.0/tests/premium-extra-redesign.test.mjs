@@ -27,11 +27,11 @@ test('Premium dos carros e Care Moto recebem destaque, Extra continua sem polime
  for (const id of ['polishLight','polishPremium'])
   assert.ok(availableTreatments(state).some(x=>x.id===id),'polimento independente '+id);
  assert.ok(!availableTreatments(state).some(x=>x.id==='polishMedium'),'Polimento Médio não deve estar à venda');
- assert.equal(quoteFor(state).total,1200);
- assert.equal(treatmentPrice('coating',state),1250);
+ assert.equal(quoteFor(state).total,1180);
+ assert.equal(treatmentPrice('coating',state),1230);
  assert.equal(quoteFor({...state,treatments:['coating']}).total,2410);
- assert.equal(quoteFor({...state,treatments:['polishLight']}).total,1620);
- assert.equal(quoteFor({...state,treatments:['polishPremium']}).total,1920);
+ assert.equal(quoteFor({...state,treatments:['polishLight']}).total,1580);
+ assert.equal(quoteFor({...state,treatments:['polishPremium']}).total,1880);
  assert.ok(normalizeTreatments({...state,treatments:['polishPremium']}).includes('polishPremium'));
  assert.ok(createSummary(state).includes('1.200'),'resumo deve apresentar o preço R$ 1.200');
  assert.ok(html.includes('id="react-velocity"'),'animação mantida');

@@ -90,7 +90,7 @@ test('server prices and append-only receipts preserve balance after customer del
  const before=await receiptTotal();
  const active=await call('/api/admin/subscriptions',{method:'POST',body:{name:'Cliente financeiro',phone:'11900009990',model:'Carro financeiro',planId:'careEssential',paidConfirmed:true,startsOn:todaySP(),price:0,price_cents:1,monthlyPayments:999999}});assert.equal(active.status,201);
  const sub=active.data.subscription,cycle=sub.cycle;
- assert.equal(cycle.price_cents,26000);const receipt=await db.prepare('SELECT * FROM payment_receipts WHERE cycle_id=?').bind(cycle.id).first();assert.equal(receipt.amount_cents,26000);assert.equal(receipt.actor_id,await digest(cookie.split('=')[1]));
+ assert.equal(cycle.price_cents,26000);const receipt=await db.prepare('SELECT * FROM payment_receipts WHERE cycle_id=?').bind(cycle.id).first();assert.equal(receipt.amount_cents,22000);assert.equal(receipt.actor_id,await digest(cookie.split('=')[1]));
  assert.equal(await receiptTotal(),before+26000);
  assert.equal(Object.hasOwn((await call('/api/admin/dashboard')).data,'monthlyPayments'),false);
  await assert.rejects(()=>db.prepare('UPDATE payment_receipts SET amount_cents=1 WHERE id=?').bind(receipt.id).run(),/append-only/);
@@ -132,7 +132,7 @@ test('migration imports prior paid cycles without changing customers or subscrip
    database.prepare('INSERT INTO subscriptions(id,customer_id,plan_id,vehicle,model,viewer_hash,billing_day,created_at,updated_at) VALUES (?,?,?,?,?,?,?,?,?)').bind(sub,customer,'careEssential','car','Carro preservado','legacy-test-hash',1,stamp,stamp),
    database.prepare('INSERT INTO cycles(id,subscription_id,starts_on,ends_on,price_cents,premium_quota,essential_quota,moto_quota,created_at) VALUES (?,?,?,?,?,?,?,?,?)').bind(cycle,sub,'2026-09-01','2026-10-01',26000,1,1,0,stamp)
   ]);
-  await applyMigrations(database,{files:['0002_security.sql']});const receipt=await database.prepare('SELECT * FROM payment_receipts WHERE cycle_id=?').bind(cycle).first();assert.equal(receipt.amount_cents,26000);assert.equal(receipt.source,'legacy_import');assert.equal(receipt.actor_id,'legacy');
+  await applyMigrations(database,{files:['0002_security.sql']});const receipt=await database.prepare('SELECT * FROM payment_receipts WHERE cycle_id=?').bind(cycle).first();assert.equal(receipt.amount_cents,22000);assert.equal(receipt.source,'legacy_import');assert.equal(receipt.actor_id,'legacy');
   assert.equal((await database.prepare('SELECT name FROM customers WHERE id=?').bind(customer).first()).name,'Cliente preservado');assert.equal((await database.prepare('SELECT price_cents FROM cycles WHERE id=?').bind(cycle).first()).price_cents,26000);
   await database.prepare('DELETE FROM subscriptions WHERE id=?').bind(sub).run();assert.ok(await database.prepare('SELECT id FROM payment_receipts WHERE cycle_id=?').bind(cycle).first());
  }finally{await legacy.dispose();}

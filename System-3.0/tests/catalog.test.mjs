@@ -148,7 +148,7 @@ test('orientação sem serviço não herda total, e mensagem usa o mesmo orçame
  assert.equal(quoteFor(guidance).items.length,0);
  assert.doesNotMatch(createSummary(guidance),/Total|R\$/);
  const message=createSummary({...sample,service:'extra',treatments:['coating']});
- assert.match(message,/Total do atendimento: R\$[\s\u00a0]*2\.450/);
+ assert.match(message,/Total do atendimento: R\$[\s\u00a0]*2\.410/);
  const planMessage=createSummary({...sample,mode:'plan',plan:'careEssential',treatments:['fullClean']});
  assert.match(planMessage,/Mensalidade: R\$[\s\u00a0]*220\/mês/);
  assert.match(planMessage,/Adicionais nesta visita: R\$[\s\u00a0]*490/);

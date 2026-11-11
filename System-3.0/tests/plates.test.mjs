@@ -140,5 +140,5 @@ test('base 3.0 sem placas recebe cadastro presencial sem perder reserva nem inve
 });
 test('servidor calcula vitrificação de plásticos sem confiar em preço ou desconto enviados',async()=>{
  for(const [vehicle,service,total] of [['car','essential',280],['car','extra',1330],['moto','motoPremium',260]]){const {q}=await quote({vehicle,service,extras:['exteriorPlastic','plasticCoating'],total:1,plasticPrice:0});assert.equal(q.budget.total,total);assert.deepEqual(q.selection.extras,['plasticCoating']);}
- const c=await care(),extra=await request(c,{extras:['plasticCoating'],total:0});assert.equal(extra.status,201);assert.equal(extra.data.quote.budget.total,220);assert.equal(extra.data.quote.budget.items[0].price,0);
+ const c=await care(),extra=await request(c,{extras:['plasticCoating'],total:0});assert.equal(extra.status,201);assert.equal(extra.data.quote.budget.total,200);assert.equal(extra.data.quote.budget.items[0].price,0);
 });

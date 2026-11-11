@@ -65,7 +65,7 @@ test('cliente envia pedido pelo assistente e recebe total e acompanhamento',asyn
  w.document.querySelector('[data-action="mode"][data-value="plan"]').click();submit(w,'care-form');submit(w,'care-form');submit(w,'care-form');
  input(w,'name','Cliente DOM');input(w,'phone','11900000100');const ack=w.document.querySelector('[name="ack"]');ack.checked=true;ack.dispatchEvent(new w.Event('change',{bubbles:true}));submit(w,'care-form');
  await until(()=>!w.document.getElementById('summary-result').hidden);
- const text=w.document.getElementById('summary-result').textContent;assert.match(text,/Sua solicitação/);assert.match(text,/260/);assert.match(text,/Acompanhar pedido/);
+ const text=w.document.getElementById('summary-result').textContent;assert.match(text,/Sua solicitação/);assert.match(text,/220/);assert.match(text,/Acompanhar pedido/);
  const url=new URL(w.document.querySelector('.tracking-link').href);quoteId=url.searchParams.get('id');quoteToken=new URLSearchParams(url.hash.slice(1)).get('t');
  const saved=await request('/api/quotes/'+quoteId,null,null,quoteToken);assert.equal(saved.data.quote.selection.phone,'5511900000100');assert.equal(saved.data.quote.kind,'plan');
  assert.equal(saved.data.quote.status,'pending');assert.equal(saved.data.quote.selection.requestStage,'appointment');

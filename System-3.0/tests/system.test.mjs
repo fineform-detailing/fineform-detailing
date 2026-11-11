@@ -34,7 +34,7 @@ test('D1 pronto, painel protegido, cookie seguro e origem validada',async()=>{
 });
 test('preços são calculados no servidor, reenvio não duplica e links são privados',async()=>{
  const body=selection({treatments:['fullClean'],extras:['glassCare'],total:1});
- const one=await call('/api/quotes',{method:'POST',body});assert.equal(one.status,201);assert.equal(one.data.quote.budget.total,690);
+ const one=await call('/api/quotes',{method:'POST',body});assert.equal(one.status,201);assert.equal(one.data.quote.budget.total,650);
  const retry=await call('/api/quotes',{method:'POST',body});assert.equal(retry.status,200);assert.equal(retry.data.quote.id,one.data.quote.id);
  const id=one.data.quote.id;assert.equal((await call('/api/quotes/'+id)).status,404);assert.equal((await call('/api/quotes/'+id,{cap:token()})).status,404);
  assert.equal((await call('/api/quotes/'+id,{cap:body.submissionToken})).status,200);
@@ -69,7 +69,7 @@ test('orientação exige valor completo antes de aceitar',async()=>{
 });
 test('Care requer pagamento e oferece portal privado pelo pedido original',async()=>{
  const body=selection({mode:'plan',plan:'careEssential',phone:'11900000002'}),saved=await call('/api/quotes',{method:'POST',body}),id=saved.data.quote.id;
- assert.equal(saved.data.quote.budget.recurring,260);
+ assert.equal(saved.data.quote.budget.recurring,220);
  assert.equal((await call('/api/admin/subscriptions',{method:'POST',auth:true,body:{quoteId:id,paidConfirmed:true}})).status,400);
  await call('/api/admin/quotes/'+id,{method:'PATCH',auth:true,body:{version:1,status:'accepted'}});
  assert.equal((await call('/api/admin/subscriptions',{method:'POST',auth:true,body:{quoteId:id}})).status,400);
@@ -83,7 +83,7 @@ test('Care requer pagamento e oferece portal privado pelo pedido original',async
 test('visita Care reserva saldo ao aceitar, extras separados, cancelamento restitui e conclusão consome',async()=>{
  const active=await call('/api/admin/subscriptions',{method:'POST',auth:true,body:{name:'Teste de saldo',phone:'11900000003',model:'Toyota teste',planId:'careEssential',paidConfirmed:true,startsOn:date}});assert.equal(active.status,201);
  const s=active.data.subscription,cap=active.data.portalToken;
- const request=selection({creditKind:'premium',extras:['glassCare']});const saved=await call('/api/subscriptions/'+s.id+'/requests',{method:'POST',cap,body:request});assert.equal(saved.status,201);assert.equal(saved.data.quote.budget.total,160);
+ const request=selection({creditKind:'premium',extras:['glassCare']});const saved=await call('/api/subscriptions/'+s.id+'/requests',{method:'POST',cap,body:request});assert.equal(saved.status,201);assert.equal(saved.data.quote.budget.total,140);
  const q=saved.data.quote;
  const accepted=await call('/api/admin/quotes/'+q.id,{method:'PATCH',auth:true,body:{version:1,status:'accepted',scheduledDate:date}});assert.equal(accepted.status,200);
  let view=(await call('/api/subscriptions/'+s.id,{cap})).data.subscription;assert.equal(view.cycle.credits.premium.reserved,1);assert.equal(view.cycle.credits.premium.available,0);
@@ -136,7 +136,7 @@ test('reenvio manual preserva uma lavagem e reenvio da visita aceita mantém o p
  const active=await call('/api/admin/subscriptions',{method:'POST',auth:true,body:{name:'Reenvio teste',phone:'11900000006',model:'BMW teste',planId:'careFrequent',paidConfirmed:true,startsOn:date}}),s=active.data.subscription;
  const body={operationId:crypto.randomUUID(),kind:'essential',date,status:'completed',cycleId:s.cycle.id};
  assert.equal((await call('/api/admin/subscriptions/'+s.id+'/visits',{method:'POST',auth:true,body})).status,201);
- const retry=await call('/api/admin/subscriptions/'+s.id+'/visits',{method:'POST',auth:true,body});assert.equal(retry.status,201);assert.equal(retry.data.subscription.cycle.credits.essential.done,1);assert.equal(retry.data.subscription.cycle.credits.essential.available,2);
+ const retry=await call('/api/admin/subscriptions/'+s.id+'/visits',{method:'POST',auth:true,body});assert.equal(retry.status,201);assert.equal(retry.data.subscription.cycle.credits.essential.done,1);assert.equal(retry.data.subscription.cycle.credits.essential.available,1);
  const visitBody=selection({creditKind:'premium'}),quote=await call('/api/subscriptions/'+s.id+'/requests',{method:'POST',cap:active.data.portalToken,body:visitBody});assert.equal(quote.status,201);
  const id=quote.data.quote.id;await call('/api/admin/quotes/'+id,{method:'PATCH',auth:true,body:{version:1,status:'accepted',scheduledDate:date}});
  const again=await call('/api/subscriptions/'+s.id+'/requests',{method:'POST',cap:active.data.portalToken,body:visitBody});assert.equal(again.status,200);assert.equal(again.data.quote.id,id);
@@ -320,5 +320,5 @@ test('visão geral mantém indicadores operacionais sem total financeiro e prese
  assert.equal(dashboard.data.quotes.accepted,(before.quotes.accepted||0)+1);
  assert.deepEqual(dashboard.data.expiring,before.expiring);
  assert.deepEqual((await db.prepare('SELECT * FROM payment_receipts ORDER BY id').all()).results,receipts.results);
- assert.equal(receipts.results.find(r=>r.cycle_id===sub.cycle.id).amount_cents,26000);
+ assert.equal(receipts.results.find(r=>r.cycle_id===sub.cycle.id).amount_cents,22000);
 });

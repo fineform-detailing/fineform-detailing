@@ -71,7 +71,7 @@ test('mensagem natural inclui escolhas e preferências e pede confirmação ao M
  const summary=createSummary({...sample,mode:'plan',plan:'careFrequent',extras:['wax','wheelIron'],treatments:['fullClean'],notes:'Tenho manchas nos bancos.'});
  assert.match(summary,/Care Premium/);assert.match(summary,/18\/10\/2026/);assert.match(summary,/10:00/);
  assert.match(summary,/Higienização completa/);assert.match(summary,/Descontaminação das rodas/);
- assert.doesNotMatch(summary,/- Cera na pintura/);assert.match(summary,/Care Frequente — R\$/);
+ assert.doesNotMatch(summary,/- Cera na pintura/);assert.match(summary,/Care Premium — R\$/);
  assert.match(summary,/Podemos conferir a disponibilidade e confirmar as etapas desse orçamento/);
 });
 test('Extra contempla manutenção por área e oferece vitrificação como upgrade separado',()=>{

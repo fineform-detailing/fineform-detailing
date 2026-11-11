@@ -20,7 +20,7 @@ test('Premium dos carros e Care Moto recebem destaque, Extra continua sem polime
  assert.ok(!css.includes('background:linear-gradient(130deg'));
  assert.ok(css.includes('.service-row.service-featured::before{content:none}'));
  const extra=findService('extra');
- assert.equal(extra.price,1200);
+ assert.equal(extra.price,1180);
  assert.ok(extra.includes.every(x=>!/polimento/i.test(x)));
  assert.ok(!/polimento/i.test(extra.description));
  assert.equal(extra.covered.includes('polishLight'),false);
@@ -29,7 +29,7 @@ test('Premium dos carros e Care Moto recebem destaque, Extra continua sem polime
  assert.ok(!availableTreatments(state).some(x=>x.id==='polishMedium'),'Polimento Médio não deve estar à venda');
  assert.equal(quoteFor(state).total,1200);
  assert.equal(treatmentPrice('coating',state),1250);
- assert.equal(quoteFor({...state,treatments:['coating']}).total,2450);
+ assert.equal(quoteFor({...state,treatments:['coating']}).total,2410);
  assert.equal(quoteFor({...state,treatments:['polishLight']}).total,1620);
  assert.equal(quoteFor({...state,treatments:['polishPremium']}).total,1920);
  assert.ok(normalizeTreatments({...state,treatments:['polishPremium']}).includes('polishPremium'));

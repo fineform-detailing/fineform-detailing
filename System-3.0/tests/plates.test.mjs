@@ -28,7 +28,7 @@ test('cliente envia qualquer modalidade sem placa, e dados forjados não cadastr
 test('orçamento pode ser aceito e agendado antes da chegada; iniciar requer cadastro presencial',async()=>{
  const {q}=await quote(),accepted=await update(q,{status:'accepted',scheduledDate:todaySP(),scheduledTime:'10:00'});assert.equal(accepted.status,200);const current=accepted.data.quote;
  for(const status of ['in_progress','ready','completed'])assert.equal((await update(current,{status})).status,409);
- const registered=await register(current,{plate:'abc-1234'});assert.equal(registered.status,200);const received=registered.data.quote;assert.equal(received.plate,'ABC1234');assert.equal(received.plateVerified,true);assert.equal(received.selection.plateVerified,true);assert.equal(received.scheduledDate,todaySP());assert.equal(received.budget.total,100);assert.equal(received.status,'accepted');
+ const registered=await register(current,{plate:'abc-1234'});assert.equal(registered.status,200);const received=registered.data.quote;assert.equal(received.plate,'ABC1234');assert.equal(received.plateVerified,true);assert.equal(received.selection.plateVerified,true);assert.equal(received.scheduledDate,todaySP());assert.equal(received.budget.total,80);assert.equal(received.status,'accepted');
  assert.equal((await update(received,{status:'in_progress'})).status,200);
 });
 test('conferência atualiza o mesmo link privado e guarda operador, data e histórico',async()=>{
@@ -51,7 +51,7 @@ test('cadastro do pedido é exclusivo do painel, com CSRF, mesma origem e acesso
 test('avulsos identificam cada atendimento sem prender o cliente a um veículo ou usar saldo Care',async()=>{
  const c=await care(),a=await quote({phone:'11900001501'}),b=await quote({phone:'11900001501',model:'Carro do sobrinho'});
  const qa=(await register(a.q,{plate:c.subscription.plate})).data.quote,qb=(await register(b.q,{plate:plate()})).data.quote;
- for(const q of [qa,qb]){assert.equal(q.kind,'single');assert.equal(q.subscriptionId,null);assert.equal(q.budget.total,100);assert.equal((await update(q,{status:'accepted'})).status,200);}
+ for(const q of [qa,qb]){assert.equal(q.kind,'single');assert.equal(q.subscriptionId,null);assert.equal(q.budget.total,80);assert.equal((await update(q,{status:'accepted'})).status,200);}
  const s=(await call('/api/subscriptions/'+c.subscription.id,{cap:c.portalToken})).data.subscription;assert.equal(s.cycle.credits.premium.available,1);assert.equal(s.cycle.credits.essential.available,1);assert.equal(s.visits.length,0);
 });
 test('Care originado no orçamento exige veículo registrado antes da ativação e pagamento',async()=>{
@@ -136,9 +136,9 @@ test('base 3.0 sem placas recebe cadastro presencial sem perder reserva nem inve
   database.prepare('INSERT INTO visits(id,cycle_id,kind,status,visit_date,completed_at,created_at,updated_at) VALUES (?,?,?,?,?,?,?,?)').bind(completed,cycle,'premium','completed',todaySP(),stamp,stamp,stamp)
  ]);await applyMigrations(database,{files:['0004_vehicle_plates.sql','0005_in_person_vehicle_registration.sql']});
  const login=await legacy.dispatchFetch('http://localhost/api/admin/session',{method:'POST',headers:{Origin:'http://localhost','Content-Type':'application/json'},body:JSON.stringify({key})}),auth=await login.json(),session=login.headers.get('Set-Cookie').split(';')[0];
- const r=await legacy.dispatchFetch('http://localhost/api/admin/subscriptions/'+sub+'/plate',{method:'PATCH',headers:{Origin:'http://localhost','Content-Type':'application/json',Cookie:session,'X-FF-CSRF':auth.csrfToken},body:JSON.stringify({version:1,plate:'LEG1A23',confirm:true})});assert.equal(r.status,200);const s=(await r.json()).subscription;assert.equal(s.cycle.credits.premium.done,1);assert.equal(s.cycle.credits.essential.reserved,1);assert.equal(s.visits.find(x=>x.id===scheduled).plate,'LEG1A23');assert.equal(s.visits.find(x=>x.id===completed).plate,null);assert.equal((await database.prepare('SELECT amount_cents FROM payment_receipts WHERE cycle_id=?').bind(cycle).first()).amount_cents,26000);
+ const r=await legacy.dispatchFetch('http://localhost/api/admin/subscriptions/'+sub+'/plate',{method:'PATCH',headers:{Origin:'http://localhost','Content-Type':'application/json',Cookie:session,'X-FF-CSRF':auth.csrfToken},body:JSON.stringify({version:1,plate:'LEG1A23',confirm:true})});assert.equal(r.status,200);const s=(await r.json()).subscription;assert.equal(s.cycle.credits.premium.done,1);assert.equal(s.cycle.credits.essential.reserved,1);assert.equal(s.visits.find(x=>x.id===scheduled).plate,'LEG1A23');assert.equal(s.visits.find(x=>x.id===completed).plate,null);assert.equal((await database.prepare('SELECT amount_cents FROM payment_receipts WHERE cycle_id=?').bind(cycle).first()).amount_cents,22000);
 });
 test('servidor calcula vitrificação de plásticos sem confiar em preço ou desconto enviados',async()=>{
- for(const [vehicle,service,total] of [['car','essential',320],['car','extra',1350],['moto','motoPremium',300]]){const {q}=await quote({vehicle,service,extras:['exteriorPlastic','plasticCoating'],total:1,plasticPrice:0});assert.equal(q.budget.total,total);assert.deepEqual(q.selection.extras,['plasticCoating']);}
+ for(const [vehicle,service,total] of [['car','essential',280],['car','extra',1330],['moto','motoPremium',260]]){const {q}=await quote({vehicle,service,extras:['exteriorPlastic','plasticCoating'],total:1,plasticPrice:0});assert.equal(q.budget.total,total);assert.deepEqual(q.selection.extras,['plasticCoating']);}
  const c=await care(),extra=await request(c,{extras:['plasticCoating'],total:0});assert.equal(extra.status,201);assert.equal(extra.data.quote.budget.total,220);assert.equal(extra.data.quote.budget.items[0].price,0);
 });

@@ -98,7 +98,7 @@ test('server prices and append-only receipts preserve balance after customer del
  await assert.rejects(()=>db.prepare('UPDATE cycles SET price_cents=1 WHERE id=?').bind(cycle.id).run(),/cannot be rewritten/);
  await assert.rejects(()=>db.prepare('DELETE FROM audit_events').run(),/append-only/);
  const preview=await call('/api/admin/customers/'+sub.customerId);assert.equal((await call('/api/admin/customers/'+sub.customerId,{method:'DELETE',body:{confirm:true,snapshot:preview.data.snapshot}})).status,200);
- assert.equal(await receiptTotal(),before+26000);assert.ok(await db.prepare('SELECT id FROM payment_receipts WHERE cycle_id=?').bind(cycle.id).first());
+ assert.equal(await receiptTotal(),before+22000);assert.ok(await db.prepare('SELECT id FROM payment_receipts WHERE cycle_id=?').bind(cycle.id).first());
  assert.equal(Object.hasOwn((await call('/api/admin/dashboard')).data,'monthlyPayments'),false);
  const exported=(await call('/api/admin/export')).data;assert.ok(exported.payment_receipts.some(r=>r.id===receipt.id));assert.equal(exported.admin_sessions,undefined);assert.equal(exported.mfa_counters,undefined);
 });

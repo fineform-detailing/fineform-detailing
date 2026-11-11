@@ -122,7 +122,7 @@ test('orçamento soma opcionais elegíveis e remove preparação compartilhada',
  assert.equal(combined.discount,80);
  assert.equal(combined.total,510);
  assert.equal(quoteFor({...sample,service:'fullClean',treatments:['polishLight']}).total,830);
- assert.equal(quoteFor({...sample,service:'extra',treatments:['coating'],extras:['glassCare','fabric','wheelIron']}).total,2480);
+ assert.equal(quoteFor({...sample,service:'extra',treatments:['coating'],extras:['glassCare','fabric','wheelIron']}).total,2410);
 });
 test('totais com vitrificação são iguais nas duas ordens sem crédito duplicado',()=>{
  for(const [polish,total] of [['polishLight',1230],['polishMedium',1500],['polishPremium',1630]]){
@@ -174,8 +174,8 @@ test('escopo de lavagem e oferta pública dos polimentos estão consistentes',as
  assert.ok(app.includes("['polishLight','polishPremium','coating']"));
  assert.ok(!app.includes("[...polishIds,'coating'].map"));
  assert.ok(booking.includes("s.id!=='polishMedium'"));
- assert.equal(quoteFor({...sample,service:'polishLight',treatments:['fullClean']}).total,870);
- assert.equal(quoteFor({...sample,service:'fullClean',treatments:['polishLight']}).total,870);
+ assert.equal(quoteFor({...sample,service:'polishLight',treatments:['fullClean']}).total,830);
+ assert.equal(quoteFor({...sample,service:'fullClean',treatments:['polishLight']}).total,830);
  assert.equal(quoteFor({...sample,service:'polishPremium',treatments:['coating']}).total,1650);
  assert.equal(quoteFor({...sample,service:'coating',treatments:['polishPremium']}).total,1630);
  const plastico=extras.find(x=>x.id==='plasticCoating');

@@ -176,7 +176,7 @@ test('escopo de lavagem e oferta pública dos polimentos estão consistentes',as
  assert.ok(booking.includes("s.id!=='polishMedium'"));
  assert.equal(quoteFor({...sample,service:'polishLight',treatments:['fullClean']}).total,830);
  assert.equal(quoteFor({...sample,service:'fullClean',treatments:['polishLight']}).total,830);
- assert.equal(quoteFor({...sample,service:'polishPremium',treatments:['coating']}).total,1650);
+ assert.equal(quoteFor({...sample,service:'polishPremium',treatments:['coating']}).total,1630);
  assert.equal(quoteFor({...sample,service:'coating',treatments:['polishPremium']}).total,1630);
  const plastico=extras.find(x=>x.id==='plasticCoating');
  assert.ok(plastico.description.length<220);

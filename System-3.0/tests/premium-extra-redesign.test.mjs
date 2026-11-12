@@ -33,7 +33,7 @@ test('Premium dos carros e Care Moto recebem destaque, Extra continua sem polime
  assert.equal(quoteFor({...state,treatments:['polishLight']}).total,1580);
  assert.equal(quoteFor({...state,treatments:['polishPremium']}).total,1900);
  assert.ok(normalizeTreatments({...state,treatments:['polishPremium']}).includes('polishPremium'));
- assert.ok(createSummary(state).includes('1.180'),'resumo deve apresentar o preço R$ 1.200');
+ assert.ok(createSummary(state).includes('1.180'),'resumo deve apresentar o preço R$ 1.180');
  assert.ok(html.includes('id="react-velocity"'),'animação mantida');
 });
 test('linhas separadoras soltas removidas sem eliminar estrutura de preços',async()=>{

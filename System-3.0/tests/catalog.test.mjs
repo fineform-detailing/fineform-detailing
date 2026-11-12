@@ -64,6 +64,15 @@ test('motos têm uma lavagem e opcionais compatíveis, incluindo vitrificação 
  assert.deepEqual(normalizeExtras(state),['wheelIron','motoPolish']);
  assert.deepEqual(normalizeTreatments(state),[]);
 });
+test('benefícios dos três cards Care são explícitos e correspondem às visitas do plano',()=>{
+ assert.deepEqual(plans.map(p=>p.description),[
+  '• 1 Premium + 1 Essencial',
+  '• 2 Essenciais + 1 Premium',
+  '• 2 Moto Premium'
+ ]);
+ assert.deepEqual(plans.map(p=>p.price),[220,420,280]);
+ assert.deepEqual(plans.map(p=>p.visits),[2,3,2]);
+});
 test('economias dos três planos batem com os mesmos serviços avulsos',()=>{
  for(const p of plans){const avulso=p.vehicle==='car'?p.premium*findService('premium').price+p.essential*findService('essential').price:p.premium*findService('motoPremium').price;assert.equal(Math.max(0,avulso-p.price),p.saving);assert.equal(p.premium+p.essential,p.visits);}
 });

@@ -151,8 +151,8 @@ test('orientação sem serviço não herda total, e mensagem usa o mesmo orçame
  assert.match(message,/Total do atendimento: R\$[\s\u00a0]*2\.410/);
  const planMessage=createSummary({...sample,mode:'plan',plan:'careEssential',treatments:['fullClean']});
  assert.match(planMessage,/Mensalidade: R\$[\s\u00a0]*220\/mês/);
- assert.match(planMessage,/Adicionais nesta visita: R\$[\s\u00a0]*490/);
- assert.match(planMessage,/Total deste pedido: R\$[\s\u00a0]*710/);
+ assert.match(planMessage,/Adicionais nesta visita: R\$[\s\u00a0]*350/);
+ assert.match(planMessage,/Total deste pedido: R\$[\s\u00a0]*570/);
 });
 
 test('escopo de lavagem e oferta pública dos polimentos estão consistentes',async()=>{

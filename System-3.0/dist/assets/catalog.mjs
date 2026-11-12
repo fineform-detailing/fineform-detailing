@@ -44,9 +44,9 @@ export const extras = [
 ];
 export const extraPrice=(extra,vehicle)=>vehicle==='moto'&&extra.motoPrice?extra.motoPrice:extra.price;
 export const plans = [
- {id:'careEssential',vehicle:'car',name:'Care Essencial',visits:2,premium:1,essential:1,price:220,saving:20,description:'• 1 Premium + 1 Essencial'},
- {id:'careFrequent',vehicle:'car',name:'Care Premium',visits:3,premium:1,essential:2,price:420,saving:0,description:'• 2 Essenciais + 1 Premium'},
- {id:'careMoto',vehicle:'moto',name:'Care Moto',visits:2,premium:2,essential:0,price:280,saving:0,description:'• 2 Moto Premium'}
+ {id:'careEssential',vehicle:'car',name:'Care Essencial',visits:2,premium:1,essential:1,price:220,saving:20,description:'• 2 lavagens/mês: 1 Premium + 1 Essencial'},
+ {id:'careFrequent',vehicle:'car',name:'Care Premium',visits:3,premium:1,essential:2,price:420,saving:0,description:'• 3 lavagens/mês: 2 Essenciais + 1 Premium'},
+ {id:'careMoto',vehicle:'moto',name:'Care Moto',visits:2,premium:2,essential:0,price:280,saving:0,description:'• 2 lavagens Moto Premium/mês'}
 ];
 export const findService=id=>services.find(x=>x.id===(id==='correction'?'polishMedium':id));
 export const findPlan=id=>plans.find(x=>x.id===id);

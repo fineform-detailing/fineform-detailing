@@ -66,9 +66,9 @@ test('motos têm uma lavagem e opcionais compatíveis, incluindo vitrificação 
 });
 test('benefícios dos três cards Care são explícitos e correspondem às visitas do plano',()=>{
  assert.deepEqual(plans.map(p=>p.description),[
-  '• 2 lavagens/mês: 1 Premium + 1 Essencial',
-  '• 3 lavagens/mês: 2 Essenciais + 1 Premium',
-  '• 2 lavagens Moto Premium/mês'
+  '1 Premium + 1 Essencial',
+  '2 Essenciais + 1 Premium',
+  '2 Moto Premium'
  ]);
  assert.deepEqual(plans.map(p=>p.price),[229,309,269]);
  assert.deepEqual(plans.map(p=>p.visits),[2,3,2]);

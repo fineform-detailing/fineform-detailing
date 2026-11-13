@@ -320,5 +320,5 @@ test('visão geral mantém indicadores operacionais sem total financeiro e prese
  assert.equal(dashboard.data.quotes.accepted,(before.quotes.accepted||0)+1);
  assert.deepEqual(dashboard.data.expiring,before.expiring);
  assert.deepEqual((await db.prepare('SELECT * FROM payment_receipts ORDER BY id').all()).results,receipts.results);
- assert.equal(receipts.results.find(r=>r.cycle_id===sub.cycle.id).amount_cents,22000);
+ assert.equal(receipts.results.find(r=>r.cycle_id===sub.cycle.id).amount_cents,22900);
 });

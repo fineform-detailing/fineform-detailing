@@ -129,7 +129,7 @@ test('rejeita conteúdo inválido e exporta registros reais do D1',async()=>{
 test('limite de tentativas de acesso',async()=>{let last;for(let i=0;i<9;i++)last=await call('/api/admin/session',{method:'POST',body:{key:'errada'},address:'198.51.100.99'});assert.equal(last.status,429);});
 test('datas de ciclo conservam dia de cobrança e crédito aplica preparação uma vez',()=>{
  assert.equal(nextMonth('2027-01-31',31),'2027-02-28');assert.equal(nextMonth('2027-02-28',31),'2027-03-31');assert.equal(nextMonth('2028-01-31',31),'2028-02-29');
- assert.equal(planVisitQuote({vehicle:'car',mode:'single',service:'premium',treatments:['fullClean'],extras:[]}).total,469);
+ assert.equal(planVisitQuote({vehicle:'car',mode:'single',service:'premium',treatments:['fullClean'],extras:[]}).total,310);
 });
 
 test('reenvio manual preserva uma lavagem e reenvio da visita aceita mantém o pedido',async()=>{

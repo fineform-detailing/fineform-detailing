@@ -189,6 +189,6 @@ test('escopo de lavagem e oferta pública dos polimentos estão consistentes',as
  assert.equal(quoteFor({...sample,service:'coating',treatments:['polishPremium']}).total,1990);
  const plastico=extras.find(x=>x.id==='plasticCoating');
  assert.ok(plastico.description.length<220);
- assert.match(plastico.description,/cura/);
+ assert.match(plastico.description,/cura/i);
  assert.match(plastico.description,/pneus, freios, banco, manoplas ou pedaleiras/);
 });

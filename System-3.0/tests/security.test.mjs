@@ -90,15 +90,15 @@ test('server prices and append-only receipts preserve balance after customer del
  const before=await receiptTotal();
  const active=await call('/api/admin/subscriptions',{method:'POST',body:{name:'Cliente financeiro',phone:'11900009990',model:'Carro financeiro',planId:'careEssential',paidConfirmed:true,startsOn:todaySP(),price:0,price_cents:1,monthlyPayments:999999}});assert.equal(active.status,201);
  const sub=active.data.subscription,cycle=sub.cycle;
- assert.equal(cycle.price_cents,22000);const receipt=await db.prepare('SELECT * FROM payment_receipts WHERE cycle_id=?').bind(cycle.id).first();assert.equal(receipt.amount_cents,22000);assert.equal(receipt.actor_id,await digest(cookie.split('=')[1]));
- assert.equal(await receiptTotal(),before+22000);
+ assert.equal(cycle.price_cents,22900);const receipt=await db.prepare('SELECT * FROM payment_receipts WHERE cycle_id=?').bind(cycle.id).first();assert.equal(receipt.amount_cents,22900);assert.equal(receipt.actor_id,await digest(cookie.split('=')[1]));
+ assert.equal(await receiptTotal(),before+22900);
  assert.equal(Object.hasOwn((await call('/api/admin/dashboard')).data,'monthlyPayments'),false);
  await assert.rejects(()=>db.prepare('UPDATE payment_receipts SET amount_cents=1 WHERE id=?').bind(receipt.id).run(),/append-only/);
  await assert.rejects(()=>db.prepare('DELETE FROM payment_receipts WHERE id=?').bind(receipt.id).run(),/append-only/);
  await assert.rejects(()=>db.prepare('UPDATE cycles SET price_cents=1 WHERE id=?').bind(cycle.id).run(),/cannot be rewritten/);
  await assert.rejects(()=>db.prepare('DELETE FROM audit_events').run(),/append-only/);
  const preview=await call('/api/admin/customers/'+sub.customerId);assert.equal((await call('/api/admin/customers/'+sub.customerId,{method:'DELETE',body:{confirm:true,snapshot:preview.data.snapshot}})).status,200);
- assert.equal(await receiptTotal(),before+22000);assert.ok(await db.prepare('SELECT id FROM payment_receipts WHERE cycle_id=?').bind(cycle.id).first());
+ assert.equal(await receiptTotal(),before+22900);assert.ok(await db.prepare('SELECT id FROM payment_receipts WHERE cycle_id=?').bind(cycle.id).first());
  assert.equal(Object.hasOwn((await call('/api/admin/dashboard')).data,'monthlyPayments'),false);
  const exported=(await call('/api/admin/export')).data;assert.ok(exported.payment_receipts.some(r=>r.id===receipt.id));assert.equal(exported.admin_sessions,undefined);assert.equal(exported.mfa_counters,undefined);
 });

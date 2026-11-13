@@ -34,7 +34,7 @@ export const services = [
 ];
 export const extras = [
  {id:'exteriorPlastic',vehicle:'both',price:59,motoPrice:39,label:'Revitalização de plásticos externos',area:'exterior',description:'Limpeza e acabamento de manutenção dos plásticos externos compatíveis. Incluso no Extra; não substitui a vitrificação.'},
- {id:'plasticCoating',vehicle:'both',price:189,motoPrice:119,label:'Vitrificação de plásticos externos',area:'exterior',description:'Proteção cerâmica dos plásticos externos sem pintura, após limpeza e preparo. Cura combinada. Em motos, não se aplica em pneus, freios, banco, manoplas ou pedaleiras.'},
+ {id:'plasticCoating',vehicle:'both',price:189,motoPrice:119,label:'Vitrificação de plásticos externos',area:'exterior',description:'Proteção cerâmica dos plásticos externos sem pintura, após limpeza e preparo. cura combinada. Em motos, não se aplica em pneus, freios, banco, manoplas ou pedaleiras.'},
  {id:'leather',vehicle:'car',price:159,label:'Tratamento dos bancos de couro',area:'interior',description:'Limpeza e condicionamento dos bancos de couro. Sem reparos ou tingimento. Incluso no Extra e na higienização.'},
  {id:'fabric',vehicle:'car',price:219,label:'Higienização dos bancos de tecido',area:'interior',description:'Higienização por extração dos bancos de tecido, com prazo de secagem combinado. Incluso no Extra e na higienização.'},
  {id:'wheelIron',vehicle:'both',price:49,motoPrice:39,label:'Descontaminação das rodas',area:'rodas',description:'Descontaminação ferrosa das faces acessíveis das rodas, sem desmontagem. Incluso no Extra quando indicado.'},

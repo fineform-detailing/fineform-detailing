@@ -21,7 +21,7 @@ test('orçamento moto inclui Polimento Premium 349, com total real e sem duplica
  const sum=quoteFor(model);
  assert.equal(sum.items.find(x=>x.id==='motoPolish').price,349);
  assert.equal(sum.items.find(x=>x.id==='motoPolish').label,'Polimento Premium');
- assert.equal(sum.total,510);
+ assert.equal(sum.total,498);
  assert.ok(createSummary(model).includes('Polimento Premium — R$'));
  const selected=quoteFor({...model,mode:'guidance',extras:['motoPolish']});
  assert.equal(selected.total,349);

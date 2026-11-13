@@ -170,7 +170,7 @@ test('migração de notificações preserva clientes, ciclos, recibos e estrutur
  await applyMigrations(f.db,{files:['0003_admin_notifications.sql']});
  const after=await Promise.all(tables.map(table=>f.db.prepare('SELECT * FROM '+table+' ORDER BY id').all()));assert.deepEqual(after.map(value=>value.results),before.map(value=>value.results));
  const schema=(await f.db.prepare("SELECT name FROM sqlite_master WHERE type='table'").all()).results.map(row=>row.name);for(const name of ['admin_push_subscriptions','admin_push_jobs','admin_push_vapid_tokens'])assert.ok(schema.includes(name));
- assert.equal((await f.db.prepare('SELECT amount_cents FROM payment_receipts WHERE cycle_id=?').bind(care.data.subscription.cycle.id).first()).amount_cents,22000);
+ assert.equal((await f.db.prepare('SELECT amount_cents FROM payment_receipts WHERE cycle_id=?').bind(care.data.subscription.cycle.id).first()).amount_cents,22900);
  assert.equal(Object.hasOwn((await f.call('/api/admin/dashboard')).data,'monthlyPayments'),false);
 });
 

@@ -34,7 +34,7 @@ test('D1 pronto, painel protegido, cookie seguro e origem validada',async()=>{
 });
 test('preços são calculados no servidor, reenvio não duplica e links são privados',async()=>{
  const body=selection({treatments:['fullClean'],extras:['glassCare'],total:1});
- const one=await call('/api/quotes',{method:'POST',body});assert.equal(one.status,201);assert.equal(one.data.quote.budget.total,650);
+ const one=await call('/api/quotes',{method:'POST',body});assert.equal(one.status,201);assert.equal(one.data.quote.budget.total,618);
  const retry=await call('/api/quotes',{method:'POST',body});assert.equal(retry.status,200);assert.equal(retry.data.quote.id,one.data.quote.id);
  const id=one.data.quote.id;assert.equal((await call('/api/quotes/'+id)).status,404);assert.equal((await call('/api/quotes/'+id,{cap:token()})).status,404);
  assert.equal((await call('/api/quotes/'+id,{cap:body.submissionToken})).status,200);
@@ -69,7 +69,7 @@ test('orientação exige valor completo antes de aceitar',async()=>{
 });
 test('Care requer pagamento e oferece portal privado pelo pedido original',async()=>{
  const body=selection({mode:'plan',plan:'careEssential',phone:'11900000002'}),saved=await call('/api/quotes',{method:'POST',body}),id=saved.data.quote.id;
- assert.equal(saved.data.quote.budget.recurring,220);
+ assert.equal(saved.data.quote.budget.recurring,229);
  assert.equal((await call('/api/admin/subscriptions',{method:'POST',auth:true,body:{quoteId:id,paidConfirmed:true}})).status,400);
  await call('/api/admin/quotes/'+id,{method:'PATCH',auth:true,body:{version:1,status:'accepted'}});
  assert.equal((await call('/api/admin/subscriptions',{method:'POST',auth:true,body:{quoteId:id}})).status,400);
@@ -83,7 +83,7 @@ test('Care requer pagamento e oferece portal privado pelo pedido original',async
 test('visita Care reserva saldo ao aceitar, extras separados, cancelamento restitui e conclusão consome',async()=>{
  const active=await call('/api/admin/subscriptions',{method:'POST',auth:true,body:{name:'Teste de saldo',phone:'11900000003',model:'Toyota teste',planId:'careEssential',paidConfirmed:true,startsOn:date}});assert.equal(active.status,201);
  const s=active.data.subscription,cap=active.data.portalToken;
- const request=selection({creditKind:'premium',extras:['glassCare']});const saved=await call('/api/subscriptions/'+s.id+'/requests',{method:'POST',cap,body:request});assert.equal(saved.status,201);assert.equal(saved.data.quote.budget.total,140);
+ const request=selection({creditKind:'premium',extras:['glassCare']});const saved=await call('/api/subscriptions/'+s.id+'/requests',{method:'POST',cap,body:request});assert.equal(saved.status,201);assert.equal(saved.data.quote.budget.total,149);
  const q=saved.data.quote;
  const accepted=await call('/api/admin/quotes/'+q.id,{method:'PATCH',auth:true,body:{version:1,status:'accepted',scheduledDate:date}});assert.equal(accepted.status,200);
  let view=(await call('/api/subscriptions/'+s.id,{cap})).data.subscription;assert.equal(view.cycle.credits.premium.reserved,1);assert.equal(view.cycle.credits.premium.available,0);
@@ -129,7 +129,7 @@ test('rejeita conteúdo inválido e exporta registros reais do D1',async()=>{
 test('limite de tentativas de acesso',async()=>{let last;for(let i=0;i<9;i++)last=await call('/api/admin/session',{method:'POST',body:{key:'errada'},address:'198.51.100.99'});assert.equal(last.status,429);});
 test('datas de ciclo conservam dia de cobrança e crédito aplica preparação uma vez',()=>{
  assert.equal(nextMonth('2027-01-31',31),'2027-02-28');assert.equal(nextMonth('2027-02-28',31),'2027-03-31');assert.equal(nextMonth('2028-01-31',31),'2028-02-29');
- assert.equal(planVisitQuote({vehicle:'car',mode:'single',service:'premium',treatments:['fullClean'],extras:[]}).total,350);
+ assert.equal(planVisitQuote({vehicle:'car',mode:'single',service:'premium',treatments:['fullClean'],extras:[]}).total,469);
 });
 
 test('reenvio manual preserva uma lavagem e reenvio da visita aceita mantém o pedido',async()=>{

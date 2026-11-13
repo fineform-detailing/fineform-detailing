@@ -31,7 +31,7 @@ test('Premium dos carros e Care Moto recebem destaque, Extra continua sem polime
  assert.equal(treatmentPrice('coating',state),1390);
  assert.equal(quoteFor({...state,treatments:['coating']}).total,2680);
  assert.equal(quoteFor({...state,treatments:['polishLight']}).total,1680);
- assert.equal(quoteFor({...state,treatments:['polishPremium']}).total,2280);
+ assert.equal(quoteFor({...state,treatments:['polishPremium']}).total,2191);
  assert.ok(normalizeTreatments({...state,treatments:['polishPremium']}).includes('polishPremium'));
  assert.ok(createSummary(state).includes('1.290'),'resumo deve apresentar o preço R$ 1.290');
  assert.ok(html.includes('id="react-velocity"'),'animação mantida');

@@ -5,10 +5,10 @@ import {extras,compatibleExtras,quoteFor,createSummary} from '../dist/assets/cat
 
 const motoPolish=extras.find(x=>x.id==='motoPolish');
 
-test('Polimento Premium de moto substitui o antigo realce e custa R$ 380',()=>{
+test('Polimento Premium de moto substitui o antigo realce e custa R$ 349',()=>{
  assert.ok(motoPolish);
  assert.equal(motoPolish.label,'Polimento Premium');
- assert.equal(motoPolish.price,380);
+ assert.equal(motoPolish.price,349);
  assert.equal(motoPolish.vehicle,'moto');
  assert.ok(motoPolish.description.includes('moto'));
  assert.equal(extras.some(x=>x.label==='Realce de uma peça pintada'),false);
@@ -16,15 +16,15 @@ test('Polimento Premium de moto substitui o antigo realce e custa R$ 380',()=>{
  assert.equal(compatibleExtras('car').some(x=>x.id==='motoPolish'),false);
 });
 
-test('orçamento moto inclui Polimento Premium 380, com total real e sem duplicar serviço',()=>{
+test('orçamento moto inclui Polimento Premium 349, com total real e sem duplicar serviço',()=>{
  const model={vehicle:'moto',model:'Honda CB',mode:'single',service:'motoPremium',extras:['motoPolish'],treatments:[],name:'Cliente',goals:[],date:'',time:'',notes:''};
  const sum=quoteFor(model);
- assert.equal(sum.items.find(x=>x.id==='motoPolish').price,380);
+ assert.equal(sum.items.find(x=>x.id==='motoPolish').price,349);
  assert.equal(sum.items.find(x=>x.id==='motoPolish').label,'Polimento Premium');
  assert.equal(sum.total,510);
  assert.ok(createSummary(model).includes('Polimento Premium — R$'));
  const selected=quoteFor({...model,mode:'guidance',extras:['motoPolish']});
- assert.equal(selected.total,380);
+ assert.equal(selected.total,349);
  assert.equal(selected.hasBase,false);
 });
 

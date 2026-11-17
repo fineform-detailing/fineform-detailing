@@ -13,6 +13,7 @@ import {withdrawReview} from './privacy.mjs';
 import {handleFamilyFinance,dispatchFamilyFinance} from './family-finance.mjs';
 import {businessProfile,publicBusiness,saveBusinessProfile,shareQuoteLocation} from './business.mjs';
 import {publicBusinessDetails} from '../dist/assets/business-profile.mjs';
+import {prelaunchResponse} from './prelaunch.mjs';
 export {LiveUpdates} from './live.mjs';
 const response=(data,status=200,headers={})=>new Response(JSON.stringify(data),{status,headers:{'Content-Type':'application/json; charset=utf-8','Cache-Control':'no-store','X-Content-Type-Options':'nosniff','Referrer-Policy':'no-referrer',...headers}});
 const idFrom=value=>{if(!idValid(value))fail(404,'Registro não encontrado.');return value;};
@@ -209,6 +210,7 @@ export default {async fetch(req,env,ctx){
   return securityHeaders(req,blocked,{api:isApi,privatePage:true});
  }
  if(url.protocol!=='https:'&&!isLocal(req)){if(!['GET','HEAD'].includes(req.method))return securityHeaders(req,response({error:'Use uma conexão HTTPS.'},403),{api:true});url.protocol='https:';return Response.redirect(url.href,308);}
+ if(env.PRELAUNCH_MODE==='true')return securityHeaders(req,await prelaunchResponse(req,env),{api:isApi,privatePage:true});
  if(!isApi){
   let result=env.ASSETS?await env.ASSETS.fetch(req):new Response('Fine Form 3.0',{status:200});
   if(/^\/informacoes(?:\/|$)/.test(url.pathname)&&result.headers.get('Content-Type')?.includes('text/html')&&result.ok&&req.method==='GET'){

@@ -2,7 +2,7 @@
   <source media="(max-width: 600px) and (prefers-color-scheme: dark)" srcset="docs/readme/brand-dark-mobile.svg">
   <source media="(max-width: 600px)" srcset="docs/readme/brand-light-mobile.svg">
   <source media="(prefers-color-scheme: dark)" srcset="docs/readme/brand-dark.svg">
-  <img src="docs/readme/brand-light.svg" width="1200" alt="Fine Form — seu veículo, em boa forma. Identidade ciano e mascote original da marca.">
+  <img src="docs/readme/brand-light.svg" width="1200" alt="Fine Form — seu veículo, em boa forma. Identidade em laranja, preto e tons claros, com o mascote original da marca.">
 </picture>
 
 # Plataforma Fine Form 3.0
@@ -11,7 +11,13 @@ Site, atendimento e operação diária no mesmo projeto. A experiência pública
 
 **[Site publicado](https://fine-form-3-0.fineformcare.workers.dev/) · [Painel](https://fine-form-3-0.fineformcare.workers.dev/painel/) · [Atualizar pelo celular](ATUALIZAR-PELO-CELULAR.md) · [Apresentação da marca](../README.md)**
 
-## O que a plataforma faz
+## Status atual: preparação para a inauguração
+
+Com `PRELAUNCH_MODE: "true"`, o visitante vê somente a página de inauguração. Catálogo, solicitações, painel, rotas diretas e APIs ficam bloqueados no servidor. O código completo e os dados são preservados para a abertura. A página não anuncia uma data ainda não confirmada.
+
+**[Como funciona o bloqueio e como reabrir o site](docs/INAUGURACAO.md)**
+
+## Recursos da plataforma após a abertura
 
 | Área | Recursos |
 | --- | --- |
@@ -29,7 +35,7 @@ Os pagamentos Care são confirmados manualmente pelo administrador. Os registros
 
 ## Identidade e interface
 
-O ciano **`#53C3B1`** é o acento da marca, acompanhado de preto, tons claros, **Manrope** e **Barlow Condensed**, com fontes servidas pelo próprio projeto. O tentáculo original aparece na abertura e pode ser revisto pelo controle do site.
+O laranja **`#FF8000`** é o acento da marca, acompanhado de preto, tons claros, **Manrope** e **Barlow Condensed**, com fontes servidas pelo próprio projeto. O tentáculo original aparece na abertura e pode ser revisto pelo controle do site.
 
 - Espaço em branco faz parte do layout: conteúdo e contatos devem aparecer com propósito, sem repetições.
 - O rodapé mantém redes sociais, privacidade e informações complementares de forma compacta.
@@ -66,6 +72,8 @@ Defina uma chave de desenvolvimento em `.dev.vars`. Depois:
 npm run db:local
 npm run dev
 ```
+
+O modo inauguração também fica ativo no desenvolvimento por padrão. Para inspecionar a aplicação completa localmente, defina `PRELAUNCH_MODE="false"` em `.dev.vars`, sem alterar a produção.
 
 No PowerShell, use `Copy-Item .dev.vars.example .dev.vars` para copiar o arquivo. Quando necessário no Windows, execute `npm.cmd` e `npx.cmd`.
 
@@ -106,7 +114,7 @@ npm run deploy
 
 `deploy` gera os assets, aplica as migrações D1 pendentes e publica o Worker. Preserve os identificadores e secrets do ambiente existente. `configure`, `reuse` e a criação de outro ambiente são fluxos específicos descritos no [guia de deploy](docs/DEPLOY-CLOUDFLARE.md).
 
-Depois da publicação, confira **[`/api/health`](https://fine-form-3-0.fineformcare.workers.dev/api/health)**: versão `3.0.0` e `ready: true`. Confira também o site, o menu de Informações no celular e o acesso ao painel.
+Enquanto o modo inauguração estiver ativo, confira a apresentação na raiz, uma URL interna e o bloqueio das APIs com código `prelaunch`. **Depois da reabertura**, confira `/api/health`: versão `3.0.0` e `ready: true`, além do catálogo, das informações e do painel.
 
 ## Segurança e dados
 

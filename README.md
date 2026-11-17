@@ -2,65 +2,71 @@
   <source media="(max-width: 600px) and (prefers-color-scheme: dark)" srcset="System-3.0/docs/readme/brand-dark-mobile.svg">
   <source media="(max-width: 600px)" srcset="System-3.0/docs/readme/brand-light-mobile.svg">
   <source media="(prefers-color-scheme: dark)" srcset="System-3.0/docs/readme/brand-dark.svg">
-  <img src="System-3.0/docs/readme/brand-light.svg" width="1200" alt="Fine Form. Seu veículo, em boa forma. Um veículo por vez, atenção por inteiro. Ilustração do tentáculo ciano da marca.">
+  <img src="System-3.0/docs/readme/brand-light.svg" width="1200" alt="Fine Form. Seu veículo, em boa forma. Identidade em laranja, preto e tons claros.">
 </picture>
 
 <p align="center">
-  <a href="https://fine-form-3-0.fineformcare.workers.dev/">Conheça a Fine Form</a> ·
-  <a href="https://fine-form-3-0.fineformcare.workers.dev/atendimento/">Escolha seu cuidado</a> ·
-  <a href="https://fine-form-3-0.fineformcare.workers.dev/links/">Todos os contatos</a>
+  <a href="https://fine-form-3-0.fineformcare.workers.dev/"><strong>Acompanhe a Fine Form ↗</strong></a> &nbsp;·&nbsp;
+  <a href="https://www.instagram.com/fineform.detailing/">Instagram</a> &nbsp;·&nbsp;
+  <a href="https://wa.me/5511959473298">WhatsApp</a>
 </p>
 
-## Cada detalhe merece um cuidado próprio.
+## Um novo cuidado. Em breve.
 
-A **Fine Form** cuida de carros e motos com atenção aos materiais, ao acabamento e à conversa. O atendimento é direto com Mateus: entender o veículo, explicar os cuidados possíveis e combinar o que será feito antes de começar.
+A **Fine Form Estética Automotiva** está em preparação para a inauguração. Nosso espaço e nosso site estão sendo preparados para receber carros e motos com atenção aos materiais, ao acabamento e à conversa.
 
 **Um veículo por vez. Atenção por inteiro.**
 
-### Um cuidado que acompanha você
+A data de inauguração será divulgada nas redes da marca. Até a abertura, o site apresenta somente a página de inauguração, com os contatos de Mateus. As páginas internas, o painel e as APIs ficam bloqueados no servidor, inclusive por links diretos.
 
-| Seu momento | O que você encontra |
+## A forma Fine Form
+
+**Laranja `#FF8000`, preto e tons claros.** Tipografia direta, espaço para respirar e o símbolo original da marca. A experiência acompanha o cuidado: explicar com clareza, combinar os detalhes e tratar cada veículo conforme sua necessidade.
+
+| Nosso princípio | Como aparece na experiência |
 | --- | --- |
-| Cuidar agora | Lavagens, higienização, polimento, proteção e cuidados por área. |
-| Manter a boa forma | **Fine Form Care**, com planos para dar continuidade ao cuidado de carros e motos. |
-| Escolher com clareza | Serviços, valores de referência e resumo do pedido em um só lugar. |
-| Acompanhar cada etapa | Link privado para consultar o pedido e suas atualizações. |
+| Cuidado com critério | Etapas, materiais e acabamento considerados em cada serviço. |
+| Conversa direta | Atendimento com Mateus, com escopo e condições combinados antes de começar. |
+| Continuidade | Fine Form Care para acompanhar a manutenção do veículo. |
+| Clareza | Solicitação de atendimento não significa agendamento automático. |
 
-O site recebe sua solicitação. Data, duração, local e escopo são combinados pessoalmente antes do atendimento. O endereço é compartilhado pelo canal privado do pedido quando liberado por Mateus.
+## O projeto
 
-### A forma Fine Form
+Este repositório guarda o site e a plataforma de operação da Fine Form. Os recursos abaixo fazem parte da aplicação completa e ficam indisponíveis ao público durante a preparação:
 
-Uma identidade de **ciano, preto e tons claros**, com tipografia direta e espaço para respirar. O tentáculo do loader traz o lado curioso da marca; a apresentação mantém o foco no veículo e no cuidado.
+| Área | Finalidade |
+| --- | --- |
+| Cuidados | Serviços para carros e motos, adicionais e opções por superfície. |
+| Atendimento | Preparação de solicitação, preferência de data e acompanhamento por link privado. |
+| Operação | Pedidos, agenda, clientes, veículos e controle de acesso ao painel. |
+| Fine Form Care | Assinaturas por veículo, ciclos e registro de visitas. |
 
-No site, você pode explorar serviços para carros e motos, conhecer os planos Care, preparar um pedido e acompanhar o atendimento. Nas redes, encontra a mesma atenção aos detalhes.
+**Código e documentação:** [`System-3.0/`](System-3.0/)
 
-<p align="center">
-  <a href="https://wa.me/5511959473298">WhatsApp</a> ·
-  <a href="https://www.instagram.com/fineform.detailing/">Instagram</a> ·
-  <a href="https://www.tiktok.com/@fineform.detailing">TikTok</a> ·
-  <a href="mailto:fineformcare@gmail.com">E-mail</a>
-</p>
+| Para consultar | Documento |
+| --- | --- |
+| Arquitetura, execução e manutenção | [Documentação técnica](System-3.0/README.md) |
+| Bloqueio temporário e reabertura | [Modo inauguração](System-3.0/docs/INAUGURACAO.md) |
+| Publicação na infraestrutura existente | [Deploy na Cloudflare](System-3.0/docs/DEPLOY-CLOUDFLARE.md) |
+| Atualização pelo celular | [Guia de atualização](System-3.0/ATUALIZAR-PELO-CELULAR.md) |
 
----
+**Base técnica:** JavaScript, React em interações específicas, Motion e esbuild. Hospedagem em Cloudflare Workers com Static Assets, banco D1 e Durable Objects para atualizações ao vivo.
 
-### Por trás da experiência
+## Contato
 
-Este repositório também guarda a plataforma que conecta o site, o atendimento, os pedidos, a agenda, o painel e o Fine Form Care.
+[Instagram](https://www.instagram.com/fineform.detailing/) · [TikTok](https://www.tiktok.com/@fineform.detailing) · [WhatsApp](https://wa.me/5511959473298) · [E-mail](mailto:fineformcare@gmail.com)
 
-**[Abrir a documentação do projeto →](System-3.0/README.md)**
+<details>
+<summary>Notas de operação e acesso</summary>
 
-Código e aplicação em [`System-3.0/`](System-3.0/). Publicação em Cloudflare Workers, com banco D1 e atualizações ao vivo.
+O Worker de produção é `fine-form-3-0`, na conta Cloudflare da Fine Form. A aplicação está em `System-3.0/`, na branch `main`. Mudanças nessa pasta acionam a integração de publicação existente; alterações apenas neste README não acionam o build.
 
-## Acesso restrito ao Brasil
+O modo inauguração é controlado pela variável `PRELAUNCH_MODE`, versionada em `System-3.0/wrangler.jsonc`. A reabertura exige alterar o valor para `"false"`, verificar e publicar. Não há um parâmetro público que permita contornar o bloqueio.
 
-A Fine Form 3.0 atende somente requisições com país de origem **Brasil (BR)**, conforme a geolocalização **confiável** fornecida pela Cloudflare ao Worker (`request.cf.country`). Não são usados cabeçalhos enviados pelo visitante para decidir o acesso.
+A restrição geográfica existente continua ativa: somente requisições identificadas pela Cloudflare como originadas no Brasil podem acessar a aplicação. País desconhecido ou diferente de `BR` recebe HTTP 403 antes das páginas, dos arquivos e da API. Cabeçalhos fornecidos pelo visitante não liberam o acesso. A exceção de desenvolvimento é restrita a hosts loopback.
 
-- **Brasil:** o Worker processa normalmente o site, os arquivos estáticos, o painel e a API.
-- **Outros países ou país desconhecido:** o Worker responde **HTTP 403** antes de servir páginas, scripts, imagens, estilos ou executar rotas da API. A mensagem é `Acesso disponível apenas no Brasil.`.
-- **Desenvolvimento local:** apenas os hosts loopback explícitos são isentos. O domínio público continua sujeito à verificação.
-- **Arquivos estáticos:** `System-3.0/wrangler.jsonc` usa `assets.run_worker_first: true`, para que os Assets não contornem a validação.
-- **Testes:** `System-3.0/tests/geography.test.mjs` contém cenários para países internacionais, país ausente, cabeçalhos falsificados, APIs, assets e acesso brasileiro.
+As contagens de tráfego da Cloudflare podem incluir bots e tentativas bloqueadas. Elas não representam, por si só, visitantes autorizados.
 
-**Como interpretar o painel:** contagens de *requests* por cidade ou país incluem tentativas de bots, scanners e requisições recusadas. Essas métricas não equivalem a visitantes autorizados. Uma restrição aplicada no Worker responde HTTP 403, mas a tentativa ainda pode aparecer nos relatórios de tráfego da Cloudflare. Para analisar sucesso ou bloqueio, verifique o status HTTP dos eventos, não apenas o mapa.
+Antes de publicar, reconcilie o código com a versão em produção. Preserve banco, bindings e segredos. O modo inauguração não exclui registros nem modifica credenciais.
 
-**Publicação:** o Worker de produção é `fine-form-3-0`, na conta Cloudflare da Fine Form. O repositório `fineform-detailing/fineform-detailing`, branch `main`, tem build automático do diretório `System-3.0/**`. Alterações no README da raiz apenas documentam a regra e **não acionam** uma publicação da aplicação. Evite publicar uma versão antiga do projeto sobre modificações mais recentes feitas diretamente na Cloudflare sem antes reconciliar os arquivos de produção.
+</details>

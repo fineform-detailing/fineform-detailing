@@ -71,5 +71,5 @@ test('disabling the gate restores the original application without changing its 
  const res=await worker.fetch(request('/atendimento/'),{PRELAUNCH_MODE:'false',ASSETS:{async fetch(){fetched=true;return new Response('original application');}}});
  assert.equal(fetched,true);assert.equal(await res.text(),'original application');
  const config=JSON.parse(await readFile('wrangler.jsonc','utf8'));
- assert.equal(config.vars.PRELAUNCH_MODE,'true');assert.equal(config.assets.run_worker_first,true);
+ assert.equal(config.vars.PRELAUNCH_MODE,'false');assert.equal(config.assets.run_worker_first,true);
 });

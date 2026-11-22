@@ -63,6 +63,13 @@ export function organizeQuoteView(detail){
   frame.dataset.section=id;previousSection=id;
   context.textContent=sections.find(([key])=>key===id)[1];
   if(scroll)body.scrollTop=Number(panels[id].dataset.scroll)||0;
+  // A short, non-blocking transition makes the current scope legible.
+  // The live DOM is not re-created: form values and handlers remain intact.
+  const win=document.defaultView;
+  const reduced=typeof win?.matchMedia==='function'&&win.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if(leaving!==panels[id]&&!reduced&&typeof panels[id].animate==='function'){
+   panels[id].animate([{opacity:.48,transform:'translate3d(0,7px,0)'},{opacity:1,transform:'translate3d(0,0,0)'}],{duration:175,easing:'cubic-bezier(.2,.8,.2,1)'});
+  }
  }
  footer.addEventListener('click',event=>{
   const button=event.target.closest('[data-order-section]');

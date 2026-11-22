@@ -6,7 +6,7 @@
   "compatibility_date": "2026-07-30",
   "keep_vars": true,
   "vars": {
-    "PRELAUNCH_MODE": "true"
+    "PRELAUNCH_MODE": "false"
   },
   "preview_urls": false,
   "triggers": {

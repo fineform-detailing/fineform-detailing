@@ -42,7 +42,19 @@ const select=(name,label,options,value='')=>'<label class="system-field"><span>'
 const paid='<label class="system-check"><input name="paidConfirmed" type="checkbox" required><span>Recebi o pagamento deste ciclo e conferi o valor.</span></label>';
 const blank=message=>'<div class="system-empty">'+message+'</div>';
 const period=c=>c?dateLabel(c.starts_on)+' → '+dateLabel(c.ends_on)+' (fim exclusivo)':'Sem ciclo';
-function modal(html){currentCustomer=null;dialog.classList.toggle('ff-quote-dialog',html.includes('ff-quote-view'));detail.innerHTML='<p id="dialog-error" class="system-error ff-dialog-error" role="alert" hidden></p>'+html;if(!dialog.open)dialog.showModal();organizeQuoteView(detail);detail.querySelector('h2')?.focus({preventScroll:true});}
+function modal(html){
+ const oldCode=detail.querySelector('.ff-quote-head h2')?.textContent;
+ const oldSection=detail.querySelector('.ff-quote-view')?.dataset.section;
+ const oldScroll=detail.querySelector('.ff-order-body')?.scrollTop||0;
+ currentCustomer=null;dialog.classList.toggle('ff-quote-dialog',html.includes('ff-quote-view'));
+ detail.innerHTML='<p id="dialog-error" class="system-error ff-dialog-error" role="alert" hidden></p>'+html;
+ if(!dialog.open)dialog.showModal();
+ organizeQuoteView(detail);
+ if(oldCode&&oldCode===detail.querySelector('.ff-quote-head h2')?.textContent&&oldSection===detail.querySelector('.ff-quote-view')?.dataset.section){
+  const body=detail.querySelector('.ff-order-body');if(body)body.scrollTop=oldScroll;
+ }
+ detail.querySelector('h2')?.focus({preventScroll:true});
+}
 function modalError(error){const el=document.getElementById('dialog-error');if(el){el.textContent=error.message;el.hidden=false;el.scrollIntoView({block:'start'});}else toast(error.message);}
 const adminIcons={"analytics":"M4 20V10 M12 20V4 M20 20v-7","dashboard":"M3 3h7v7H3z M14 3h7v7h-7z M3 14h7v7H3z M14 14h7v7h-7z","quotes":"M8 3h9l4 4v14H8z M17 3v5h4 M10 12h8 M10 16h8","subscriptions":"M4 6h16v12H4z M4 10h16 M8 15h4","plates":"M3 7h18v10H3z M6 11h6 M16 11h2 M6 14h12","agenda":"M3 5h18v16H3z M7 3v4 M17 3v4 M3 10h18 M8 14h3","customers":"M16 20v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2 M9 10a4 4 0 1 0 0-8a4 4 0 0 0 0 8 M16 4a3 3 0 0 1 0 6","notifications":"M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9 M10 21h4","settings":"M12 15a3 3 0 1 0 0-6a3 3 0 0 0 0 6 M12 2v3 M12 19v3 M4.93 4.93l2.12 2.12 M16.95 16.95l2.12 2.12 M2 12h3 M19 12h3 M4.93 19.07l2.12-2.12 M16.95 7.05l2.12-2.12"};
 const adminNavIcon=id=>'<svg class="admin-nav-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="'+adminIcons[id]+'"/></svg>';
@@ -265,7 +277,7 @@ async function action(name){if(name==='header-more'||name==='more'){const menu=d
 document.addEventListener('click',async event=>{const button=event.target.closest('button');if(!event.target.closest('#admin-more-menu')&&!['more','header-more'].includes(button?.dataset.action))closeMore();if(!button||button.disabled)return;try{
  if(button.dataset.week){dashboardWeekOffset+=Number(button.dataset.week);const calendar=document.getElementById('ff-week-calendar');if(calendar)calendar.innerHTML=weekCalendar(dashboardWeekOffset);}
  else if(button.dataset.agendaDate){closeMore();agendaDate=button.dataset.agendaDate;tab='agenda';page=0;search='';filter='';await loadView();}
- else if(button.dataset.tab){closeMore();tab=button.dataset.tab;page=0;search='';filter=button.dataset.status||'';const globalSearch=document.getElementById('admin-search');if(globalSearch)globalSearch.elements.q.value='';await loadView();if(button.closest('.admin-nav,.admin-mobile-nav,.admin-more-menu,.ff-panel-footer'))document.getElementById('admin-main')?.scrollIntoView({block:'start',behavior:'instant'});}
+ else if(button.dataset.tab){closeMore();tab=button.dataset.tab;page=0;search='';filter=button.dataset.status||'';root.querySelectorAll('[data-tab]').forEach(b=>{if(b.dataset.tab===tab)b.setAttribute('aria-current','page');else b.removeAttribute('aria-current');});const globalSearch=document.getElementById('admin-search');if(globalSearch)globalSearch.elements.q.value='';await loadView();if(button.closest('.admin-nav,.admin-mobile-nav,.admin-more-menu,.ff-panel-footer'))document.getElementById('admin-main')?.scrollIntoView({block:'start',behavior:'instant'});}
  else if(button.dataset.deleteQuote)await removeQuote(button.dataset.deleteQuote,button);
  else if(button.dataset.loyalty){currentQuote=null;currentSub=null;await openLoyalty(button.dataset.loyalty,{modal,detail,toast,quoteId:button.dataset.loyaltyOrder||''});}
  else if(button.dataset.deleteCustomer)await confirmCustomerRemoval(button.dataset.deleteCustomer);

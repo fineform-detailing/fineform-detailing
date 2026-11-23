@@ -312,3 +312,45 @@ body[data-page="admin"] #admin-dialog .ff-loyalty-circle.is-new{
  body[data-page="admin"] #admin-dialog .ff-loyalty-circle.is-new{animation:none}
  body[data-page="admin"] #admin-dialog .ff-loyalty-progress>span{transition:none}
 }
+
+
+/* Clientes: a tabela vira cartões legíveis no celular, sem rolagem lateral. */
+@media(max-width:700px){
+ body[data-page="admin"] #admin-view .admin-table-wrap:has(.ff-customer-actions){
+  overflow:visible!important;border:0!important;background:transparent!important;box-shadow:none!important;border-radius:0!important;
+ }
+ body[data-page="admin"] #admin-view .admin-table:has(.ff-customer-actions){
+  display:block!important;width:100%!important;min-width:0!important;border:0!important;
+ }
+ body[data-page="admin"] #admin-view .admin-table:has(.ff-customer-actions) thead{display:none!important}
+ body[data-page="admin"] #admin-view .admin-table:has(.ff-customer-actions) tbody{display:grid!important;gap:15px!important}
+ body[data-page="admin"] #admin-view .admin-table:has(.ff-customer-actions) tr{
+  display:grid!important;grid-template-columns:minmax(0,1fr)!important;gap:0!important;
+  width:100%!important;box-sizing:border-box;padding:19px 19px 21px!important;
+  border:1px solid #e0e7df!important;border-radius:20px!important;background:#fff;
+ }
+ body[data-page="admin"] #admin-view .admin-table:has(.ff-customer-actions) td{
+  display:flex!important;align-items:flex-start;justify-content:space-between;gap:16px;
+  width:100%!important;min-width:0!important;box-sizing:border-box;
+  padding:10px 0!important;margin:0!important;border:0!important;
+  font-size:13px;line-height:1.5;overflow-wrap:anywhere;
+ }
+ body[data-page="admin"] #admin-view .admin-table:has(.ff-customer-actions) td:first-child{
+  display:block!important;font-size:19px;font-weight:750;letter-spacing:-.025em;color:#171d18;
+  padding:0 0 15px!important;margin:0 0 9px!important;border-bottom:1px solid #e8ece7!important;
+ }
+ body[data-page="admin"] #admin-view .admin-table:has(.ff-customer-actions) td:nth-child(2)::before{content:"Contato"}
+ body[data-page="admin"] #admin-view .admin-table:has(.ff-customer-actions) td:nth-child(3)::before{content:"Veículo"}
+ body[data-page="admin"] #admin-view .admin-table:has(.ff-customer-actions) td:nth-child(4)::before{content:"Planos"}
+ body[data-page="admin"] #admin-view .admin-table:has(.ff-customer-actions) td::before{
+  flex:0 0 auto;font-size:11px;font-weight:700;color:#737e75;letter-spacing:.015em;
+ }
+ body[data-page="admin"] #admin-view .admin-table:has(.ff-customer-actions) td:last-child{
+  display:block!important;padding:19px 0 0!important;margin-top:9px!important;
+  border-top:1px solid #e8ece7!important;
+ }
+ body[data-page="admin"] #admin-view .admin-table:has(.ff-customer-actions) td:last-child::before{content:none}
+ body[data-page="admin"] #admin-view .ff-customer-actions{gap:10px;min-width:0;max-width:100%}
+ body[data-page="admin"] #admin-view .ff-customer-actions .button{width:100%;min-height:47px}
+ body[data-page="admin"] #admin-view .ff-customer-actions .ff-customer-delete{margin-top:6px}
+}

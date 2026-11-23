@@ -2,3 +2,74 @@
 @media(max-width:850px){.reviews-list{grid-template-columns:repeat(2,minmax(0,1fr))}.reviews-heading{align-items:start;flex-direction:column;gap:18px}.reviews-heading p{max-width:none}}
 @media(max-width:600px){.reviews-list{grid-template-columns:1fr}.review-card{padding:24px}.review-card-top{flex-direction:row;justify-content:space-between;align-items:center;gap:8px}.review-verified{font-size:9px}.review-stars{font-size:20px}.review-compose{padding:24px 20px}.rating-options{gap:7px}.rating-options label{min-width:45px;min-height:64px}.review-page .system-heading h1{font-size:36px}}
 @media(prefers-reduced-motion:reduce){.rating-options label{transition:none}}
+
+
+/* Revisão da experiência de avaliação: uma superfície e controles reais. */
+body[data-page="review"]{background:#f7f8f5;color:#161a17}
+body[data-page="review"] .review-topbar{width:min(920px,calc(100% - 44px));margin:0 auto;min-height:88px;display:flex;justify-content:space-between;align-items:center;gap:18px;border-bottom:1px solid #dde3dc}
+.review-home-link{display:inline-flex;align-items:center;gap:11px;text-decoration:none;color:#171a18;font-weight:800;letter-spacing:.13em;font-size:13px}
+.review-home-link img{width:30px;height:30px;object-fit:contain}
+.review-back-link{font-size:12px;font-weight:700;color:#566057;text-decoration:none}
+.review-home-link:focus-visible,.review-back-link:focus-visible{outline:2px solid #aa5e0c;outline-offset:5px}
+body[data-page="review"] .review-page{width:min(850px,100%);max-width:850px;min-height:auto;padding:clamp(32px,6vw,72px) 22px 100px;margin:0 auto}
+body[data-page="review"] .review-page .system-heading{margin:0 0 clamp(34px,5vw,48px);display:block}
+body[data-page="review"] .review-page .system-heading .kicker{margin:0 0 14px;font-size:11px;font-weight:800;letter-spacing:.16em;color:#696f69;line-height:1.5}
+body[data-page="review"] .review-page .system-heading h1{font-size:clamp(38px,7vw,68px);font-weight:700;line-height:1.05;letter-spacing:-.05em;margin:0 0 24px;color:#171a18;overflow-wrap:normal}
+body[data-page="review"] .review-page .system-heading h1 span{color:#9d4e0b}
+body[data-page="review"] .review-page .system-heading p:last-child{font-size:clamp(15px,2.4vw,18px);line-height:1.7;color:#58615b;max-width:58ch;margin:0}
+body[data-page="review"] #review-content{min-width:0}
+body[data-page="review"] .review-compose,
+body[data-page="review"] .review-thanks,
+body[data-page="review"] .review-celebration{box-sizing:border-box;border:1px solid #e1e6df;border-radius:26px;background:#fff;padding:clamp(24px,5vw,42px);box-shadow:0 15px 40px rgba(19,30,22,.035);min-width:0}
+body[data-page="review"] .review-compose h2{font-size:clamp(24px,4.5vw,34px);line-height:1.2;letter-spacing:-.035em;max-width:20ch;margin:0 0 34px}
+body[data-page="review"] .rating-field{margin:0 0 32px;min-width:0}
+body[data-page="review"] .rating-field legend{margin-bottom:10px;font-size:15px}
+body[data-page="review"] .rating-options{display:flex;align-items:center;gap:clamp(1px,1.4vw,10px);flex-wrap:nowrap;width:100%;max-width:430px}
+body[data-page="review"] .rating-options label{box-sizing:border-box;flex:1;min-width:0;min-height:64px;border:1px solid transparent;border-radius:13px;box-shadow:none;background:transparent;color:#b6bdb7;font-size:clamp(30px,6.5vw,44px);line-height:1;cursor:pointer;transition:transform .2s ease,color .2s ease,background .2s ease}
+body[data-page="review"] .rating-options label:hover{color:#bc741d;background:#fdf8ef;transform:translateY(-2px)}
+body[data-page="review"] .rating-options label.is-selected{background:#fff4e2;border-color:#f3d8b0;color:#ad5b0c}
+body[data-page="review"] .rating-options .rating-number{font-size:11px;line-height:1;color:#666f68}
+body[data-page="review"] .rating-options input:focus-visible+label{outline:3px solid #ae5c0b;outline-offset:2px}
+body[data-page="review"] #rating-description{min-height:1.6em;font-size:13px!important;margin:9px 0 0;color:#835018!important}
+body[data-page="review"] .review-comment{margin:0 0 12px;font-size:15px}
+body[data-page="review"] .review-compose textarea{box-sizing:border-box;width:100%;min-height:140px;padding:16px 18px;border:1px solid #c9d1c9;border-radius:15px;font-size:16px;line-height:1.5;background:#fbfcfa;box-shadow:none}
+body[data-page="review"] .review-compose textarea:focus{border-color:#c77b1a;outline:2px solid #e8c28e;outline-offset:1px}
+body[data-page="review"] .review-counter{margin:7px 0 0!important}
+body[data-page="review"] .review-compose .system-check{display:flex;align-items:flex-start;gap:12px;margin:30px 0 24px;padding:17px;border-radius:15px;background:#f7f8f5;border:1px solid #e1e6df}
+body[data-page="review"] .review-compose .system-check input{flex:0 0 auto;margin-top:5px;accent-color:#9f530b}
+body[data-page="review"] .review-compose .system-check span{font-size:13px;line-height:1.55}
+body[data-page="review"] .review-compose [type="submit"]{width:100%;min-height:55px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:14px}
+body[data-page="review"] .review-compose [type="submit"][aria-busy="true"]{opacity:.75}
+body[data-page="review"] #review-error:empty{display:none}
+body[data-page="review"] #review-error:not(:empty){padding:12px 14px;border-radius:10px;background:#fff4ed}
+body[data-page="review"] .review-compose form>p:last-child{font-size:12px!important;line-height:1.6;color:#6d766e}
+body[data-page="review"] .review-thanks{min-height:380px;display:grid;justify-items:center;align-content:center;gap:15px}
+body[data-page="review"] .review-thanks h2{font-size:clamp(26px,4.5vw,34px);line-height:1.17;margin:0}
+body[data-page="review"] .review-thanks p{max-width:54ch;margin:0;line-height:1.6}
+body[data-page="review"] .review-thanks .review-check{margin:0 0 8px}
+body[data-page="review"] .review-thanks .review-stars{margin:4px 0;font-size:30px}
+body[data-page="review"] .review-celebration{text-align:center;min-height:380px;display:grid;justify-items:center;align-content:center;gap:10px;overflow:hidden}
+.review-celebration .kicker{font-size:10px;letter-spacing:.17em;color:#95631d;margin:0}
+.review-celebration h2{font-size:clamp(28px,5vw,36px);margin:0;letter-spacing:-.035em}
+.review-celebration p:last-child{font-size:14px;color:#647065;margin:0}
+.review-celebration-art{position:relative;width:min(100%,250px);height:151px}
+.review-celebration-car{position:absolute;left:0;right:0;bottom:7px;width:100%;height:108px;color:#657b6e;stroke-dasharray:500;stroke-dashoffset:500;animation:ff-car-draw .85s ease forwards}
+.review-celebration-stars{position:absolute;inset:0;z-index:1}
+.review-flying-star{position:absolute;left:calc(16% + var(--i)*16%);top:0;font-size:30px;color:#d18a1b;filter:drop-shadow(0 3px 8px #d7a05433);opacity:0;animation:ff-review-star-flight .95s cubic-bezier(.22,.75,.33,1) forwards;animation-delay:calc(var(--i)*.1s)}
+.review-celebration-check{position:absolute;z-index:2;left:50%;top:53%;width:44px;height:44px;display:grid;place-items:center;border-radius:50%;background:#e8f4eb;color:#23623f;font-size:25px;font-weight:800;opacity:0;transform:translate(-50%,-50%) scale(.35);animation:ff-review-confirm .4s .98s ease-out forwards}
+@keyframes ff-car-draw{to{stroke-dashoffset:0}}
+@keyframes ff-review-star-flight{0%{opacity:0;transform:translateY(-24px) scale(.65) rotate(-20deg)}25%{opacity:1}72%{opacity:1;transform:translateY(65px) scale(1.15) rotate(12deg)}100%{opacity:0;transform:translateY(95px) scale(.3)}}
+@keyframes ff-review-confirm{to{opacity:1;transform:translate(-50%,-50%) scale(1)}}
+@media(max-width:600px){
+ body[data-page="review"] .review-topbar{width:calc(100% - 36px);min-height:72px}
+ body[data-page="review"] .review-page{padding:33px 18px 70px}
+ body[data-page="review"] .review-page .system-heading h1{font-size:clamp(37px,10vw,48px)}
+ body[data-page="review"] .review-compose,body[data-page="review"] .review-thanks,body[data-page="review"] .review-celebration{padding:25px 19px;border-radius:21px}
+ body[data-page="review"] .review-compose h2{font-size:24px;margin-bottom:26px}
+ body[data-page="review"] .rating-options label{min-height:62px}
+ body[data-page="review"] .review-back-link{font-size:11px}
+}
+@media(prefers-reduced-motion:reduce){
+ body[data-page="review"] .rating-options label,body[data-page="review"] .rating-options label:hover{transition:none;transform:none}
+ .review-celebration-car,.review-flying-star,.review-celebration-check{animation:none;opacity:1;stroke-dashoffset:0}
+}

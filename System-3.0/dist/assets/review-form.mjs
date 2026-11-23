@@ -2,7 +2,7 @@ import {api,escape as e} from './system.mjs';
 const host=document.getElementById('review-content'),id=new URLSearchParams(location.search).get('id'),token=new URLSearchParams(location.hash.slice(1)).get('t')||'';
 const labels=['Deixou a desejar','Poderia melhorar','Foi bom','Foi muito bom','Foi excelente'];
 function celebrate(review){
- if(matchMedia('(prefers-reduced-motion: reduce)').matches){receipt(review);return;}
+ if(typeof matchMedia!=='function'||matchMedia('(prefers-reduced-motion: reduce)').matches){receipt(review);return;}
  const stars=Array.from({length:Math.max(1,Math.min(5,Number(review.rating)||1))},(_,i)=>'<span class="review-flying-star" style="--i:'+i+'" aria-hidden="true">★</span>').join('');
  host.innerHTML='<div class="review-celebration" role="status" aria-live="polite"><p class="kicker">FINE FORM · EXPERIÊNCIA</p><div class="review-celebration-art" aria-hidden="true"><div class="review-celebration-stars">'+stars+'</div><svg class="review-celebration-car" viewBox="0 0 240 110" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 75h21l20-34a22 22 0 0 1 19-11h80a25 25 0 0 1 19 9l22 27h19v25h-19"/><path d="M51 91H24V75m52-1h88M91 31l-15 35h104"/><circle cx="63" cy="88" r="13"/><circle cx="186" cy="88" r="13"/></svg><span class="review-celebration-check">✓</span></div><h2>Avaliação enviada!</h2><p>Obrigado por fazer parte do cuidado Fine Form.</p></div>';
  window.setTimeout(()=>{if(host.querySelector('.review-celebration')){receipt(review);host.querySelector('.review-thanks h2')?.setAttribute('tabindex','-1');host.querySelector('.review-thanks h2')?.focus({preventScroll:true});}},1500);

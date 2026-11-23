@@ -12,7 +12,7 @@ const icon = name => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
 export function mountFloatingNav({root = './', window = globalThis.window} = {}) {
   const {document} = window;
   const footer = document.querySelector('[data-footer]');
-  if (!footer || document.querySelector('.ff-dock') || document.body.dataset.page === 'admin') return;
+  if (!footer || document.querySelector('.ff-dock') || ['admin','review'].includes(document.body.dataset.page)) return;
   const page = document.body.dataset.page;
   const items = [
     ['home', 'Início', page === 'home' ? '#conteudo' : root, 'home'],

@@ -2,7 +2,7 @@ import {api,escape as e} from './system.mjs';
 const when=value=>new Date(value).toLocaleString('pt-BR',{timeZone:'America/Sao_Paulo'});
 export async function openLoyalty(customerId,{modal,detail,toast,quoteId=''}){
  const endpoint='/api/admin/customers/'+encodeURIComponent(customerId)+'/loyalty';
- if(!detail.ownerDocument.getElementById('admin-dialog')?.open)modal('<section class="ff-loyalty ff-view-loading" role="status" aria-label="Carregando fidelidade"><div class="ff-loading-head"></div><div class="ff-loading-card tall"></div></section>');
+ if(!detail.ownerDocument.getElementById('admin-dialog')?.open)modal('<section class="ff-loyalty ff-view-loading" role="status" aria-label="Carregando fidelidade"><div class="ff-skeleton-title"></div><div class="ff-skeleton-section"><div class="ff-skeleton-line wide"></div><div class="ff-skeleton-line medium"></div><div class="ff-skeleton-item"></div><div class="ff-skeleton-item"></div></div></section>');
  let data=await api(endpoint),busy=false,animateNewStamp=false;
  const render=()=>{
   const card=data.cards.find(c=>c.status==='active'),points=card?.stamps.length||0;

@@ -36,12 +36,17 @@ export function organizeQuoteView(detail){
   if(node===head)continue;
   let section='service';
   if(node.matches('.ff-quote-facts,.ff-quote-services'))section='summary';
-  else if(node.matches('#ff-quote-vehicle')||node.querySelector('[data-loyalty]'))section='customer';
+  else if(node.matches('#ff-quote-vehicle,.ff-order-customer-profile')||node.querySelector('[data-loyalty]'))section='customer';
   else if(node.matches('.ff-quote-security,.ff-quote-history'))section='history';
   if(node.matches('hr')){node.remove();continue;}
-  if(node.matches('.ff-quote-services,#ff-quote-edit,#ff-quote-vehicle,.ff-quote-history'))node.open=true;
+  if(node.matches('.ff-quote-services,.ff-quote-history'))node.open=true;
   panels[section].append(node);
  }
+ // Keep the event timeline first; dangerous operations remain collapsed below it.
+ const timeline=panels.history.querySelector('.ff-quote-history');
+ if(timeline)panels.history.prepend(timeline);
+ const profile=panels.customer.querySelector('.ff-order-customer-profile');
+ if(profile)panels.customer.prepend(profile);
  const back=document.createElement('button');
  back.type='button';back.className='ff-order-back';back.dataset.closeDialog='';
  back.setAttribute('aria-label','Fechar pedido e voltar ao painel');

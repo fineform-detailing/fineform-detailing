@@ -39,7 +39,7 @@ export function organizeQuoteView(detail){
   else if(node.matches('#ff-quote-vehicle')||node.querySelector('[data-loyalty]'))section='customer';
   else if(node.matches('.ff-quote-security,.ff-quote-history'))section='history';
   if(node.matches('hr')){node.remove();continue;}
-  if(node.matches('.ff-quote-services,#ff-quote-edit'))node.open=true;
+  if(node.matches('.ff-quote-services,#ff-quote-edit,#ff-quote-vehicle,.ff-quote-history'))node.open=true;
   panels[section].append(node);
  }
  const back=document.createElement('button');
@@ -62,13 +62,14 @@ export function organizeQuoteView(detail){
   for(const [key,panel] of Object.entries(panels))panel.hidden=key!==id;
   frame.dataset.section=id;previousSection=id;
   context.textContent=sections.find(([key])=>key===id)[1];
-  if(scroll)body.scrollTop=Number(panels[id].dataset.scroll)||0;
+  if(scroll&&leaving!==panels[id])body.scrollTop=Number(panels[id].dataset.scroll)||0;
   // A short, non-blocking transition makes the current scope legible.
   // The live DOM is not re-created: form values and handlers remain intact.
   const win=document.defaultView;
   const reduced=typeof win?.matchMedia==='function'&&win.matchMedia('(prefers-reduced-motion: reduce)').matches;
   if(leaving!==panels[id]&&!reduced&&typeof panels[id].animate==='function'){
-   panels[id].animate([{opacity:.48,transform:'translate3d(0,7px,0)'},{opacity:1,transform:'translate3d(0,0,0)'}],{duration:175,easing:'cubic-bezier(.2,.8,.2,1)'});
+   panels[id].getAnimations?.().forEach(animation=>animation.cancel());
+   panels[id].animate([{opacity:.82},{opacity:1}],{duration:130,easing:'ease-out'});
   }
  }
  footer.addEventListener('click',event=>{

@@ -148,3 +148,77 @@ body[data-page="admin"] #admin-dialog .ff-loyalty-feedback:empty{display:none}
  body[data-page="admin"] :is(button,a,summary){transition:none!important;transform:none!important}
  body[data-page="admin"] #admin-dialog.ff-quote-dialog .ff-stage-track li::before{transition:none!important}
 }
+
+/* Order workspace v2: flat task sections, one scroll region, real touch targets. */
+body[data-page="admin"][data-layout="organized"] #admin-dialog.ff-quote-dialog {
+ --order-line:#e9e9e5;--order-ink:#171817;--order-muted:#646762;
+}
+body[data-page="admin"][data-layout="organized"] #admin-dialog.ff-quote-dialog .ff-quote-view{min-width:0;min-height:0;grid-template-rows:auto minmax(0,1fr) auto;isolation:isolate}
+body[data-page="admin"][data-layout="organized"] #admin-dialog.ff-quote-dialog .ff-quote-head{position:relative!important;inset:auto!important;z-index:1;padding:12px 26px 16px!important;gap:5px 12px!important;background:#fff!important}
+body[data-page="admin"][data-layout="organized"] #admin-dialog.ff-quote-dialog .ff-order-back{min-height:44px;color:#222;font-size:13px}
+body[data-page="admin"][data-layout="organized"] #admin-dialog.ff-quote-dialog .ff-order-body{position:relative!important;min-height:0;min-width:0;overflow-y:auto!important;overflow-x:hidden!important;padding:22px 26px 30px!important;scroll-padding:18px 0 24px!important;background:#fff;scrollbar-width:thin}
+body[data-page="admin"][data-layout="organized"] #admin-dialog.ff-quote-dialog .ff-order-panel{gap:22px;min-height:0;min-width:0;outline:none}
+body[data-page="admin"][data-layout="organized"] #admin-dialog.ff-quote-dialog .ff-order-panel:focus-visible{outline:2px solid #a94e00;outline-offset:-2px}
+body[data-page="admin"][data-layout="organized"] #admin-dialog.ff-quote-dialog .ff-order-panel-title{margin:0 0 2px;font:650 21px/1.25 "FF Sans",Arial,sans-serif;letter-spacing:-.045em}
+body[data-page="admin"][data-layout="organized"] #admin-dialog.ff-quote-dialog .ff-quote-facts{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr));gap:0 20px!important}
+body[data-page="admin"][data-layout="organized"] #admin-dialog.ff-quote-dialog .ff-quote-fact{background:transparent!important;border:0!important;border-bottom:1px solid var(--order-line)!important;border-radius:0!important;padding:13px 0 16px!important;min-width:0;box-shadow:none!important;min-height:0!important}
+body[data-page="admin"][data-layout="organized"] #admin-dialog.ff-quote-dialog .ff-quote-client{grid-column:1/-1;gap:5px 12px}
+body[data-page="admin"][data-layout="organized"] #admin-dialog.ff-quote-dialog .ff-quote-client>strong{font-size:20px;line-height:1.25;overflow-wrap:anywhere}
+body[data-page="admin"][data-layout="organized"] #admin-dialog.ff-quote-dialog .ff-quote-client>a{min-height:44px;display:flex;align-items:center;justify-content:center;background:#f4f4f2!important;color:#242724!important;border-radius:10px!important;font-size:12px;text-decoration:none}
+body[data-page="admin"][data-layout="organized"] #admin-dialog.ff-quote-dialog .ff-quote-fact>small{font-size:12px;line-height:1.45;letter-spacing:0}
+body[data-page="admin"][data-layout="organized"] #admin-dialog.ff-quote-dialog .ff-quote-services,
+body[data-page="admin"][data-layout="organized"] #admin-dialog.ff-quote-dialog .ff-quote-fold{padding:0!important;border:0!important;border-radius:0!important;background:transparent!important;box-shadow:none!important;overflow:visible!important;margin:0!important}
+body[data-page="admin"][data-layout="organized"] #admin-dialog.ff-quote-dialog :is(.ff-quote-fold,.ff-quote-services)>summary{padding:12px 0!important;min-height:48px!important;gap:16px;border:0!important;border-bottom:1px solid var(--order-line)!important;font-size:15px!important;line-height:1.35}
+body[data-page="admin"][data-layout="organized"] #admin-dialog.ff-quote-dialog :is(.ff-quote-fold,.ff-quote-services)>:not(summary){margin:0!important}
+body[data-page="admin"][data-layout="organized"] #admin-dialog.ff-quote-dialog .ff-quote-services>.system-list{padding:5px 0 0!important;border:0!important}
+body[data-page="admin"][data-layout="organized"] #admin-dialog.ff-quote-dialog .ff-quote-fold .system-card{padding:16px 0 0!important;margin:0!important;border:0!important;border-radius:0!important;background:transparent!important;box-shadow:none!important}
+body[data-page="admin"][data-layout="organized"] #admin-dialog.ff-quote-dialog .ff-quote-fold .system-card>h3{font-size:17px!important;line-height:1.25;margin:0 0 8px}
+body[data-page="admin"][data-layout="organized"] #admin-dialog.ff-quote-dialog .ff-quote-fold .system-muted{font-size:12px!important;line-height:1.6!important;color:var(--order-muted)}
+body[data-page="admin"][data-layout="organized"] #admin-dialog.ff-quote-dialog :is(#quote-edit,#register-vehicle){display:grid;gap:18px!important;margin:0!important;padding:16px 0 0!important}
+body[data-page="admin"][data-layout="organized"] #admin-dialog.ff-quote-dialog .ff-edit-block{display:grid;gap:12px!important;margin:0!important;padding:0 0 20px!important;border:0!important;border-bottom:1px solid var(--order-line)!important;border-radius:0!important;background:transparent!important;box-shadow:none!important}
+body[data-page="admin"][data-layout="organized"] #admin-dialog.ff-quote-dialog .ff-edit-block h4{font-size:16px!important;line-height:1.4}
+body[data-page="admin"][data-layout="organized"] #admin-dialog.ff-quote-dialog .system-field{margin:0!important;min-width:0}
+body[data-page="admin"][data-layout="organized"] #admin-dialog.ff-quote-dialog .system-field>span{margin:0 0 7px!important;font-size:12px!important;color:#333733}
+body[data-page="admin"][data-layout="organized"] #admin-dialog.ff-quote-dialog .system-field :is(input,select,textarea){box-sizing:border-box;width:100%;min-width:0;min-height:48px!important;padding:11px 13px!important;border:1px solid #d5d8d3!important;border-radius:10px!important;background:#f7f7f5!important;color:#171817!important;box-shadow:none!important;font-size:16px!important;line-height:1.4}
+body[data-page="admin"][data-layout="organized"] #admin-dialog.ff-quote-dialog .system-field textarea{min-height:90px!important}
+body[data-page="admin"][data-layout="organized"] #admin-dialog.ff-quote-dialog .system-field :is(input,select,textarea):focus-visible{outline:2px solid #b55b05!important;outline-offset:2px!important;border-color:#b55b05!important}
+body[data-page="admin"][data-layout="organized"] #admin-dialog.ff-quote-dialog .system-check{margin:0!important;gap:10px;font-size:13px;line-height:1.55;align-items:flex-start}
+body[data-page="admin"][data-layout="organized"] #admin-dialog.ff-quote-dialog .system-check input{flex:0 0 19px;width:19px;height:19px;margin:2px 0 0!important}
+body[data-page="admin"][data-layout="organized"] #admin-dialog.ff-quote-dialog :is(#quote-edit,#register-vehicle)>button[type="submit"]{display:flex;justify-content:center;align-items:center;width:100%;min-height:50px!important;margin:0!important;padding:12px 16px!important;border-radius:11px!important;font-size:14px!important;font-weight:750;background:#191b19!important;color:white!important;border:0!important}
+body[data-page="admin"][data-layout="organized"] #admin-dialog.ff-quote-dialog :is(.system-actions,.ff-quick-statuses){gap:12px!important}
+body[data-page="admin"][data-layout="organized"] #admin-dialog.ff-quote-dialog .system-actions{display:flex;flex-wrap:wrap;align-items:center;margin:0!important}
+body[data-page="admin"][data-layout="organized"] #admin-dialog.ff-quote-dialog .system-actions>.button{margin:0!important;min-height:46px!important;max-width:100%;white-space:normal;border-radius:11px!important;line-height:1.4;text-align:center}
+body[data-page="admin"][data-layout="organized"] #admin-dialog.ff-quote-dialog [data-quote-panel="customer"]>.system-actions>button{width:100%;justify-content:space-between;background:#f5f5f2!important;border:0!important;color:#242724!important}
+body[data-page="admin"][data-layout="organized"] #admin-dialog.ff-quote-dialog .ff-quote-quick{padding:0 0 20px!important;border:0!important;border-bottom:1px solid var(--order-line)!important;border-radius:0!important;background:transparent!important;box-shadow:none!important}
+body[data-page="admin"][data-layout="organized"] #admin-dialog.ff-quote-dialog .ff-stage-eyebrow{display:none}
+body[data-page="admin"][data-layout="organized"] #admin-dialog.ff-quote-dialog .ff-quick-preview{border:0!important;border-left:3px solid #ff8000!important;background:#f7f7f5!important;border-radius:0 10px 10px 0!important;padding:12px 14px!important}
+body[data-page="admin"][data-layout="organized"] #admin-dialog.ff-quote-dialog .ff-quick-statuses{grid-template-columns:1fr!important}
+body[data-page="admin"][data-layout="organized"] #admin-dialog.ff-quote-dialog .ff-order-footer{position:relative!important;inset:auto!important;z-index:1;min-width:0;background:#fff!important;box-shadow:none!important;padding:6px 18px calc(8px + env(safe-area-inset-bottom,0px))!important}
+body[data-page="admin"][data-layout="organized"] #admin-dialog.ff-quote-dialog .ff-order-tabs{position:relative;gap:6px}
+body[data-page="admin"][data-layout="organized"] #admin-dialog.ff-quote-dialog .ff-order-tabs>button{min-height:56px!important;border-radius:11px!important;transform:none!important;position:relative;overflow:hidden}
+body[data-page="admin"][data-layout="organized"] #admin-dialog.ff-quote-dialog .ff-order-tabs>button[aria-selected="true"]{background:#f3f3ef!important;color:#171817!important}
+body[data-page="admin"][data-layout="organized"] #admin-dialog.ff-quote-dialog .ff-order-tabs>button[aria-selected="true"]::before{display:none}
+body[data-page="admin"][data-layout="organized"] #admin-dialog.ff-quote-dialog .ff-order-tabs>button[aria-selected="true"] svg{stroke:#b65a00;stroke-width:2}
+body[data-page="admin"] #admin-dialog .ff-loyalty-empty{border:0!important;border-radius:0!important;background:transparent!important;padding:0 0 15px!important;border-bottom:1px solid #e9e9e5!important}
+body[data-page="admin"] #admin-dialog .ff-loyalty-card{background:#1a1c1a!important;color:#fff!important;border:0!important;border-radius:16px!important}
+body[data-page="admin"] #admin-dialog .ff-loyalty-card footer{border-color:#ffffff30!important}
+body[data-page="admin"] #admin-dialog .ff-loyalty-card footer span{color:#d6d9d3!important}
+body[data-page="admin"] #admin-dialog .ff-loyalty .ff-loyalty-circle.is-stamped{background:#ff8000!important;border-color:#ff8000!important;color:#171817!important}
+body[data-page="admin"] #admin-dialog .ff-loyalty .ff-loyalty-circle:not(.is-stamped){background:#30332f!important;color:#eee!important;border-color:#686c64!important}
+body[data-page="admin"] #admin-dialog .ff-loyalty-circle[data-loyalty-stamp]{border-color:#ffb56b!important}
+@media(max-width:650px){
+ body[data-page="admin"][data-layout="organized"] #admin-dialog.ff-quote-dialog .ff-quote-head{padding:calc(4px + env(safe-area-inset-top,0px)) 18px 12px!important}
+ body[data-page="admin"][data-layout="organized"] #admin-dialog.ff-quote-dialog .ff-order-body{padding:17px 18px 30px!important}
+ body[data-page="admin"][data-layout="organized"] #admin-dialog.ff-quote-dialog .ff-order-panel{gap:19px}
+ body[data-page="admin"][data-layout="organized"] #admin-dialog.ff-quote-dialog .ff-quote-facts{grid-template-columns:1fr}
+ body[data-page="admin"][data-layout="organized"] #admin-dialog.ff-quote-dialog .ff-order-footer{padding:6px 10px calc(8px + env(safe-area-inset-bottom,0px))!important}
+ body[data-page="admin"][data-layout="organized"] #admin-dialog.ff-quote-dialog .ff-order-tabs>button{font-size:11px!important;gap:4px;min-height:52px!important}
+ body[data-page="admin"][data-layout="organized"] #admin-dialog.ff-quote-dialog .ff-edit-block .system-grid{grid-template-columns:1fr 1fr!important;gap:12px!important}
+ body[data-page="admin"][data-layout="organized"] #admin-dialog.ff-quote-dialog .ff-quote-security .system-actions>.button{width:100%}
+}
+@media(max-width:355px){
+ body[data-page="admin"][data-layout="organized"] #admin-dialog.ff-quote-dialog .ff-edit-block .system-grid{grid-template-columns:1fr!important}
+ body[data-page="admin"][data-layout="organized"] #admin-dialog.ff-quote-dialog .ff-quote-client{grid-template-columns:1fr!important}
+ body[data-page="admin"][data-layout="organized"] #admin-dialog.ff-quote-dialog .ff-quote-client>a{grid-column:1;grid-row:auto;justify-self:start}
+}
+@media(prefers-reduced-motion:reduce){body[data-page="admin"][data-layout="organized"] #admin-dialog.ff-quote-dialog .ff-order-tabs>button{transition:none!important}}

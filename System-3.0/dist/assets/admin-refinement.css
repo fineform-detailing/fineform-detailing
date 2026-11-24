@@ -222,3 +222,66 @@ body[data-page="admin"] #admin-dialog .ff-loyalty-circle[data-loyalty-stamp]{bor
  body[data-page="admin"][data-layout="organized"] #admin-dialog.ff-quote-dialog .ff-quote-client>a{grid-column:1;grid-row:auto;justify-self:start}
 }
 @media(prefers-reduced-motion:reduce){body[data-page="admin"][data-layout="organized"] #admin-dialog.ff-quote-dialog .ff-order-tabs>button{transition:none!important}}
+
+/* Workspace v3 — a restrained mobile-first interface; no horizontal customer table. */
+body[data-page="admin"] .ff-customer-search{display:grid!important;grid-template-columns:minmax(0,1fr) auto;gap:10px!important;align-items:stretch;margin:0 0 20px!important}
+body[data-page="admin"] .ff-customer-search input{min-width:0;width:100%;min-height:48px}
+body[data-page="admin"] .ff-customer-search .button{margin:0!important;min-height:48px;border-radius:12px!important;padding:0 16px!important;background:#191b19!important;color:#fff!important}
+.ff-customer-list-heading{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:0 0 12px}
+.ff-customer-list-heading h2{font-size:20px;margin:0;letter-spacing:-.04em}
+.ff-customer-list-heading>span{font-size:12px;color:#5c6059}
+.ff-customer-list{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,290px),1fr));gap:14px;min-width:0}
+.ff-customer-item,.ff-order-customer-profile{min-width:0;background:#fff;border-radius:18px;padding:17px;display:grid;gap:16px;border:1px solid #e6e8e2;box-shadow:none}
+.ff-customer-identity{display:grid;grid-template-columns:46px minmax(0,1fr) auto;gap:12px;align-items:center;min-width:0}
+.ff-customer-avatar{width:46px;height:46px;display:grid;place-items:center;background:#fce9d7;color:#884000;border-radius:50%;font-size:15px;font-weight:750}
+.ff-customer-identity h3{margin:0 0 4px!important;font-size:17px!important;line-height:1.25!important;overflow-wrap:anywhere;letter-spacing:-.025em}
+.ff-customer-identity :is(a,small,div>span){font-size:12px;color:#595f56;overflow-wrap:anywhere}
+.ff-customer-menu{position:relative;align-self:start}
+.ff-customer-menu summary{list-style:none;cursor:pointer;display:grid;place-items:center;width:44px;height:44px;border-radius:12px;background:#f3f3ef;color:#171817;font-size:18px;letter-spacing:2px}
+.ff-customer-menu summary::-webkit-details-marker{display:none}
+.ff-customer-menu[open] button{position:absolute;right:0;top:48px;z-index:4;min-width:150px;background:#fff!important;box-shadow:0 6px 24px #0002;margin:0!important;border-radius:10px!important;min-height:44px}
+.ff-customer-meta{display:grid;grid-template-columns:minmax(0,2fr) minmax(0,1fr);gap:12px;padding:13px 0;border-block:1px solid #eceee8}
+.ff-customer-meta>div{display:grid;gap:4px;min-width:0}
+.ff-customer-meta span{font-size:11px;color:#5f645a}
+.ff-customer-meta strong{font-size:14px;line-height:1.35;overflow-wrap:anywhere}
+body[data-page="admin"] .ff-customer-loyalty{width:100%;display:flex!important;align-items:center;justify-content:space-between;gap:12px;min-height:46px;margin:0!important;background:#f4f4ef!important;border:0!important;border-radius:12px!important;color:#191b19!important;font-size:13px!important}
+body[data-page="admin"][data-layout="organized"] #admin-dialog.ff-quote-dialog .ff-order-body{background:#f5f5f1!important}
+body[data-page="admin"][data-layout="organized"] #admin-dialog.ff-quote-dialog .ff-order-panel{gap:14px!important}
+body[data-page="admin"][data-layout="organized"] #admin-dialog.ff-quote-dialog .ff-quote-quick{background:#191b19!important;color:#fff!important;border-radius:20px!important;border:0!important;padding:20px 16px!important;display:grid;gap:14px!important}
+body[data-page="admin"][data-layout="organized"] #admin-dialog.ff-quote-dialog .ff-quote-quick-title{margin:0!important;display:block!important}
+body[data-page="admin"][data-layout="organized"] #admin-dialog.ff-quote-dialog .ff-quote-quick-title h3{font-size:20px!important;color:#fff!important;letter-spacing:-.035em}
+body[data-page="admin"][data-layout="organized"] #admin-dialog.ff-quote-dialog .ff-stage-current{display:none!important}
+body[data-page="admin"][data-layout="organized"] #admin-dialog.ff-quote-dialog .ff-stage-track{margin:0!important;gap:5px!important}
+body[data-page="admin"][data-layout="organized"] #admin-dialog.ff-quote-dialog .ff-stage-track li::before{background:#4a4e48!important}
+body[data-page="admin"][data-layout="organized"] #admin-dialog.ff-quote-dialog .ff-stage-track li.is-complete::before{background:#d1d5ce!important}
+body[data-page="admin"][data-layout="organized"] #admin-dialog.ff-quote-dialog .ff-stage-track li.is-current::before{background:#ff8a24!important}
+body[data-page="admin"][data-layout="organized"] #admin-dialog.ff-quote-dialog .ff-stage-track span{color:#d0d4ce!important}
+body[data-page="admin"][data-layout="organized"] #admin-dialog.ff-quote-dialog .ff-stage-track li.is-current span{color:#ffc28d!important;font-weight:700}
+body[data-page="admin"][data-layout="organized"] #admin-dialog.ff-quote-dialog .ff-quote-quick :is(.ff-quote-intro,.system-muted){color:#d8dcd6!important;margin:0!important;font-size:12px!important}
+body[data-page="admin"][data-layout="organized"] #admin-dialog.ff-quote-dialog .ff-quick-statuses{margin:0!important;gap:10px!important}
+body[data-page="admin"][data-layout="organized"] #admin-dialog.ff-quote-dialog .ff-quick-status{background:#fff!important;color:#171817!important;border:0!important;border-radius:12px!important;min-height:46px!important}
+body[data-page="admin"][data-layout="organized"] #admin-dialog.ff-quote-dialog .ff-quick-status:disabled{opacity:.55}
+body[data-page="admin"][data-layout="organized"] #admin-dialog.ff-quote-dialog .ff-quick-preview{margin:0!important;background:#292d28!important;border:0!important;border-radius:12px!important;padding:0 12px!important;color:#fff!important}
+body[data-page="admin"][data-layout="organized"] #admin-dialog.ff-quote-dialog .ff-quick-preview summary{cursor:pointer;min-height:44px;display:flex;align-items:center;font-size:13px;list-style:none;justify-content:space-between}
+body[data-page="admin"][data-layout="organized"] #admin-dialog.ff-quote-dialog .ff-quick-preview summary::after{content:'+'}
+body[data-page="admin"][data-layout="organized"] #admin-dialog.ff-quote-dialog .ff-quick-preview[open] summary::after{content:'−'}
+body[data-page="admin"][data-layout="organized"] #admin-dialog.ff-quote-dialog .ff-quick-preview p{font-size:13px!important;color:#e7e9e3!important;line-height:1.55!important;margin:0!important;padding:0 0 14px!important}
+body[data-page="admin"][data-layout="organized"] #admin-dialog.ff-quote-dialog .ff-quick-secondary summary{color:#fff!important}
+body[data-page="admin"][data-layout="organized"] #admin-dialog.ff-quote-dialog :is(.ff-quote-facts,.ff-quote-services,.ff-quote-fold){background:#fff!important;border-radius:16px!important;padding:0 16px!important;border:0!important}
+body[data-page="admin"][data-layout="organized"] #admin-dialog.ff-quote-dialog .ff-quote-fold>summary{border:0!important;min-height:54px!important}
+body[data-page="admin"][data-layout="organized"] #admin-dialog.ff-quote-dialog .ff-quote-fold[open]>summary{border-bottom:1px solid #eceee8!important}
+body[data-page="admin"][data-layout="organized"] #admin-dialog.ff-quote-dialog .ff-quote-fold[open]>:last-child:not(summary){padding-bottom:16px!important}
+body[data-page="admin"][data-layout="organized"] #admin-dialog.ff-quote-dialog .ff-quote-security{display:grid!important;gap:12px!important;margin:0!important;padding:0!important}
+body[data-page="admin"][data-layout="organized"] #admin-dialog.ff-quote-dialog .ff-quote-security .system-actions{display:grid!important;gap:12px!important;padding-top:10px!important}
+body[data-page="admin"][data-layout="organized"] #admin-dialog.ff-quote-dialog .ff-quote-security .system-actions>button{width:100%;min-height:46px!important;margin:0!important}
+body[data-page="admin"][data-layout="organized"] #admin-dialog.ff-quote-dialog .ff-quote-history .system-timeline{padding:18px 0 4px 16px!important;margin:0!important;display:grid;gap:17px}
+body[data-page="admin"][data-layout="organized"] #admin-dialog.ff-quote-dialog .ff-quote-history .system-timeline li{padding:0 0 12px 20px!important;margin:0!important}
+body[data-page="admin"][data-layout="organized"] #admin-dialog.ff-quote-dialog .ff-quote-history .system-timeline li strong{font-size:15px!important;color:#171817!important}
+body[data-page="admin"][data-layout="organized"] #admin-dialog.ff-quote-dialog .ff-quote-history .system-timeline li p{font-size:13px!important;line-height:1.55!important;margin:5px 0!important}
+body[data-page="admin"][data-layout="organized"] #admin-dialog.ff-quote-dialog .ff-quote-history .system-timeline li time{font-size:11px!important}
+body[data-page="admin"][data-layout="organized"] #admin-dialog.ff-quote-dialog .ff-order-customer-profile{border:0!important;padding:18px!important}
+.ff-order-customer-profile .ff-profile-kicker{font-size:10px!important;font-weight:700;letter-spacing:.08em}
+body[data-page="admin"] .ff-profile-contact{display:flex;align-items:center;justify-content:center;min-height:46px;border-radius:12px!important;margin:0!important}
+body[data-page="admin"][data-layout="organized"] #admin-dialog.ff-quote-dialog .ff-order-tabs>button[aria-selected="true"]{background:#fce9d7!important;color:#773800!important}
+body[data-page="admin"][data-layout="organized"] #admin-dialog.ff-quote-dialog .ff-order-tabs>button[aria-selected="true"] span{color:#773800!important}
+@media(max-width:420px){.ff-customer-item,.ff-order-customer-profile{padding:14px}.ff-customer-identity{gap:9px;grid-template-columns:42px minmax(0,1fr) auto}.ff-customer-avatar{width:42px;height:42px}body[data-page="admin"][data-layout="organized"] #admin-dialog.ff-quote-dialog .ff-order-body{padding:14px 14px 24px!important}}

@@ -1,5 +1,5 @@
 import {organizeQuoteView,revealQuoteSection} from './admin-layout.mjs?v=3';
-import {openLoyalty} from './admin-loyalty.mjs?v=2';
+import {openLoyalty} from './admin-loyalty.mjs?v=3';
 import {api,escape as e,statusLabel,visitLabel,dateLabel,trackingUrl,copyText,watchUpdates,clearAdminSession,setReauthenticationHandler,setSessionExpiryHandler} from './system.mjs';
 import {money,findPlan,plans,todaySP} from './catalog.mjs';
 import {notificationView} from './admin-notifications.mjs';

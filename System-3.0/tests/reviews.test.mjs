@@ -185,7 +185,17 @@ test('formulário permite nota baixa, preserva comentário após falha e escapa 
  const until=async fn=>{for(let i=0;i<100;i++){if(fn())return;await new Promise(r=>setTimeout(r,10));}assert.fail('Interface indisponível');};
  try{
   w.eval(out.outputFiles[0].text);await until(()=>w.document.getElementById('review-form'));
-  const form=w.document.getElementById('review-form');form.querySelector('[value="1"]').checked=true;form.querySelector('[name=consent]').checked=true;form.querySelector('[name=comment]').value='<img src=x onerror=alert(1)>';
+  const form=w.document.getElementById('review-form');
+  assert.equal(form.querySelectorAll('.rating-star').length,5);
+  form.querySelector('[value="5"]').click();
+  assert.equal(form.querySelectorAll('.rating-options .is-selected').length,5);
+  assert.equal(form.querySelector('.rating-track').style.getPropertyValue('--rating-position'),'90%');
+  form.querySelector('[value="1"]').click();
+  assert.equal(form.querySelectorAll('.rating-options .is-selected').length,1);
+  assert.equal(form.querySelector('.rating-track').style.getPropertyValue('--rating-position'),'10%');
+  assert.equal(w.document.getElementById('rating-description').textContent,'Deixou a desejar');
+  assert.equal(w.document.querySelector('[data-header]'),null);
+  form.querySelector('[value="1"]').checked=true;form.querySelector('[name=consent]').checked=true;form.querySelector('[name=comment]').value='<img src=x onerror=alert(1)>';
   form.dispatchEvent(new w.Event('submit',{bubbles:true,cancelable:true}));await until(()=>w.document.getElementById('review-error').textContent.includes('Falha temporária'));
   assert.equal(form.querySelector('[name=comment]').value,'<img src=x onerror=alert(1)>');assert.equal(form.querySelector('button').disabled,false);
   fail=false;form.dispatchEvent(new w.Event('submit',{bubbles:true,cancelable:true}));await until(()=>w.document.querySelector('.review-thanks'));

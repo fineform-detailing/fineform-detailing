@@ -161,3 +161,5 @@ test('aba Orçar apresenta a mesma cápsula escura e continua ligada ao orçamen
  assert.equal(nav.querySelectorAll('.ff-dock-link[aria-current]').length,1);
  window.close();
 });
+
+test('avaliação tem navegação própria e nunca monta o dock sobre os campos',()=>{const {window,nav}=setup('review');assert.equal(nav,undefined);assert.equal(window.document.querySelector('.ff-dock'),null);assert.equal(window.document.body.classList.contains('has-ff-dock'),false);window.close();});

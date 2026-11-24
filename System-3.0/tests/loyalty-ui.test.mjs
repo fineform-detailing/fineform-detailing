@@ -2,7 +2,7 @@ import {test} from 'node:test';
 import assert from 'node:assert/strict';
 import {build} from 'esbuild';
 import {JSDOM} from 'jsdom';
-test('círculo só fica preto após salvar; falha preserva pontos e conteúdo é escapado',async()=>{
+test('círculo só é marcado após salvar; falha preserva pontos e conteúdo é escapado',async()=>{
  const dom=new JSDOM('<div id="detail"></div>',{url:'http://localhost/painel/',runScripts:'outside-only'}),w=dom.window;
  const data={customer:{name:'Cliente <script>teste</script>',phone:'11999999999'},cards:[{id:'card-test',target:2,reward:'Lavagem <img src=x>',status:'active',version:1,stamps:[],events:[]}],eligible:[{id:'quote-test',reference:'FF-TEST',model:'Carro'}]};
  let release,calls=0,fail=false;

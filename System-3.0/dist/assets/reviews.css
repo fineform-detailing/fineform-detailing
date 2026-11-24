@@ -53,3 +53,20 @@ body[data-page="review"] .review-thanks .privacy-inline{margin-top:24px}
 @keyframes review-star-pop{0%{transform:scale(.86)}55%{transform:scale(1.16)}100%{transform:scale(1)}}
 @media(max-width:600px){body[data-page="review"] .review-topbar{padding:9px 22px}body[data-page="review"] .review-page{padding:25px 22px 32px!important}}
 @media(prefers-reduced-motion:reduce){body[data-page="review"] :is(.rating-star,.rating-car,.review-check){transition:none!important;animation:none!important}}
+
+/* Rating motion v3 — visual feedback without changing publication or consent rules. */
+body[data-page="review"] .rating-field{border:0!important;padding:18px 12px 12px!important;border-radius:20px;background:#f5f5f1}
+body[data-page="review"] .rating-field legend{float:left;width:100%;margin:0 0 12px!important;padding:0 4px}
+body[data-page="review"] .rating-options{clear:both;gap:4px!important}
+body[data-page="review"] .rating-options label{min-height:64px!important}
+body[data-page="review"] .rating-options label.is-current{background:#ffe8d1!important}
+body[data-page="review"] .rating-options label.is-current .rating-star{animation:none!important}
+body[data-page="review"] .rating-track{height:43px;margin:5px 0 10px;isolation:isolate}
+body[data-page="review"] .rating-road{left:10%;right:10%;bottom:9px;border-bottom:2px solid #d8dbd3}
+body[data-page="review"] .rating-progress{position:absolute;left:10%;bottom:9px;width:calc(var(--rating-position) - 10%);border-bottom:2px solid #e57208;transition:width .48s cubic-bezier(.2,.8,.2,1)}
+body[data-page="review"] .rating-car{width:42px;height:25px;bottom:10px;opacity:.55;transition:left .48s cubic-bezier(.2,.8,.2,1),opacity .2s ease}
+body[data-page="review"] .rating-track.is-rated .rating-car{opacity:1}
+body[data-page="review"] #rating-description{color:#4b4f48!important;margin:0!important;min-height:22px}
+body[data-page="review"] .rating-star{transform-origin:center;transition:fill .18s ease,color .18s ease}
+body[data-page="review"] .review-thanks .review-check{background:#e5f4e9;color:#1e6640}
+@media(prefers-reduced-motion:reduce){body[data-page="review"] :is(.rating-progress,.rating-car,.rating-star){transition:none!important;animation:none!important}}

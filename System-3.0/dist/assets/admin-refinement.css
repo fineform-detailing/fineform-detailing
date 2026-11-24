@@ -285,3 +285,7 @@ body[data-page="admin"] .ff-profile-contact{display:flex;align-items:center;just
 body[data-page="admin"][data-layout="organized"] #admin-dialog.ff-quote-dialog .ff-order-tabs>button[aria-selected="true"]{background:#fce9d7!important;color:#773800!important}
 body[data-page="admin"][data-layout="organized"] #admin-dialog.ff-quote-dialog .ff-order-tabs>button[aria-selected="true"] span{color:#773800!important}
 @media(max-width:420px){.ff-customer-item,.ff-order-customer-profile{padding:14px}.ff-customer-identity{gap:9px;grid-template-columns:42px minmax(0,1fr) auto}.ff-customer-avatar{width:42px;height:42px}body[data-page="admin"][data-layout="organized"] #admin-dialog.ff-quote-dialog .ff-order-body{padding:14px 14px 24px!important}}
+
+/* Keep selected bottom-navigation label readable on pale accent backgrounds. */
+body[data-page="admin"] .admin-mobile-nav>button[aria-current="page"],body[data-page="admin"] .admin-mobile-nav>button[aria-current="page"] span{color:#773800!important}
+body[data-page="admin"] .admin-mobile-nav>button[aria-current="page"]{background:#fce9d7!important}

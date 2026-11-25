@@ -11,7 +11,7 @@ function reviewSuccessArt(rating,animate=false){
 function receipt(review,animate=false){
  if(review.published===false){host.innerHTML='<section class="system-card review-thanks"><h2>Autorização retirada.</h2><p>Sua avaliação deixou de aparecer no site. Nome e comentário foram removidos do registro de avaliação.</p><p>Para pedir acesso, correção ou eliminação de outros dados, veja a <a href="../privacidade/">Política de Privacidade</a>.</p><a class="button outline" href="../">Voltar à Fine Form</a></section>';return;}
  host.innerHTML='<section class="system-card review-thanks">'+reviewSuccessArt(review.rating,animate)+'<div class="'+(animate?'ff-review-receipt-enter':'')+'"><p class="kicker">AVALIAÇÃO RECEBIDA</p><h2 tabindex="-1">Sua avaliação foi recebida, '+e(review.firstName)+'.</h2><p>Obrigado por compartilhar sua experiência e ajudar a aprimorar nosso trabalho.</p><p class="review-stars" aria-label="'+review.rating+' de 5 estrelas">'+('★'.repeat(review.rating))+'<span aria-hidden="true">'+('☆'.repeat(5-review.rating))+'</span></p>'+(review.comment?'<blockquote>'+e(review.comment)+'</blockquote>':'')+'<a class="button orange" href="../#avaliacoes">Ver avaliações no site <span aria-hidden="true">↗</span></a><p class="privacy-inline"><a href="../privacidade/">Privacidade e seus direitos</a>. Você pode retirar a autorização sem afetar o atendimento.</p><button class="button outline" type="button" id="withdraw-review">Retirar autorização de publicação</button><p id="withdraw-error" role="alert"></p></div></section>';
- if(animate){host.querySelector('h2')?.focus({preventScroll:true});host.scrollIntoView({block:'start',behavior:'instant'});}
+ if(animate){host.querySelector('h2')?.focus({preventScroll:true});host.scrollIntoView?.({block:'start',behavior:'auto'});}
  const withdraw=document.getElementById('withdraw-review');
  withdraw.addEventListener('click',async()=>{
   withdraw.disabled=true;withdraw.setAttribute('aria-busy','true');
@@ -31,7 +31,7 @@ async function start(){
   const rating=Number(new FormData(form).get('rating'));
   const previous=Number(form.dataset.rating||0);
   form.dataset.rating=String(rating);
-  const reduced=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const reduced=window.matchMedia?.('(prefers-reduced-motion: reduce)')?.matches??false;
   form.querySelectorAll('.rating-options label').forEach((label,i)=>{
    label.classList.toggle('is-selected',i<rating);
    label.classList.toggle('is-current',i===rating-1);

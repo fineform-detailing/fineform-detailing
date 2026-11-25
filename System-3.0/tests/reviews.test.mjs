@@ -200,6 +200,11 @@ test('formulário permite nota baixa, preserva comentário após falha e escapa 
   assert.equal(form.querySelector('[name=comment]').value,'<img src=x onerror=alert(1)>');assert.equal(form.querySelector('button').disabled,false);
   fail=false;form.dispatchEvent(new w.Event('submit',{bubbles:true,cancelable:true}));await until(()=>w.document.querySelector('.review-thanks'));
   assert.equal(w.document.querySelector('.review-thanks img'),null);assert.match(w.document.querySelector('.review-thanks blockquote').textContent,/<img/);
+  assert.equal(w.document.querySelectorAll('.ff-review-seal .ff-seal-star').length,5);
+  assert.equal(w.document.querySelectorAll('.ff-review-seal .ff-seal-star.is-filled').length,1);
+  assert.ok(w.document.querySelector('.ff-review-seal:not(.is-static) .ff-seal-tick'));
+  assert.ok(w.document.querySelector('.ff-review-receipt-enter'));
+
  }finally{w.close();}
 });
 test('animações restantes funcionam sem galeria e pasta removidas',async()=>{

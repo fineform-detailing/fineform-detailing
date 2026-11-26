@@ -30,7 +30,7 @@ export const services = [
  {id:'polishMedium',vehicle:'car',label:'Polimento médio',class:'Classe C',price:690,tag:'Correção localizada',description:'Correção em até quatro peças, conforme teste e condição da pintura.',includes:[...paintPreparation,'Corte e refino nas peças acordadas, até quatro peças pintadas','Lavagem Essencial e finalização com cera compatível'],included:['wax','paintIron'],notice:paintNotice+' Para correção distribuída pelo carro inteiro, escolha o Premium.'},
  {id:'polishPremium',vehicle:'car',label:'Polimento Premium',class:'Classe C',price:990,tag:'Correção completa',description:'Corte, refino e lustro em toda a pintura elegível, definidos por teste.',includes:[...premiumPaintPreparation,'Tratamento de toda a pintura externa elegível','Corte, refino e lustro conforme a necessidade de cada área','Finalização com cera compatível'],included:['wax','paintIron'],notice:paintNotice+' As etapas respeitam o estado e a espessura disponível da pintura.'},
  {id:'coating',vehicle:'car',label:'Vitrificação de pintura',class:'Classe C',price:1390,preparedPrice:1000,tag:'Proteção cerâmica',description:'Preparação e aplicação de proteção cerâmica na pintura, com orientação de cura e manutenção.',includes:[...paintPreparation,'Polimento de realce incluído na preparação','Remoção de óleos e resíduos antes do revestimento','Aplicação manual, nivelamento e inspeção do revestimento cerâmico','Orientação de cura e manutenção conforme o produto utilizado'],included:['paintIron'],covered:['polishLight'],notice:'R$ 1.390 pelo atendimento completo. Com um polimento já contratado: acréscimo de R$ 1.000, sem repetir a preparação. Substitui a cera. Polimento Premium pode ser combinado, com abatimento do realce já incluído. Produto, condições de cura e entrega são combinados antes; vidros, rodas e plásticos não recebem este revestimento de pintura.'},
- {id:'motoPremium',vehicle:'moto',label:'Moto Premium',class:'Classe D',price:149,tag:'Cuidado em duas rodas',description:'Lavagem de carenagens, tanque, rodas acessíveis, banco e painel, com acabamento seguro.',includes:['Carenagens e tanque compatíveis','Para-lamas externos e faces acessíveis das rodas','Banco, espelhos e painel','Frestas externas acessíveis, secagem e cera em pintura compatível'],included:['wax'],notice:'Sem motor, inferior/chassi, corrente/transmissão, desmontagem, lubrificação ou manutenção mecânica. Sem pretinho nos pneus e sem acabamento escorregadio em banco, manoplas, pedaleiras ou freios.'}
+ {id:'motoPremium',vehicle:'moto',label:'Moto Premium',class:'Classe D',price:89,tag:'Cuidado em duas rodas',description:'Lavagem de carenagens, tanque, rodas acessíveis, banco e painel, com acabamento seguro.',includes:['Carenagens e tanque compatíveis','Para-lamas externos e faces acessíveis das rodas','Banco, espelhos e painel','Frestas externas acessíveis, secagem e cera em pintura compatível'],included:['wax'],notice:'Sem motor, inferior/chassi, corrente/transmissão, desmontagem, lubrificação ou manutenção mecânica. Sem pretinho nos pneus e sem acabamento escorregadio em banco, manoplas, pedaleiras ou freios.'}
 ];
 export const extras = [
  {id:'exteriorPlastic',vehicle:'both',price:59,motoPrice:39,label:'Revitalização de plásticos externos',area:'exterior',description:'Limpeza e acabamento de manutenção dos plásticos externos compatíveis. Incluso no Extra; não substitui a vitrificação.'},
@@ -46,7 +46,7 @@ export const extraPrice=(extra,vehicle)=>vehicle==='moto'&&extra.motoPrice?extra
 export const plans = [
  {id:'careEssential',vehicle:'car',name:'Care Essencial',visits:2,premium:1,essential:1,price:229,saving:19,description:'1 Premium + 1 Essencial'},
  {id:'careFrequent',vehicle:'car',name:'Care Premium',visits:3,premium:1,essential:2,price:309,saving:28,description:'2 Essenciais + 1 Premium'},
- {id:'careMoto',vehicle:'moto',name:'Care Moto',visits:2,premium:2,essential:0,price:269,saving:29,description:'2 Moto Premium'}
+ {id:'careMoto',vehicle:'moto',name:'Care Moto',visits:2,premium:2,essential:0,price:269,saving:0,description:'2 Moto Premium'}
 ];
 export const findService=id=>services.find(x=>x.id===(id==='correction'?'polishMedium':id));
 export const findPlan=id=>plans.find(x=>x.id===id);
@@ -109,10 +109,12 @@ export function validDate(date){
  const d=new Date(date+'T12:00:00Z');
  return !Number.isNaN(d.getTime())&&d.toISOString().slice(0,10)===date;
 }
+export function isBusinessDay(date){
+ return validDate(date)&&new Date(date+'T12:00:00Z').getUTCDay()!==0;
+}
 export function timesFor(date){
- if(!validDate(date)) return [];
- const sunday=new Date(date+'T12:00:00Z').getUTCDay()===0;
- const close=sunday?12*60:17*60+30;
+ if(!isBusinessDay(date)) return [];
+ const close=17*60+30;
  const times=[];
  for(let m=9*60;m<close;m+=30) times.push(String(Math.floor(m/60)).padStart(2,'0')+':'+String(m%60).padStart(2,'0'));
  return times;
@@ -120,6 +122,7 @@ export function timesFor(date){
 export function validatePreference(state,now=new Date()){
  if(state.flexibleDate&&!state.date) return '';
  if(!validDate(state.date)) return 'Escolha uma data ou marque que prefere combinar pela conversa.';
+ if(!isBusinessDay(state.date)) return 'Não atendemos aos domingos. Escolha uma data de segunda a sábado.';
  if(state.date<todaySP(now)) return 'Escolha uma data de hoje em diante.';
  if(state.time&&!timesFor(state.date).includes(state.time)) return 'Escolha um horário dentro do expediente deste dia.';
  if(state.date===todaySP(now)&&state.time){

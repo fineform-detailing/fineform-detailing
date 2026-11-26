@@ -1,3 +1,4 @@
+import {isBusinessDay} from '../dist/assets/catalog.mjs';
 import {fail,validateSelection,transitions,text,idValid,validDate,todaySP,matchPlate} from './domain.mjs';
 import {digest,randomToken,limit} from './security.mjs';
 import {now,uuid,stmt,first,all,getQuote,quoteView,checkVersion,customerFor} from './store.mjs';
@@ -50,6 +51,7 @@ export async function updateQuote(env,id,body){
  let date=body.scheduledDate===undefined?q.scheduled_date:text(body.scheduledDate,10)||null;
  let time=body.scheduledTime===undefined?q.scheduled_time:text(body.scheduledTime,5)||null;
  if(date&&!validDate(date))fail(400,'Data de atendimento inválida.');
+ if(date&&!isBusinessDay(date)&&(date!==q.scheduled_date||(changing&&status==='accepted')))fail(400,'Não atendemos aos domingos. Escolha uma data de segunda a sábado.');
  if(time&&!/^([01]\d|2[0-3]):[0-5]\d$/.test(time))fail(400,'Horário inválido.');
  const provided=body.message===undefined?undefined:text(body.message,600);const message=changing?(provided||automaticQuoteStatusMessage(q,status,date,time)):(provided===undefined?q.public_message:provided),internal=body.internalNote===undefined?q.internal_note:text(body.internalNote,600);
  let confirmed=q.confirmed_total_cents;
@@ -79,6 +81,7 @@ export async function updateQuote(env,id,body){
 
  if(q.kind==='subscription_visit'&&changing&&status==='accepted'){
   needsVisit=true;date=date||q.preferred_date||todaySP();time=time||q.preferred_time;
+  if(!isBusinessDay(date))fail(400,'Não atendemos aos domingos. Escolha uma data de segunda a sábado.');
   batch.push(stmt(env,`INSERT INTO visits(id,cycle_id,quote_id,kind,status,visit_date,visit_time,created_at,updated_at,last_op,plate)
    SELECT ?,c.id,q.id,q.credit_kind,'scheduled',?,?,?, ?,?,q.plate FROM cycles c JOIN subscriptions s ON s.id=c.subscription_id JOIN quotes q ON q.id=?
    WHERE c.id=q.requested_cycle_id AND q.version=? AND q.status='pending' AND s.status='active' AND s.plate_verified_at IS NOT NULL AND s.plate=q.plate AND q.plate IS NOT NULL AND c.paid=1

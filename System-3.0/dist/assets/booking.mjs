@@ -4,7 +4,7 @@ import {api,submissionToken,trackingUrl,saveBookmark,copyText,clearPendingSubmis
 import {preferredContact} from './contacts.mjs';
 import {PRIVACY_VERSION,DRAFT_TTL,readDraft} from './privacy-storage.mjs';
 import {REQUEST_NOTICE} from './business-stage.mjs';
-import {services,extras,plans,money,findService,findPlan,compatibleExtras,extraPrice,extraPriceFor,polishIds,availableTreatments,treatmentPrice,hasCoating,normalizeExtras,normalizeTreatments,includedFor,baseFor,todaySP,validDate,timesFor,validatePreference,createSummary,quoteFor} from './catalog.mjs';
+import {services,extras,plans,money,findService,findPlan,compatibleExtras,extraPrice,extraPriceFor,polishIds,availableTreatments,treatmentPrice,hasCoating,normalizeExtras,normalizeTreatments,includedFor,baseFor,todaySP,validDate,isBusinessDay,timesFor,validatePreference,createSummary,quoteFor} from './catalog.mjs';
 const $=s=>document.querySelector(s);
 const content=$('#wizard-content'),form=$('#care-form');
 if(!form)throw new Error('Missing care form');
@@ -95,8 +95,8 @@ function stepDetails(){
 function stepPreference(){
  let html=heading('Qual dia funciona melhor?','Sugira uma data e horário. A agenda será confirmada pessoalmente.');
  html+='<label class="field"><span>Data de preferência</span><input name="date" type="date" min="'+todaySP()+'" value="'+esc(state.date)+'"></label>';
- html+='<label class="field"><span>Horário de preferência</span><select name="time" '+(!validDate(state.date)?'disabled':'')+'><option value="">Prefiro combinar o horário</option>'+timesFor(state.date).map(t=>'<option value="'+t+'" '+(t===state.time?'selected':'')+'>'+t+'</option>').join('')+'</select></label>';
- html+='<label class="check-line"><input type="checkbox" name="flexibleDate" '+(state.flexibleDate?'checked':'')+'><span>Tenho flexibilidade ou prefiro combinar a data pela conversa.</span></label><div class="hours-note"><span>Segunda a sábado · 9h às 17h30</span><span>Domingo · 9h às 12h</span><span>Atendemos feriados, mediante combinação.</span></div>';
+ html+='<label class="field"><span>Horário de preferência</span><select name="time" '+(!isBusinessDay(state.date)?'disabled':'')+'><option value="">Prefiro combinar o horário</option>'+timesFor(state.date).map(t=>'<option value="'+t+'" '+(t===state.time?'selected':'')+'>'+t+'</option>').join('')+'</select></label>';
+ html+='<label class="check-line"><input type="checkbox" name="flexibleDate" '+(state.flexibleDate?'checked':'')+'><span>Tenho flexibilidade ou prefiro combinar a data pela conversa.</span></label><div class="hours-note"><span>Segunda a sábado · 9h às 17h30</span><span>Domingos: fechado</span><span>Atendemos feriados, mediante combinação.</span></div>';
  return html;
 }
 function interest(){return state.mode==='plan'?findPlan(state.plan)?.name||'Care mensal':state.mode==='guidance'?'Orientação com Mateus':findService(state.service)?.label||'A combinar';}
@@ -149,7 +149,7 @@ content.addEventListener('change',event=>{
  }else if(e.name==='treatment'){
   state.treatments=state.treatments.filter(x=>x!==e.value);if(e.checked){if(polishIds.includes(e.value))state.treatments=state.treatments.filter(x=>!polishIds.includes(x));state.treatments.push(e.value);}tidy();render();content.querySelector('input[name="treatment"][value="'+e.value+'"]')?.focus({preventScroll:true});
  }else if(e.name==='date'){
-  state.date=e.value;state.time='';persist();render();content.querySelector('[name="date"]')?.focus({preventScroll:true});
+  state.date=e.value;state.time='';persist();render();content.querySelector('[name="date"]')?.focus({preventScroll:true});if(validDate(state.date)&&!isBusinessDay(state.date))error('Não atendemos aos domingos. Escolha uma data de segunda a sábado.','date');
  }else if(e.name==='time'){state.time=e.value;persist();}
  else if(e.name==='flexibleDate'){state.flexibleDate=e.checked;persist();}
  else if(e.name==='ack'){state.ack=e.checked;}

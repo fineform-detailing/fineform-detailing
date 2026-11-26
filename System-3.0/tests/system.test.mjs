@@ -11,6 +11,7 @@ import {applyMigrations} from './helpers/database.mjs';
 const key='test-only-64-character-admin-key-used-in-local-integration-tests-01';
 const token=()=>Buffer.from(crypto.getRandomValues(new Uint8Array(32))).toString('base64url');
 const date=todaySP();
+const nextSunday=()=>{const day=new Date(todaySP()+'T12:00:00Z');day.setUTCDate(day.getUTCDate()+((7-day.getUTCDay())%7||7));return day.toISOString().slice(0,10);};
 async function call(path,{method='GET',body,auth=false,cap,origin='http://localhost',address}={}){
  await vehicleFixture(db,path,body);
  const res=await mf.dispatchFetch('http://localhost'+path,{method,headers:{...(body?{'Content-Type':'application/json'}:{}),...(auth?{Cookie:cookie,'X-FF-CSRF':csrf}:{}),...(cap?{Authorization:'Bearer '+cap}:{}),Origin:origin,'CF-Connecting-IP':address||'192.0.2.'+(ip++%250)},body:body?JSON.stringify(body):undefined});
@@ -31,6 +32,12 @@ test('D1 pronto, painel protegido, cookie seguro e origem validada',async()=>{
  assert.equal((await call('/api/admin/session',{method:'POST',origin:'https://outra-origem.example',body:{key}})).status,403);
  assert.equal((await call('/api/admin/session',{method:'POST',body:{key:'incorreta'}})).status,401);
  assert.match(cookie,/^ff_admin_dev=/);
+});
+test('domingo é rejeitado em novos orçamentos e na confirmação administrativa',async()=>{
+ const sunday=nextSunday();
+ for(const time of ['', '10:00']){const rejected=await call('/api/quotes',{method:'POST',body:selection({date:sunday,time,flexibleDate:true})});assert.equal(rejected.status,400);}
+ const saved=await call('/api/quotes',{method:'POST',body:selection({vehicle:'moto',service:'motoPremium'})});assert.equal(saved.status,201);assert.equal(saved.data.quote.budget.total,89);
+ const rejected=await call('/api/admin/quotes/'+saved.data.quote.id,{method:'PATCH',auth:true,body:{version:1,status:'accepted',scheduledDate:sunday,scheduledTime:'10:00'}});assert.equal(rejected.status,400);
 });
 test('preços são calculados no servidor, reenvio não duplica e links são privados',async()=>{
  const body=selection({treatments:['fullClean'],extras:['glassCare'],total:1});

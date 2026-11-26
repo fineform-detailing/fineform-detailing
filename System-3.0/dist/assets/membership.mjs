@@ -1,7 +1,7 @@
 import {api,escape as e,dateLabel,visitLabel,trackingUrl,submissionToken,saveBookmark,copyText,watchUpdates,clearPendingSubmission} from './system.mjs';
 import {PRIVACY_VERSION} from './privacy-storage.mjs';
 import {creditKinds,chooseCredit,visitAvailability} from './membership-state.mjs';
-import {findPlan,money,todaySP,timesFor,compatibleExtras,extraPrice,extraPriceFor,includedFor,availableTreatments,treatmentPrice,polishIds,normalizeTreatments,normalizeExtras,planVisitQuote,validatePreference} from './catalog.mjs';
+import {findPlan,money,todaySP,isBusinessDay,timesFor,compatibleExtras,extraPrice,extraPriceFor,includedFor,availableTreatments,treatmentPrice,polishIds,normalizeTreatments,normalizeExtras,planVisitQuote,validatePreference} from './catalog.mjs';
 import {plateLabel,registeredPlateLabel} from './plates.mjs';
 const host=document.getElementById('membership-content'),live=document.getElementById('live-state');
 const id=new URLSearchParams(location.search).get('id'),token=new URLSearchParams(location.hash.slice(1)).get('t');
@@ -74,10 +74,12 @@ function syncAvailability(){
  form.elements.date.min=cycle?.starts_on>todaySP()?cycle.starts_on:todaySP();
  form.elements.date.max=cycle?previousDay(cycle.ends_on):todaySP();
  const availability=visitAvailability(subscription,selected),button=document.getElementById('request-visit-button');
- button.disabled=submitting||!availability.allowed;
+ const closed=Boolean(form.elements.date.value)&&!isBusinessDay(form.elements.date.value);
+ form.elements.time.disabled=closed;
+ button.disabled=submitting||!availability.allowed||closed;
  button.setAttribute('aria-busy',String(submitting));
  button.textContent=submitting?'Enviando solicitação…':availability.allowed?'Solicitar visita ↗':'Visita indisponível';
- const hint=submitting?'Enviando seu pedido. Aguarde a confirmação.':!availability.allowed?availability.reason:!form.elements.ack.checked?'Marque a autorização acima para enviar sua solicitação.':availability.reason;
+ const hint=closed?'Não atendemos aos domingos. Escolha uma data de segunda a sábado.':submitting?'Enviando seu pedido. Aguarde a confirmação.':!availability.allowed?availability.reason:!form.elements.ack.checked?'Marque a autorização acima para enviar sua solicitação.':availability.reason;
  document.getElementById('visit-status').textContent=hint;
  document.getElementById('care-availability').textContent=availability.reason;
  document.getElementById('visit-support').hidden=availability.allowed||submitting;

@@ -107,3 +107,8 @@ Em **Pedidos**, use **Excluir** na linha ou **Excluir pedido** dentro do registr
 Em **Clientes**, **Excluir cliente** abre uma confirmação com os totais de pedidos, assinaturas, ciclos e lavagens vinculados. **Manter cliente** fecha sem apagar nada. **Excluir cliente e registros** remove definitivamente o cliente e esses registros, inclusive pedidos pendentes com o mesmo telefone. Os respectivos links privados deixam de funcionar. Este botão apaga também assinaturas ativas e os ciclos vinculados; confira os totais antes de confirmar. Na versão 3.0, os recibos financeiros sem nome/telefone permanecem, preservando o total de mensalidades já recebido.
 
 As duas ações exigem sessão do painel e confirmação. Se os dados mudarem antes da exclusão, recarregue o pedido ou confira novamente o resumo do cliente. Exclusões são transações: uma falha impede a remoção parcial. Um registro técnico de auditoria da operação permanece. Nenhum dado é apagado apenas por instalar a atualização.
+
+
+## Expediente
+
+Atendimento de segunda a sábado, das 9h às 17h30. Domingos fechados: não aceite novos pedidos ou visitas Care com data de domingo. Pedidos já registrados devem ser revisados e, se necessário, remarcados com o cliente.

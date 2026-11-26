@@ -1,4 +1,4 @@
-import {services,extras,plans,findService,findPlan,normalizeTreatments,normalizeExtras,quoteFor,validDate,timesFor,todaySP,validatePreference} from '../dist/assets/catalog.mjs';
+import {services,extras,plans,findService,findPlan,normalizeTreatments,normalizeExtras,quoteFor,validDate,isBusinessDay,timesFor,todaySP,validatePreference} from '../dist/assets/catalog.mjs';
 import {normalizePlate,isPlate} from '../dist/assets/plates.mjs';
 import {BUSINESS_STAGE} from '../dist/assets/business-stage.mjs';
 export function requirePlate(value){const plate=normalizePlate(value);if(!isPlate(plate))fail(400,'Informe uma placa válida: ABC-1234 ou ABC1D23.');return plate;}
@@ -34,6 +34,7 @@ export function validateSelection(raw,now=new Date()){
  if(treatments.some(id=>!services.some(s=>s.id===id&&s.vehicle===vehicle&&s.class==='Classe C'))||additional.some(id=>!extras.some(s=>s.id===id&&(s.vehicle==='both'||s.vehicle===vehicle))))fail(400,'Um dos cuidados selecionados é inválido.');
  const date=text(raw.date,10),time=text(raw.time,5);
  if(date&&(!validDate(date)||date<todaySP(now)))fail(400,'Escolha uma data de hoje em diante.');
+ if(date&&!isBusinessDay(date))fail(400,'Não atendemos aos domingos. Escolha uma data de segunda a sábado.');
  if(time&&(!date||!timesFor(date).includes(time)))fail(400,'Horário inválido para a data.');
  const state={vehicle,mode,service:mode==='single'?service.id:vehicle==='car'?'essential':'motoPremium',plan:mode==='plan'?plan.id:'',name,model,phone,date,time,flexibleDate:raw.flexibleDate!==false,notes:text(raw.notes,600),goals:Array.isArray(raw.goals)?raw.goals.slice(0,6).map(v=>text(v,40)):[],treatments,extras:additional};
  state.requestStage=BUSINESS_STAGE;

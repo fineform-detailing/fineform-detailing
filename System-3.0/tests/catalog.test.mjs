@@ -18,8 +18,11 @@ test('lavagens detalham cada área; Extra inclui teto e cintos com aviso somente
 });
 const sample={vehicle:'car',mode:'single',service:'premium',extras:[],treatments:[],name:'Rafael',model:'Honda Civic',goals:[],date:'2026-10-18',time:'10:00',flexibleDate:false,notes:''};
 
-test('a janela de domingo termina antes de 12h; demais dias antes de 17h30',()=>{
- assert.deepEqual(timesFor('2026-10-18'),['09:00','09:30','10:00','10:30','11:00','11:30']);
+test('domingo fechado; demais dias antes de 17h30',()=>{
+ assert.deepEqual(timesFor('2026-10-18'),[]);
+ assert.match(validatePreference({...sample,time:'',flexibleDate:true},new Date('2026-10-11T22:00:00Z')),/domingos/);
+ assert.match(validatePreference({...sample,time:'10:00'},new Date('2026-10-11T22:00:00Z')),/domingos/);
+ assert.equal(validatePreference({...sample,date:'2026-10-17'},new Date('2026-10-11T22:00:00Z')),'');
  assert.equal(timesFor('2026-10-19').at(-1),'17:00');
  assert.equal(timesFor('2026-10-17').at(-1),'17:00');
  assert.equal(timesFor('2026-10-12').length,17); // feriado não bloqueia a agenda de preferências
@@ -59,6 +62,8 @@ test('tratamentos complementares consideram inclusões e um só polimento',()=>{
 });
 test('motos têm uma lavagem e opcionais compatíveis, incluindo vitrificação de plásticos',()=>{
  assert.equal(services.filter(s=>s.vehicle==='moto').length,1);
+ assert.equal(findService('motoPremium').price,89);
+ assert.equal(quoteFor({...sample,vehicle:'moto',service:'motoPremium'}).total,89);
  assert.deepEqual(compatibleExtras('moto').map(x=>x.id),['exteriorPlastic','plasticCoating','wheelIron','motoPolish']);
  const state={...sample,vehicle:'moto',service:'motoPremium',extras:['fabric','paintIron','wheelIron','motoPolish'],treatments:['fullClean']};
  assert.deepEqual(normalizeExtras(state),['wheelIron','motoPolish']);

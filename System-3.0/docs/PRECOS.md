@@ -13,7 +13,7 @@ A versão mantém a tabela revisada do projeto anterior. São preços da Fine Fo
 | Polimento Premium | R$ 990 |
 | Vitrificação com preparação/realce | R$ 1.390 |
 | Vitrificação com preparação elegível já contemplada | R$ 970 de complemento |
-| Moto Premium | R$ 150 |
+| Moto Premium | R$ 89 |
 
 | Adicional | Carro | Moto |
 | --- | ---: | ---: |
@@ -31,7 +31,7 @@ A versão mantém a tabela revisada do projeto anterior. São preços da Fine Fo
 | --- | --- | ---: | ---: |
 | Essencial | 1 Premium + 1 Essencial | R$ 260 | R$ 20 |
 | Frequente | 1 Premium + 3 Essenciais | R$ 440 | R$ 40 |
-| Moto | 2 Moto Premium | R$ 280 | R$ 20 |
+| Moto | 2 Moto Premium | R$ 269 | Sem economia sobre avulsos; mensalidade a revisar |
 
 ## Informação simples para o cliente
 

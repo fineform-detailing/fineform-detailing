@@ -1,7 +1,7 @@
 import {fail,findPlan,quotasFor,nextMonth,todaySP,text,validDate,phoneOf,validateSelection,quoteFor,idValid,requirePlate,matchPlate} from './domain.mjs';
 import {randomToken,digest,limit} from './security.mjs';
 import {stmt,first,all,now,uuid,getQuote,getSub,subView,customerFor,audit,checkVersion} from './store.mjs';
-import {planVisitQuote} from '../dist/assets/catalog.mjs';
+import {planVisitQuote,isBusinessDay} from '../dist/assets/catalog.mjs';
 import {requireRegisteredVehicle} from './plates.mjs';
 import {saveQuote} from './quotes.mjs';
 import {queueReviewPushStatement} from './reviews.mjs';
@@ -75,6 +75,7 @@ export async function recordVisit(env,id,body){
  if(!validDate(date)||date<cycle.starts_on||date>=cycle.ends_on)fail(400,'A lavagem precisa estar dentro do período do ciclo.');
  if(time&&!/^([01]\d|2[0-3]):[0-5]\d$/.test(time))fail(400,'Horário inválido.');
  if(status==='completed'&&date>todaySP())fail(400,'Não registre como concluída uma lavagem futura.');
+ if(status==='scheduled'&&!isBusinessDay(date))fail(400,'Não atendemos aos domingos. Escolha uma data de segunda a sábado.');
  if(status==='scheduled'&&date<todaySP())fail(400,'Não agende uma visita no passado.');
  if(s.status!=='active'||!cycle.paid)fail(400,'O plano precisa estar ativo e o ciclo pago.');
  if(body.operationId&&!idValid(body.operationId))fail(400,'Identificador de operação inválido.');
